@@ -22,6 +22,14 @@
     "prettier:fix": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fontsource/roboto": "^5.1.1",
+    "@mui/icons-material": "^6.4.3",
+    "@mui/material": "^6.4.3",
+    "@mui/x-data-grid": "^7.26.0",
+    "@mui/x-date-pickers": "^7.26.0",
+    "@types/jwt-decode": "^3.1.0",
     "dotenv-cli": "^8.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
