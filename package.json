@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
     "preview": "vite preview",
     "serve": "serve -s ./build",
     "start:demo": "dotenv -e .env.demo yarn start",
@@ -19,17 +18,23 @@
     "prerun:prod": "yarn install && yarn build:prod",
     "pm2:demo": "pm2 serve ./build 8520 --spa --name lulumedic-cms-web:demo",
     "pm2:prod": "pm2 serve ./build 8520 --spa --name lulumedic-cms-web:prod",
-    "prettier:fix": "prettier --write \"src/**/*.{ts,tsx}\""
+    "prettier:fix": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "lint": "eslint ./src",
+    "lint:migrateConfig": "npx @eslint/migrate-config .eslintrc.json",
+    "prepare": "husky"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@eslint/compat": "^1.2.6",
     "@fontsource/roboto": "^5.1.1",
     "@mui/icons-material": "^6.4.3",
+    "@mui/lab": "6.0.0-beta.26",
     "@mui/material": "^6.4.3",
     "@mui/x-data-grid": "^7.26.0",
     "@mui/x-date-pickers": "^7.26.0",
     "@types/jwt-decode": "^3.1.0",
+    "dayjs": "^1.11.13",
     "dotenv-cli": "^8.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -37,25 +42,34 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.20.0",
     "@types/eslint": "^9.6.1",
     "@types/node": "^22.13.1",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
-    "eslint": "^9.19.0",
+    "eslint": "^9.20.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "prettier": "^3.5.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.22.0",
+    "typescript-eslint": "^8.24.0",
     "vite": "^6.1.0",
     "vite-plugin-checker": "^0.8.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "yarn run prettier:fix",
+      "yarn run lint"
+    ]
   }
 }

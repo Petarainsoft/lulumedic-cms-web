@@ -1,7 +1,11 @@
-import './App.css';
+import Button from '@mui/material/Button';
 
 function App() {
-  return <>{JSON.stringify(import.meta.env.VITE_APP_TITLE)}</>;
+  return (
+    <>
+      <Button variant="contained">123</Button>
+    </>
+  );
 }
 
 export default App;
