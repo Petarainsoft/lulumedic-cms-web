@@ -14,7 +14,7 @@ const appPaletteLight: PaletteOptions = {
   mode: 'light',
 
   primary: {
-    main: '#F0921C',
+    main: '#12BD7E',
     light: '#FFB95E',
     dark: '#855300',
     contrastText: '#fff',
