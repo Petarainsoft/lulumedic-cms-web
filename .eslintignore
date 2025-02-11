@@ -1,0 +1,9 @@
+**/dist/**
+**/build/**
+**/node_modules/**
+**/*.test.{js,jsx,ts,tsx}
+**/*.spec.{js,jsx,ts,tsx}
+**/config-overrides.js
+ecosystem.config.js
+react-app-env.d.ts
+reportWebVitals.ts
