@@ -16,7 +16,7 @@ const buttonOverrides = (): Pick<Components, 'MuiButton'> => ({
       root: {
         textTransform: 'none',
         fontWeight: 500,
-        borderRadius: '12px',
+        borderRadius: 8,
         boxShadow: 'none',
 
         '&.MuiButton-sizeExtraLarge': {
@@ -26,7 +26,7 @@ const buttonOverrides = (): Pick<Components, 'MuiButton'> => ({
         },
 
         '&.MuiButton-noBorderRadius': {
-          borderRadius: 'none',
+          borderRadius: '0 !important',
         },
 
         '&.MuiButton-borderDashed': {

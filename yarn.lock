@@ -1342,6 +1342,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/cookie@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "@types/cookie@npm:0.6.0"
+  checksum: 10c0/5b326bd0188120fb32c0be086b141b1481fec9941b76ad537f9110e10d61ee2636beac145463319c71e4be67a17e85b81ca9e13ceb6e3bb63b93d16824d6c149
+  languageName: node
+  linkType: hard
+
 "@types/eslint@npm:^9.6.1":
   version: 9.6.1
   resolution: "@types/eslint@npm:9.6.1"
@@ -1389,6 +1396,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mui-image@npm:^1":
+  version: 1.0.5
+  resolution: "@types/mui-image@npm:1.0.5"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/ac81f6e290571a7534271464203d6ab92d997ebb266c35b7611adbcc12c3ee5a0f65d67e072f234f3689cc38903e8c94d785fc164ca987f19e6b33b51083daed
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^22.13.1":
   version: 22.13.1
   resolution: "@types/node@npm:22.13.1"
@@ -1430,7 +1446,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19.0.8":
+"@types/react@npm:*, @types/react@npm:^19.0.8":
   version: 19.0.8
   resolution: "@types/react@npm:19.0.8"
   dependencies:
@@ -2209,6 +2225,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cookie@npm:^1.0.1":
+  version: 1.0.2
+  resolution: "cookie@npm:1.0.2"
+  checksum: 10c0/fd25fe79e8fbcfcaf6aa61cd081c55d144eeeba755206c058682257cb38c4bd6795c6620de3f064c740695bb65b7949ebb1db7a95e4636efb8357a335ad3f54b
+  languageName: node
+  linkType: hard
+
 "cosmiconfig@npm:^7.0.0":
   version: 7.1.0
   resolution: "cosmiconfig@npm:7.1.0"
@@ -2289,7 +2312,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.4.0":
+"debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.4.0":
   version: 4.4.0
   resolution: "debug@npm:4.4.0"
   dependencies:
@@ -3374,6 +3397,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"globrex@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "globrex@npm:0.1.2"
+  checksum: 10c0/a54c029520cf58bda1d8884f72bd49b4cd74e977883268d931fd83bcbd1a9eb96d57c7dbd4ad80148fb9247467ebfb9b215630b2ed7563b2a8de02e1ff7f89d1
+  languageName: node
+  linkType: hard
+
 "gopd@npm:^1.0.1, gopd@npm:^1.2.0":
   version: 1.2.0
   resolution: "gopd@npm:1.2.0"
@@ -3541,6 +3571,13 @@ __metadata:
   version: 0.1.4
   resolution: "imurmurhash@npm:0.1.4"
   checksum: 10c0/8b51313850dd33605c6c9d3fd9638b714f4c4c40250cff658209f30d40da60f78992fb2df5dabee4acf589a6a82bbc79ad5486550754bd9ec4e3fc0d4a57d6a6
+  languageName: node
+  linkType: hard
+
+"inherits@npm:2.0.3":
+  version: 2.0.3
+  resolution: "inherits@npm:2.0.3"
+  checksum: 10c0/6e56402373149ea076a434072671f9982f5fad030c7662be0332122fe6c0fa490acb3cc1010d90b6eff8d640b1167d77674add52dfd1bb85d545cf29e80e73e7
   languageName: node
   linkType: hard
 
@@ -4184,6 +4221,7 @@ __metadata:
     "@mui/x-date-pickers": "npm:^7.26.0"
     "@types/eslint": "npm:^9.6.1"
     "@types/jwt-decode": "npm:^3.1.0"
+    "@types/mui-image": "npm:^1"
     "@types/node": "npm:^22.13.1"
     "@types/react": "npm:^19.0.8"
     "@types/react-dom": "npm:^19.0.3"
@@ -4202,14 +4240,18 @@ __metadata:
     globals: "npm:^15.14.0"
     husky: "npm:^9.1.7"
     lint-staged: "npm:^15.4.3"
+    mui-image: "npm:^1.0.7"
+    path: "npm:^0.12.7"
     prettier: "npm:^3.5.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
+    react-router-dom: "npm:^7.1.5"
     serve: "npm:^14.2.4"
     typescript: "npm:^5.7.3"
     typescript-eslint: "npm:^8.24.0"
     vite: "npm:^6.1.0"
     vite-plugin-checker: "npm:^0.8.0"
+    vite-tsconfig-paths: "npm:^5.1.4"
   languageName: unknown
   linkType: soft
 
@@ -4445,6 +4487,19 @@ __metadata:
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
   checksum: 10c0/d924b57e7312b3b63ad21fc5b3dc0af5e78d61a1fc7cfb5457edaf26326bf62be5307cc87ffb6862ef1c2b33b0233cdb5d4f01c4c958cc0d660948b65a287a48
+  languageName: node
+  linkType: hard
+
+"mui-image@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "mui-image@npm:1.0.7"
+  peerDependencies:
+    "@emotion/react": ^11.4.1
+    "@emotion/styled": ^11.3.0
+    "@mui/material": ^5.0.1
+    prop-types: ^15.7.2
+    react: ^17.0.2 || ^18.0.0
+  checksum: 10c0/8625d4efe0cccc5294e8d670bf9a0ea5a60a084c79727913b5d69d89459e920320c7b5289164098d33cfddec6bc43c13f550ff175ea89bc62a421790db3d737c
   languageName: node
   linkType: hard
 
@@ -4793,6 +4848,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"path@npm:^0.12.7":
+  version: 0.12.7
+  resolution: "path@npm:0.12.7"
+  dependencies:
+    process: "npm:^0.11.1"
+    util: "npm:^0.10.3"
+  checksum: 10c0/f795ce5438a988a590c7b6dfd450ec9baa1c391a8be4c2dea48baa6e0f5b199e56cd83b8c9ebf3991b81bea58236d2c32bdafe2c17a2e70c3a2e4c69891ade59
+  languageName: node
+  linkType: hard
+
 "picocolors@npm:^1.0.0, picocolors@npm:^1.1.1":
   version: 1.1.1
   resolution: "picocolors@npm:1.1.1"
@@ -4863,6 +4928,13 @@ __metadata:
   version: 5.0.0
   resolution: "proc-log@npm:5.0.0"
   checksum: 10c0/bbe5edb944b0ad63387a1d5b1911ae93e05ce8d0f60de1035b218cdcceedfe39dbd2c697853355b70f1a090f8f58fe90da487c85216bf9671f9499d1a897e9e3
+  languageName: node
+  linkType: hard
+
+"process@npm:^0.11.1":
+  version: 0.11.10
+  resolution: "process@npm:0.11.10"
+  checksum: 10c0/40c3ce4b7e6d4b8c3355479df77aeed46f81b279818ccdc500124e6a5ab882c0cc81ff7ea16384873a95a74c4570b01b120f287abbdd4c877931460eca6084b3
   languageName: node
   linkType: hard
 
@@ -4951,6 +5023,36 @@ __metadata:
   version: 0.14.2
   resolution: "react-refresh@npm:0.14.2"
   checksum: 10c0/875b72ef56b147a131e33f2abd6ec059d1989854b3ff438898e4f9310bfcc73acff709445b7ba843318a953cb9424bcc2c05af2b3d80011cee28f25aef3e2ebb
+  languageName: node
+  linkType: hard
+
+"react-router-dom@npm:^7.1.5":
+  version: 7.1.5
+  resolution: "react-router-dom@npm:7.1.5"
+  dependencies:
+    react-router: "npm:7.1.5"
+  peerDependencies:
+    react: ">=18"
+    react-dom: ">=18"
+  checksum: 10c0/a21d39aba6ef6d6c19c926d2d1c3b7782f9d2ac2d02830ed6f048ee51e2e7e3fa23269fec901d9c3e84f923c80ef29c4632884b3be81f45b9ec5cd9988fd93da
+  languageName: node
+  linkType: hard
+
+"react-router@npm:7.1.5":
+  version: 7.1.5
+  resolution: "react-router@npm:7.1.5"
+  dependencies:
+    "@types/cookie": "npm:^0.6.0"
+    cookie: "npm:^1.0.1"
+    set-cookie-parser: "npm:^2.6.0"
+    turbo-stream: "npm:2.4.0"
+  peerDependencies:
+    react: ">=18"
+    react-dom: ">=18"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+  checksum: 10c0/c0013102c7a02d26cd2353fa3749bd229fbcfedd291710540be1765d703861f96a34ef0114dd5ee8d9a728e87f3a5698387058f9539b39604f331505f507d912
   languageName: node
   linkType: hard
 
@@ -5350,6 +5452,13 @@ __metadata:
   bin:
     serve: build/main.js
   checksum: 10c0/93abecd6214228d529065040f7c0cbe541c1cc321c6a94b8a968f45a519bd9c46a9fd5e45a9b24a1f5736c5b547b8fa60d5414ebc78f870e29431b64165c1d06
+  languageName: node
+  linkType: hard
+
+"set-cookie-parser@npm:^2.6.0":
+  version: 2.7.1
+  resolution: "set-cookie-parser@npm:2.7.1"
+  checksum: 10c0/060c198c4c92547ac15988256f445eae523f57f2ceefeccf52d30d75dedf6bff22b9c26f756bd44e8e560d44ff4ab2130b178bd2e52ef5571bf7be3bd7632d9a
   languageName: node
   linkType: hard
 
@@ -5780,6 +5889,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tsconfck@npm:^3.0.3":
+  version: 3.1.5
+  resolution: "tsconfck@npm:3.1.5"
+  peerDependencies:
+    typescript: ^5.0.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  bin:
+    tsconfck: bin/tsconfck.js
+  checksum: 10c0/9b62cd85d5702aa23ea50ea578d7124f3d59cc4518fcc7eacc04f4f9c9c481f720738ff8351bd4472247c0723a17dfd01af95a5b60ad623cdb8727fbe4881847
+  languageName: node
+  linkType: hard
+
 "tsconfig-paths@npm:^3.15.0":
   version: 3.15.0
   resolution: "tsconfig-paths@npm:3.15.0"
@@ -5796,6 +5919,13 @@ __metadata:
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
+  languageName: node
+  linkType: hard
+
+"turbo-stream@npm:2.4.0":
+  version: 2.4.0
+  resolution: "turbo-stream@npm:2.4.0"
+  checksum: 10c0/e68b2569f1f16e6e9633d090c6024b2ae9f0e97bfeacb572451ca3732e120ebbb546f3bc4afc717c46cb57b5aea6104e04ef497f9912eef6a7641e809518e98a
   languageName: node
   linkType: hard
 
@@ -5995,6 +6125,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"util@npm:^0.10.3":
+  version: 0.10.4
+  resolution: "util@npm:0.10.4"
+  dependencies:
+    inherits: "npm:2.0.3"
+  checksum: 10c0/d29f6893e406b63b088ce9924da03201df89b31490d4d011f1c07a386ea4b3dbe907464c274023c237da470258e1805d806c7e4009a5974cd6b1d474b675852a
+  languageName: node
+  linkType: hard
+
 "vary@npm:~1.1.2":
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
@@ -6051,6 +6190,22 @@ __metadata:
     vue-tsc:
       optional: true
   checksum: 10c0/b43729183e2dd86ffd67dac071e0fd99b1ffaab92a5f603d6f61750f6b35736d20cc9c2ec4148fc6124155a0ea8b856d99af1578cb6763a366112add1a94b6e1
+  languageName: node
+  linkType: hard
+
+"vite-tsconfig-paths@npm:^5.1.4":
+  version: 5.1.4
+  resolution: "vite-tsconfig-paths@npm:5.1.4"
+  dependencies:
+    debug: "npm:^4.1.1"
+    globrex: "npm:^0.1.2"
+    tsconfck: "npm:^3.0.3"
+  peerDependencies:
+    vite: "*"
+  peerDependenciesMeta:
+    vite:
+      optional: true
+  checksum: 10c0/6228f23155ea25d92b1e1702284cf8dc52ad3c683c5ca691edd5a4c82d2913e7326d00708cef1cbfde9bb226261df0e0a12e03ef1d43b6a92d8f02b483ef37e3
   languageName: node
   linkType: hard
 

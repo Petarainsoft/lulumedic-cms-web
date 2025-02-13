@@ -86,9 +86,9 @@ const appTheme = createTheme({
   mixins: {
     MuiDataGrid: {
       // Pinned columns sections
-      pinnedBackground: '#340606',
+      // pinnedBackground: '#340606',
       // Headers, and top & bottom fixed rows
-      containerBackground: '#f5f2ec',
+      // containerBackground: '#f5f2ec',
     },
   },
 });
