@@ -19,11 +19,11 @@ const FilterPanel = () => {
         <Typography variant="bodyMedium">Keyword</Typography>
       </Grid>
 
-      <Grid size={8}>
+      <Grid size={7}>
         <TextField sx={{ width: '30%' }} />
       </Grid>
 
-      <Grid size={2} display="flex" columnGap={1} justifyContent="end">
+      <Grid size={3} display="flex" columnGap={1} justifyContent="end">
         <Button variant="outlined" className="MuiButton-noBorderRadius">
           Reset search
         </Button>

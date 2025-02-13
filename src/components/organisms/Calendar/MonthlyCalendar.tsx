@@ -79,12 +79,14 @@ const MonthlyCalendar = ({ currentDate }: Props) => {
   console.log({ daysMapFiltered, daysMapToWeeks, month });
 
   return (
-    <Grid>
+    <Grid height="100%">
       <WeekDayList weekdays={weekdays} />
 
-      {(daysMapFiltered || []).map(days => (
-        <DaysInMonth days={days} currentDate={currentDate} />
-      ))}
+      <Grid overflow="auto">
+        {(daysMapFiltered || []).map(days => (
+          <DaysInMonth days={days} currentDate={currentDate} />
+        ))}
+      </Grid>
     </Grid>
   );
 };

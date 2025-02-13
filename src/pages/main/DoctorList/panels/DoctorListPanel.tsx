@@ -40,12 +40,12 @@ const DoctorListPanel = () => {
     {
       field: 'contact',
       headerName: 'Contact',
-      width: 230,
+      // width: 230,
     },
     {
       field: 'position',
       headerName: 'Position',
-      width: 230,
+      // width: 230,
     },
     {
       field: 'reservationStatus',

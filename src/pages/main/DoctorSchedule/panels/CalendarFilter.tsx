@@ -1,13 +1,12 @@
 import { dayjs } from 'utils/dateTime';
 import styled from '@emotion/styled';
 
-import Grid, { Grid2Props } from '@mui/material/Grid2';
 import { DateCalendar } from 'components/atoms/DatePicker';
 import Typography from 'components/atoms/Typography';
 import Popover from 'components/atoms/Popover';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import Stack, { StackProps } from '@mui/material/Stack';
 
 // HOOKS
 
@@ -16,11 +15,14 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import useValuesQuery from 'hooks/useValuesQuery';
 
-type Props = Grid2Props;
+type CalendarView = 'monthly' | 'weekly';
+
+type Props = StackProps;
 
 const CalenDarFilter = ({ className }: Props) => {
-  const [filterParams, setFilterParams] = useValuesQuery<{ date: string }>(['date'], {
+  const [filterParams, setFilterParams] = useValuesQuery<{ date: string; view: CalendarView }>(['date', 'view'], {
     date: dayjs().format('YYYY-MM'),
+    view: 'monthly',
   });
 
   const onChangeCalendar = (action: 'prev' | 'next') => {
@@ -33,9 +35,17 @@ const CalenDarFilter = ({ className }: Props) => {
     }
   };
 
+  const onChangeCalendarView = (view: CalendarView) => {
+    if (view == 'monthly') {
+      setFilterParams('view', 'monthly');
+    } else {
+      setFilterParams('view', 'weekly');
+    }
+  };
+
   return (
-    <Grid container alignItems="center" className={className}>
-      <Grid size={1}>
+    <Stack alignItems="center" className={className} direction="row">
+      <Stack>
         <Popover
           rootElement={<Typography>{filterParams.date}</Typography>}
           anchorOrigin={{
@@ -53,42 +63,51 @@ const CalenDarFilter = ({ className }: Props) => {
             onChange={date => setFilterParams('date', date.format('YYYY-MM'))}
           />
         </Popover>
-      </Grid>
+      </Stack>
 
-      <Grid size={1}>
+      <Stack direction="row">
         <IconButton onClick={() => onChangeCalendar('prev')}>
           <ChevronLeftIcon />
         </IconButton>
         <IconButton onClick={() => onChangeCalendar('next')}>
           <ChevronRightIcon />
         </IconButton>
-      </Grid>
+      </Stack>
 
-      <Grid size="grow" display="flex" justifyContent="center">
+      <Stack flex="1" display="flex" justifyContent="center" alignItems="center">
         <Stack
           bgcolor="background.default"
+          width={140}
           direction="row"
-          justifyContent="space-evenly"
+          justifyContent="center"
           borderRadius={8}
           px={0.8}
           py={0.5}
           columnGap={1}
         >
-          <Typography variant="bodyMedium" className="CalendarTab CalendarActive">
+          <Typography
+            variant="bodyMedium"
+            className={`CalendarTab ${filterParams.view == 'monthly' ? 'CalendarActive' : ''}`}
+            onClick={() => onChangeCalendarView('monthly')}
+          >
             Monthly
           </Typography>
-          <Typography variant="bodyMedium" className="CalendarTab">
+          <Typography
+            variant="bodyMedium"
+            className={`CalendarTab ${filterParams.view == 'weekly' ? 'CalendarActive' : ''}`}
+            onClick={() => onChangeCalendarView('weekly')}
+          >
             Weekly
           </Typography>
         </Stack>
-      </Grid>
+      </Stack>
 
-      <Grid size="auto">
+      <Stack>
         <Button variant="contained" className="MuiButton-noBorderRadius">
           스케줄 작성
         </Button>
-      </Grid>
-    </Grid>
+      </Stack>
+    </Stack>
   );
 };
 

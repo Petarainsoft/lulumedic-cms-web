@@ -1,11 +1,7 @@
 import ScheduleCalendar from './panels/ScheduleCalendar';
 
 const DoctorSchedulePage = () => {
-  return (
-    <div>
-      <ScheduleCalendar />
-    </div>
-  );
+  return <ScheduleCalendar />;
 };
 
 export { DoctorSchedulePage as Component };

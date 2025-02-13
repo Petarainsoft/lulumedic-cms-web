@@ -2,11 +2,15 @@ import { dayjs } from 'utils/dateTime';
 import { useSearchParams } from 'react-router-dom';
 
 import MonthlyCalendar from 'components/organisms/Calendar/MonthlyCalendar';
+import WeeklyCalendar from 'components/organisms/Calendar/WeeklyCalendar';
+
 import Grid from '@mui/material/Grid2';
 import CalenDarFilter from './CalendarFilter';
 
 const ScheduleCalendar = () => {
   const [params] = useSearchParams();
+
+  const view = params.get('view');
 
   return (
     <Grid container rowGap={2}>
@@ -15,7 +19,11 @@ const ScheduleCalendar = () => {
       </Grid>
 
       <Grid size={12}>
-        <MonthlyCalendar currentDate={dayjs(params.get('date') || undefined)} />
+        {view == 'weekly' ? (
+          <WeeklyCalendar currentDate={dayjs(params.get('date') || undefined)} />
+        ) : (
+          <MonthlyCalendar currentDate={dayjs(params.get('date') || undefined)} />
+        )}
       </Grid>
     </Grid>
   );
