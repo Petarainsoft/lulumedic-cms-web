@@ -18,6 +18,12 @@ const breadcrumbs = [
     path: MAIN_PATH.DOCTOR_CREATE,
     label: '의사 등록',
   },
+
+  // Reservation
+  {
+    path: MAIN_PATH.RESERVATIONS,
+    label: '예약 상세',
+  },
 ];
 
 const AppBreadcrumbs = () => {

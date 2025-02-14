@@ -49,3 +49,40 @@ export const exposureOptions = Object.keys(Exposure).map(key => ({
   label: Exposure[key as keyof typeof Exposure],
   value: key,
 }));
+
+export enum ReservationStatus {
+  All = '전체',
+  Waiting = '예약대기',
+  Confirm = '예약확정',
+  Cancelled = '예약취소',
+}
+
+export enum MedicalStatus {
+  All = '전체',
+  Waiting = '진료대기',
+  Completed = '진료완료',
+  NoShow = '진료노쇼',
+}
+
+export enum ReservationPeriod {
+  Category = '기간 구분',
+  ReceptionDate = '접수일자',
+  ReservationDate = '예약일자',
+}
+
+export const reservationPeriodOptions = Object.keys(ReservationPeriod).map(key => ({
+  label: ReservationPeriod[key as keyof typeof ReservationPeriod],
+  value: key,
+}));
+
+export enum ReservationKeywordType {
+  Name = '이름',
+  Contact = '연락처',
+  Appointment = '예약번호',
+  Patient = '환자번호',
+}
+
+export const reservationKeywordTypeOptions = Object.keys(ReservationKeywordType).map(key => ({
+  label: ReservationKeywordType[key as keyof typeof ReservationKeywordType],
+  value: key,
+}));

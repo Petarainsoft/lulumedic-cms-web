@@ -5,6 +5,9 @@ export enum MAIN_PATH {
   DOCTOR_MANAGEMENT = 'doctors',
   DOCTOR_CREATE = 'create',
   DOCTOR_SCHEDULES = 'schedules',
+
+  RESERVATIONS = 'reservations',
+  RESERVATION_DETAIL = 'reservations-detail',
 }
 
 const mainRoutes: RouteObject[] = [
@@ -25,7 +28,18 @@ const mainRoutes: RouteObject[] = [
         path: `:id/${MAIN_PATH.DOCTOR_SCHEDULES}`,
         lazy: () => import('pages/main/DoctorSchedule/DoctorSchedulePage'),
       },
+
+      {
+        // path: `${MAIN_PATH.RESERVATION_DETAIL}/:id`,
+        // lazy: () => import('pages/main/reservation/ReservationDetailPage'),
+      },
     ],
+  },
+
+  // Reservation
+  {
+    path: MAIN_PATH.RESERVATIONS,
+    lazy: () => import('pages/main/reservation/ReservationPage'),
   },
 ];
 

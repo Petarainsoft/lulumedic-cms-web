@@ -8,12 +8,12 @@ import MainLayout from 'components/templates/MainLayout';
 import Navbar from 'components/molecules/Navbar/NavBar';
 import AppBreadcrumbs from 'components/molecules/AppBreadcrumbs/AppBreadcrumbs';
 
-const temp = Array.from({ length: 100 }, (_, i) => i);
+// const temp = Array.from({ length: 100 }, (_, i) => i);
 
 const MainPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate('doctors');
+    navigate('reservations');
   }, []);
 
   return (
