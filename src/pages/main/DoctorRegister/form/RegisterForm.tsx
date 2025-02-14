@@ -92,8 +92,8 @@ const RegisterForm = ({ doctorDetail }: Props) => {
   console.log({ doctorDetail });
 
   return (
-    <>
-      <Grid container rowGap={2} alignItems="center" px={2} overflow="auto" height="100%">
+    <Grid container height="100%" overflow="auto">
+      <Grid size={12} container alignItems="center" px={2} height="100%" rowGap={2}>
         {/* Department */}
         <SelectGroup label="진료과" placeholder="진료과를 선택해 주세요" />
         {/* employeeId */}
@@ -144,7 +144,7 @@ const RegisterForm = ({ doctorDetail }: Props) => {
           저장
         </Button>
       </Grid>
-    </>
+    </Grid>
   );
 };
 

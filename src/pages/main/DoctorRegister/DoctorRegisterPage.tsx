@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 
 const DoctorRegisterPage = () => {
   return (
-    <Stack rowGap={5} height="100%" overflow="auto">
+    <Stack height="100%" flexDirection="column">
       <Typography variant="titleLarge" fontWeight="bold">
         의사정보
       </Typography>

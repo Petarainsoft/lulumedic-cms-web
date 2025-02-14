@@ -6,16 +6,10 @@ import { ID } from 'constants/types';
 
 const RegisterPanel = () => {
   const params = useParams();
-
   const id = params?.id;
-
   const detail = doctorList.find(item => (item?.id as ID) == id);
 
-  return (
-    <form>
-      <RegisterForm doctorDetail={detail} />
-    </form>
-  );
+  return <RegisterForm doctorDetail={detail} />;
 };
 
 export default RegisterPanel;

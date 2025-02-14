@@ -6,7 +6,7 @@ type Props = Grid2Props;
 const Sidebar = ({ className }: Props) => {
   return (
     <Grid p={2} height="100%" size="auto" className={className}>
-      123
+      Sidebar
     </Grid>
   );
 };
