@@ -66,7 +66,7 @@ const DoctorListPanel = () => {
       field: 'medicalCondition',
       headerName: 'Medical condition',
       flex: 1,
-      renderCell: ({ value }) => {
+      renderCell: ({ value, row }) => {
         return (
           <Stack direction="row" justifyContent="space-evenly" alignItems="center" height="100%">
             <Typography variant="bodyMedium">{value}</Typography>
@@ -74,7 +74,7 @@ const DoctorListPanel = () => {
               variant="outlined"
               onClick={e => {
                 e.stopPropagation();
-                navigate(`${MAIN_PATH.DOCTOR_SCHEDULES}`);
+                navigate(`${row?.id}/${MAIN_PATH.DOCTOR_SCHEDULES}`);
               }}
             >
               스케줄 관리

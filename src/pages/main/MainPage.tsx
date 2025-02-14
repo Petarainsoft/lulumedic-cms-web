@@ -8,15 +8,11 @@ import MainLayout from 'components/templates/MainLayout';
 import Navbar from 'components/molecules/Navbar/NavBar';
 import AppBreadcrumbs from 'components/molecules/AppBreadcrumbs/AppBreadcrumbs';
 
-// const temp = Array.from({ length: 100 }, (_, i) => i);
-
-const env = import.meta.env;
+const temp = Array.from({ length: 100 }, (_, i) => i);
 
 const MainPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    console.log({ env });
-
     navigate('doctors');
   }, []);
 
@@ -26,13 +22,16 @@ const MainPage = () => {
         <Sidebar />
       </Grid>
 
-      <Grid size={10}>
+      <Grid size="grow" height="100%">
         <MainLayout rowGap={2} navBar={<PageHeader />}>
           <Navbar />
           <AppBreadcrumbs />
-          {/* {temp.map(item => (
+          {/* <Grid flex={1} overflow="auto">
+            {temp.map(item => (
               <div>{item}</div>
-            ))} */}
+            ))}
+          </Grid> */}
+
           <Outlet />
         </MainLayout>
       </Grid>

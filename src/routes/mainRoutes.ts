@@ -22,7 +22,7 @@ const mainRoutes: RouteObject[] = [
         lazy: () => import('pages/main/DoctorRegister/DoctorRegisterPage'),
       },
       {
-        path: MAIN_PATH.DOCTOR_SCHEDULES,
+        path: `:id/${MAIN_PATH.DOCTOR_SCHEDULES}`,
         lazy: () => import('pages/main/DoctorSchedule/DoctorSchedulePage'),
       },
     ],

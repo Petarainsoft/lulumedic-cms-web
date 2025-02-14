@@ -93,7 +93,7 @@ const RegisterForm = ({ doctorDetail }: Props) => {
 
   return (
     <Grid container height="100%" overflow="auto">
-      <Grid size={12} container alignItems="center" px={2} height="100%" rowGap={2}>
+      <Grid size={12} container alignItems="center" px={2} rowGap={2} overflow="auto">
         {/* Department */}
         <SelectGroup label="진료과" placeholder="진료과를 선택해 주세요" />
         {/* employeeId */}
