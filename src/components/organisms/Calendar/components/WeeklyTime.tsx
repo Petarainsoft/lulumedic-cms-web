@@ -1,20 +1,20 @@
-import Divider from '@mui/material/Divider';
+// import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
-import Typography from 'components/atoms/Typography';
-import { Dayjs } from 'utils/dateTime';
+// import Typography from 'components/atoms/Typography';
+// import { Dayjs } from 'utils/dateTime';
 
 const MINUTE_IN_DAY = 60;
 
-type Props = {
-  currentDate?: Dayjs;
-  daysInWeekDay?: Dayjs[];
-};
+// type Props = {
+//   currentDate?: Dayjs;
+//   daysInWeekDay?: Dayjs[];
+// };
 
 const timeLineOfDays = Array.from({ length: 24 }, (_, i) => i);
-const WeeklyTime = ({ daysInWeekDay }: Props) => {
+const WeeklyTime = () => {
   return (
     <Stack className="WeeklyTime">
-      {timeLineOfDays.map((item, index) => (
+      {timeLineOfDays.map((_, index) => (
         <Stack
           flexDirection="row"
           alignItems="center"
@@ -43,9 +43,9 @@ const WeeklyTime = ({ daysInWeekDay }: Props) => {
 
           {/* Box */}
           {/* <Stack direction="row" width="100%"> */}
-          {(daysInWeekDay || [])?.map(item => (
+          {/* {(daysInWeekDay || [])?.map(item => (
             <Stack borderRight={1} borderColor="divider" height="100%" width="100%"></Stack>
-          ))}
+          ))} */}
           {/* </Stack> */}
         </Stack>
       ))}

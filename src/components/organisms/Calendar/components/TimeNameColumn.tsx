@@ -3,11 +3,11 @@ import Typography from 'components/atoms/Typography';
 
 const timeLineOfDays = Array.from({ length: 24 }, (_, i) => i);
 
-type Props = {};
+// type Props = {};
 const TimeNameColumn = () => {
   return (
     <Stack>
-      {timeLineOfDays.map((item, index) => (
+      {timeLineOfDays.map(item => (
         <Typography
           height={60}
           color="textDisabled"

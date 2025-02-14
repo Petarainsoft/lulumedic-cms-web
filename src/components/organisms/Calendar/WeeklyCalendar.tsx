@@ -72,7 +72,7 @@ const WeeklyCalendar = ({ currentDate }: Props) => {
       </Grid>
       <Grid size="grow">
         <WeekDayList weekdays={weekdays} daysInWeekDay={daysMapToWeeks[0]} />
-        <WeeklyTime daysInWeekDay={daysMapToWeeks[0]} />
+        <WeeklyTime />
       </Grid>
     </Grid>
   );

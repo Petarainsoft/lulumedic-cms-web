@@ -58,7 +58,7 @@ const AppPagination = ({
           color="primary"
           page={page}
           shape="rounded"
-          onChange={(e, newPage) => onPageChange(newPage)}
+          onChange={(_, newPage) => onPageChange(newPage)}
         />
       </Grid>
 

@@ -12,7 +12,7 @@ import {
   reservationConfirmOptions,
 } from 'core/enum';
 import { Button } from '@mui/material';
-import { Any, ID } from 'constants/types';
+import { Any } from 'constants/types';
 
 const minuteOptions = [
   {

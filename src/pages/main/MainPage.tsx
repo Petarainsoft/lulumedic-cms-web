@@ -1,4 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import Grid from '@mui/material/Grid2';
 import Sidebar from 'components/molecules/Sidebar/Sidebar';
@@ -6,13 +7,16 @@ import PageHeader from 'components/molecules/PageHeader/PageHeader';
 import MainLayout from 'components/templates/MainLayout';
 import Navbar from 'components/molecules/Navbar/NavBar';
 import AppBreadcrumbs from 'components/molecules/AppBreadcrumbs/AppBreadcrumbs';
-import { useEffect } from 'react';
 
 // const temp = Array.from({ length: 100 }, (_, i) => i);
+
+const env = import.meta.env;
 
 const MainPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
+    console.log({ env });
+
     navigate('doctors');
   }, []);
 
