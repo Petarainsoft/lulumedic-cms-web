@@ -28,11 +28,6 @@ const mainRoutes: RouteObject[] = [
         path: `:id/${MAIN_PATH.DOCTOR_SCHEDULES}`,
         lazy: () => import('pages/main/DoctorSchedule/DoctorSchedulePage'),
       },
-
-      {
-        // path: `${MAIN_PATH.RESERVATION_DETAIL}/:id`,
-        // lazy: () => import('pages/main/reservation/ReservationDetailPage'),
-      },
     ],
   },
 
@@ -40,6 +35,11 @@ const mainRoutes: RouteObject[] = [
   {
     path: MAIN_PATH.RESERVATIONS,
     lazy: () => import('pages/main/reservation/ReservationPage'),
+    children: [],
+  },
+  {
+    path: `${MAIN_PATH.RESERVATION_DETAIL}/:id`,
+    lazy: () => import('pages/main/reservation/reservationDetail/ReservationDetailPage'),
   },
 ];
 

@@ -23,12 +23,12 @@ const textFieldOverrides = (): Pick<Components, 'MuiInputBase'> => ({
         '&.MuiOutlinedInput-root': {
           '&:hover': {
             '.MuiOutlinedInput-notchedOutline': {
-              borderColor: '#F0921C',
+              borderColor: '#12BD7E',
             },
           },
           '&.Mui-focused': {
             '.MuiOutlinedInput-notchedOutline': {
-              borderColor: '#F0921C',
+              borderColor: '#12BD7E',
               borderWidth: 1,
             },
           },

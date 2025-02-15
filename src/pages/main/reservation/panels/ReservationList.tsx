@@ -7,6 +7,7 @@ import Typography from 'components/atoms/Typography';
 import Button from '@mui/material/Button';
 
 import { reservationList } from 'core/constants';
+import { MAIN_PATH } from 'routes';
 
 const GridToolbar = () => {
   return (
@@ -23,58 +24,62 @@ const ReservationList = () => {
   const columns: GridColDef[] = [
     {
       field: 'patientNumber',
-      headerName: 'Patient Number',
+      headerName: '환자번호',
       width: 130,
     },
     {
       field: 'reservationNumber',
-      headerName: 'Reservation Number',
+      headerName: '예약번호',
       type: 'number',
       width: 100,
     },
     {
-      field: 'category',
-      headerName: 'Category',
+      field: 'firstTimeVisit',
+      headerName: '초재진 구분',
       // width: 230,
     },
     {
+      field: 'patientName',
+      headerName: '이름',
+    },
+    {
       field: 'birthDate',
-      headerName: 'Birth Date',
+      headerName: '생년월일',
       // width: 230,
     },
     {
       field: 'contact',
-      headerName: 'Contact',
+      headerName: '연락처',
       // flex: 1,
     },
     {
-      field: 'date',
-      headerName: 'Date',
+      field: 'date', // make appointment date
+      headerName: '진료예약',
       width: 130,
     },
     {
       field: 'department',
-      headerName: 'Department',
+      headerName: '진료과',
       width: 130,
     },
     {
       field: 'doctorName',
-      headerName: 'Doctor Name',
+      headerName: '담당의사',
       flex: 1,
     },
     {
       field: 'reservationStatus',
-      headerName: 'Reservation Status',
+      headerName: '예약상태',
       width: 130,
     },
     {
       field: 'medicalStatus',
-      headerName: 'Medical Status',
+      headerName: '진료상태',
       width: 130,
     },
     {
       field: 'reservationTime',
-      headerName: 'Reservation Time',
+      headerName: '접수일자',
       width: 130,
     },
   ];
@@ -84,10 +89,15 @@ const ReservationList = () => {
       columns={columns}
       rows={reservationList}
       onRowClick={val => {
-        // navigate(`${MAIN_PATH.DOCTOR_CREATE}/${val.id}`);
+        navigate(`../${MAIN_PATH.RESERVATION_DETAIL}/${val.id}`);
       }}
       slots={{
         toolbar: GridToolbar,
+        noRowsOverlay: () => (
+          <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            예약 내역이 없습니다.
+          </div>
+        ),
       }}
     />
   );

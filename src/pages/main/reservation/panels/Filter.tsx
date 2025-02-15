@@ -8,6 +8,7 @@ import { ReservationStatus, MedicalStatus, reservationPeriodOptions, reservation
 import Select from 'components/atoms/Select';
 import TextField from 'components/atoms/Input';
 import Button from '@mui/material/Button';
+import { DatePicker } from '@mui/x-date-pickers';
 
 const reservationStatus = Object.keys(ReservationStatus).map(key => ({
   label: ReservationStatus[key as keyof typeof ReservationStatus],
@@ -20,6 +21,8 @@ const medicalStatus = Object.keys(MedicalStatus).map(key => ({
 }));
 
 const Filter = () => {
+  console.log({ reservationPeriodOptions });
+
   return (
     <Grid
       container
@@ -31,7 +34,7 @@ const Filter = () => {
       borderColor="divider"
       py={4}
     >
-      <Grid size={2}>
+      <Grid size={1.5}>
         <Typography color="textDisabled">예약상태</Typography>
       </Grid>
       <Grid size={10}>
@@ -43,7 +46,7 @@ const Filter = () => {
       </Grid>
 
       {/* Medical */}
-      <Grid size={2}>
+      <Grid size={1.5}>
         <Typography color="textDisabled">진료상태</Typography>
       </Grid>
       <Grid size={10}>
@@ -55,40 +58,55 @@ const Filter = () => {
       </Grid>
 
       {/* Department */}
-      <Grid size={2}>
+      <Grid size={1.5}>
         <Typography color="textDisabled">진료상태</Typography>
       </Grid>
       <Grid size={10}>
-        <Select sx={{ width: 200 }} placeholder="진료과 선택" />
+        <Select sx={{ width: 180 }} placeholder="진료과 선택" />
       </Grid>
 
       {/* Period */}
-      <Grid size={2}>
+      <Grid size={1.5}>
         <Typography color="textDisabled">기간</Typography>
       </Grid>
-      <Grid size={10}>
+      <Grid size={2}>
         <Select
-          sx={{ width: 200 }}
+          sx={{ width: 180 }}
+          fullWidth
           defaultValue={reservationPeriodOptions[1].value}
           placeholder="접수일자"
           options={reservationPeriodOptions}
         />
       </Grid>
 
+      {/* DATE */}
+      <Grid size={0.5}>
+        <Typography color="textDisabled">시작일</Typography>
+      </Grid>
+      <Grid size={1.5}>
+        <DatePicker />
+      </Grid>
+      <Grid size={0.5}>
+        <Typography color="textDisabled">종료일</Typography>
+      </Grid>
+      <Grid size={5}>
+        <DatePicker />
+      </Grid>
+
       {/* Search keyword */}
-      <Grid size={2}>
+      <Grid size={1.5}>
         <Typography color="textDisabled">검색 키워드</Typography>
       </Grid>
       <Grid size="auto">
         <Select
-          sx={{ width: 200 }}
+          sx={{ width: 180 }}
           defaultValue={reservationKeywordTypeOptions[0].value}
           placeholder="검색 키워드"
           options={reservationKeywordTypeOptions}
         />
       </Grid>
-      <Grid size={4}>
-        <TextField />
+      <Grid size={5}>
+        <TextField fullWidth />
       </Grid>
       <Grid size="grow" display="flex" justifyContent="end" columnGap={1}>
         <Button variant="outlined">Reset</Button>

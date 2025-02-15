@@ -1,4 +1,4 @@
-import Grid, { Grid2Props } from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid2';
 import Filter from './panels/Filter';
 import ReservationList from './panels/ReservationList';
 

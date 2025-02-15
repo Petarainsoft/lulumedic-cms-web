@@ -4,7 +4,7 @@ import Select from 'components/atoms/Select';
 import Stack from '@mui/material/Stack';
 import { Image } from 'components/atoms/Image';
 
-import icon from 'assets/lulu-icon.png';
+import icon from 'assets/logo_2.svg';
 
 const options = [
   {
