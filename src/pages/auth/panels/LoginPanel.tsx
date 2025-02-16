@@ -11,11 +11,14 @@ import Button from '@mui/material/Button';
 // Services
 import { loginApi } from 'services/AuthService';
 
+import useNotification from 'hooks/useNotification';
+
+// HOOKS
 import logo from 'assets/logo_2.svg';
 
 const LoginPanel = () => {
   const navigate = useNavigate();
-
+  const { onSuccess, onError } = useNotification();
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -34,9 +37,10 @@ const LoginPanel = () => {
 
       // TODO: Save to context
       localStorage.setItem('loginInfo', JSON.stringify({ username, password }));
+      onSuccess('로그인 성공');
       navigate('/');
     } else {
-      alert('로그인 실패');
+      onError('로그인 실패');
     }
   };
   return (

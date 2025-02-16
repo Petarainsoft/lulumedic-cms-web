@@ -5,9 +5,11 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import Stack from '@mui/material/Stack';
 import Typography from 'components/atoms/Typography';
+import Grid from '@mui/material/Grid2';
+import Filter from './Filter';
 
 // SERVICES
-import { fetchReservations } from 'services/ReservationService';
+import { fetchReservations, SearchFilter } from 'services/ReservationService';
 
 import Patient from 'models/accounts/Patient';
 import Appointment from 'models/appointment/Appointment';
@@ -17,6 +19,7 @@ import { MAIN_PATH } from 'routes';
 import { ObjMap } from 'constants/types';
 import Doctor from 'models/accounts/Doctor';
 import TimeSlot from 'models/appointment/TimeSlot';
+import { ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
 
 const GridToolbar = () => {
   return (
@@ -70,10 +73,10 @@ const ReservationList = () => {
       {
         field: 'contact',
         headerName: '연락처',
+        width: 130,
         renderCell: ({ row }) => {
           return patientsMap[row?.patientId]?.phone;
         },
-        // flex: 1,
       },
       {
         field: 'createdAt', // make appointment date
@@ -100,26 +103,29 @@ const ReservationList = () => {
       {
         field: 'doctorName',
         headerName: '담당의사',
-        flex: 1,
+        width: 100,
         renderCell: ({ row }) => {
           const doctorId = timeSlotMap?.[row?.timeslotId]?.doctorId;
           return doctorId ? doctorsMap[doctorId]?.name : '';
         },
       },
       {
-        field: 'reservationStatus',
+        field: 'status',
         headerName: '예약상태',
         width: 130,
+        valueFormatter: (value: STATUS_TYPE) => (value ? ReservationStatusLabel[value] : ''),
       },
       {
         field: 'medicalStatus',
         headerName: '진료상태',
         width: 130,
+        // valueFormatter: (value: STATUS_TYPE) => (value ? ReservationStatusLabel[value] : ''),
       },
       {
         field: 'reservationTime',
         headerName: '접수일자',
         width: 130,
+        valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
       },
     ],
     [reservations.length, patientsMap, departmentsMap, doctorsMap, timeSlotMap]
@@ -127,28 +133,40 @@ const ReservationList = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetchReservations();
-
-      setReservations(res);
+      await onSearch();
     })();
   }, []);
 
+  const onSearch = async (payload?: SearchFilter) => {
+    const res = await fetchReservations(payload);
+
+    setReservations(res);
+  };
+
   return (
-    <DataGrid
-      columns={columns}
-      rows={reservations}
-      onRowClick={val => {
-        navigate(`../${MAIN_PATH.RESERVATION_DETAIL}/${val.id}`);
-      }}
-      slots={{
-        toolbar: GridToolbar,
-        noRowsOverlay: () => (
-          <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            예약 내역이 없습니다.
-          </div>
-        ),
-      }}
-    />
+    <Grid container height="100%" overflow="auto">
+      <Grid size={12}>
+        <Filter onFilterChange={values => onSearch(values)} />
+      </Grid>
+
+      <Grid size={12}>
+        <DataGrid
+          columns={columns}
+          rows={reservations}
+          onRowClick={val => {
+            navigate(`../${MAIN_PATH.RESERVATION_DETAIL}/${val.id}`);
+          }}
+          slots={{
+            toolbar: GridToolbar,
+            noRowsOverlay: () => (
+              <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                예약 내역이 없습니다.
+              </div>
+            ),
+          }}
+        />
+      </Grid>
+    </Grid>
   );
 };
 

@@ -8,12 +8,14 @@ export const InfoLabel = ({
   value,
   type = 'text',
   options,
+  disabled,
   onChange,
 }: {
   label: string;
   value?: Value;
   type?: 'select' | 'text';
 } & SelectProps) => {
+  console.log({ value });
   return (
     <>
       <Grid size={3}>
@@ -23,9 +25,16 @@ export const InfoLabel = ({
       </Grid>
       <Grid size={3}>
         {type === 'text' ? (
-          <Typography variant="bodyMedium">{value}</Typography>
+          <Typography variant="bodyMedium">{value || '-'}</Typography>
         ) : (
-          <Select placeholder="1" defaultValue={value} options={options} onChange={onChange} fullWidth />
+          <Select
+            // placeholder="1"
+            defaultValue={value}
+            options={options}
+            onChange={onChange}
+            disabled={disabled}
+            fullWidth
+          />
         )}
       </Grid>
     </>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import env from 'constants/env';
-import { Any } from 'constants/types';
+import { Any, Obj } from 'constants/types';
 
 // TODO
 // import { loginApi } from 'services/AuthService';
@@ -24,6 +24,9 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   response => response.data,
   async error => {
+    if (error.status === 401) {
+      window.location.href = '/auth/login';
+    }
     return error;
 
     // const originalRequest = error.config;
@@ -66,8 +69,8 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-export const get = async <D>(url: string): Promise<AppResponse<D>> => {
-  return await axiosInstance.get(url);
+export const get = async <D>(url: string, queryParams?: Obj): Promise<AppResponse<D>> => {
+  return await axiosInstance.get(url, { params: queryParams });
 };
 
 export const post = async <D>(url: string, payload: Any): Promise<AppResponse<D>> => {

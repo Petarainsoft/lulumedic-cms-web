@@ -52,15 +52,16 @@ export const exposureOptions = Object.keys(Exposure).map(key => ({
 
 export enum STATUS_TYPE {
   PENDING = 'PENDING',
-  APPROVAL = 'APPROVAL',
-  CONFIRMED = 'CONFIRMED',
+  APPROVED = 'APPROVED',
+  COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
 }
 
 export const ReservationStatusLabel = {
   All: '전체',
   [STATUS_TYPE.PENDING]: '예약대기',
-  [STATUS_TYPE.CONFIRMED]: '예약확정',
+  [STATUS_TYPE.APPROVED]: '예약확정',
+  [STATUS_TYPE.COMPLETED]: '완전한',
   [STATUS_TYPE.CANCELLED]: '예약취소',
 };
 
@@ -91,5 +92,22 @@ export enum ReservationKeywordType {
 
 export const reservationKeywordTypeOptions = Object.keys(ReservationKeywordType).map(key => ({
   label: ReservationKeywordType[key as keyof typeof ReservationKeywordType],
+  value: key,
+}));
+
+export enum ReasonType {
+  CancelOfTreatment = 'CancelOfTreatment',
+  EmergencySurgery = 'EmergencySurgery',
+  Other = 'Other',
+}
+
+const reasonTypeLabels = {
+  [ReasonType.CancelOfTreatment]: '진료취소',
+  [ReasonType.EmergencySurgery]: '응급수술',
+  [ReasonType.Other]: '기타',
+};
+
+export const reasonTypeOptions = Object.keys(ReasonType).map(key => ({
+  label: reasonTypeLabels[key as keyof typeof ReasonType],
   value: key,
 }));

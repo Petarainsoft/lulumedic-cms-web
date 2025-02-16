@@ -14,7 +14,7 @@ export type SelectProps = Omit<MuiSelectProps, 'onChange'> & {
   onChange?: (value: ID) => void;
 };
 
-const Select = ({ options, placeholder, onChange, ...rest }: SelectProps) => {
+const Select = ({ options, placeholder, defaultValue, onChange, ...rest }: SelectProps) => {
   const optionMapByValue = options?.reduce(
     (acc, option) => {
       acc[option.value] = option;
@@ -22,6 +22,8 @@ const Select = ({ options, placeholder, onChange, ...rest }: SelectProps) => {
     },
     {} as Record<string, SelectOption>
   );
+
+  console.log({ optionMapByValue }, rest.value);
 
   const handleChange = (event: SelectChangeEvent<unknown>) => {
     if (onChange) {
@@ -34,8 +36,9 @@ const Select = ({ options, placeholder, onChange, ...rest }: SelectProps) => {
       onChange={handleChange}
       displayEmpty
       renderValue={value => {
-        if (value) {
-          const option = optionMapByValue?.[value as keyof typeof optionMapByValue];
+        console.log(333, value);
+        if (value || defaultValue) {
+          const option = optionMapByValue?.[(value || defaultValue) as keyof typeof optionMapByValue];
           return option?.label;
         }
 

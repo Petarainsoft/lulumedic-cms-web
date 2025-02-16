@@ -1,4 +1,5 @@
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useOutletContext, useNavigate, useParams } from 'react-router-dom';
 import { dayjs } from 'utils/dateTime';
 
 // COMPONENTS
@@ -6,9 +7,13 @@ import Grid from '@mui/material/Grid2';
 import Information, { InfoLabel } from '../components/Information';
 import Button from '@mui/material/Button';
 import ConfirmDialog from 'components/molecules/Dialog';
+import Dialog from 'components/molecules/Dialog';
+import Select from 'components/atoms/Select';
+import Typography from 'components/atoms/Typography';
+import TextField from 'components/atoms/Input';
 
 // CONSTANTS
-import { ReservationStatusLabel } from 'core/enum';
+import { ReasonType, reasonTypeOptions, ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
 import { ID, ObjMap } from 'constants/types';
 import { MAIN_PATH } from 'routes';
 
@@ -21,7 +26,8 @@ import TimeSlot from 'models/appointment/TimeSlot';
 
 // HOOKS
 import useOpen from 'hooks/useOpen';
-import { useRef } from 'react';
+import { fetchReservationById, updateReservationById } from 'services/ReservationService';
+import useNotification from 'hooks/useNotification';
 
 const reservationStatus = Object.keys(ReservationStatusLabel)
   .map(key => ({
@@ -30,13 +36,20 @@ const reservationStatus = Object.keys(ReservationStatusLabel)
   }))
   .filter(item => item.label !== ReservationStatusLabel.All);
 
-type Props = {
-  detail?: Appointment;
-};
-const DetailPanel = ({ detail }: Props) => {
+const DetailPanel = () => {
+  const params = useParams();
+  const [detail, setDetail] = useState<Appointment>();
+
   const navigate = useNavigate();
-  const statusRef = useRef('');
+  const changedRefs = useRef<{ status?: STATUS_TYPE; reason?: string; reasonType?: ReasonType }>({
+    status: detail?.status,
+    reason: '',
+  });
+
   const [openConfirm, confirmProps] = useOpen();
+  const [openReason, reasonProps] = useOpen();
+  const { onSuccess, onError } = useNotification();
+
   const { patientsMap, departmentsMap, doctorsMap, timeSlotMap } = useOutletContext<{
     patientsMap: ObjMap<Patient>;
     departmentsMap: ObjMap<Department>;
@@ -44,14 +57,64 @@ const DetailPanel = ({ detail }: Props) => {
     timeSlotMap: ObjMap<TimeSlot>;
   }>();
 
+  useEffect(() => {
+    (async () => {
+      await handleGetDetail();
+    })();
+  }, [params]);
+
+  const handleGetDetail = async () => {
+    if (params?.id) {
+      const res = await fetchReservationById(params?.id);
+      setDetail(res);
+    }
+  };
+
   const getDepartment = (timeSlotId: ID) => {
     const doctorId = timeSlotMap?.[timeSlotId]?.doctorId;
 
     if (doctorId) {
       const departmentId = doctorsMap?.[doctorId]?.departmentId;
-
       return departmentId ? departmentsMap[departmentId!]?.name : '';
     }
+  };
+
+  const handleUpdate = async () => {
+    if (params?.id) {
+      const rs = await updateReservationById(params.id, {
+        status: changedRefs.current.status || detail?.status,
+        cancelReason: changedRefs.current.reason,
+        timeslotId: detail?.timeslotId,
+        patientId: detail?.patientId,
+      });
+
+      if (rs) {
+        handleGetDetail();
+        onSuccess('업데이트됨');
+      } else {
+        onError('오류');
+      }
+      reasonProps.onClose();
+      confirmProps.onClose();
+    }
+  };
+
+  const handleConfirm = () => {
+    if (changedRefs.current.status === STATUS_TYPE.CANCELLED) {
+      openReason();
+    } else {
+      handleUpdate();
+      // confirmProps.onClose();
+    }
+  };
+
+  const getPatientInfo = (patientId?: ID, fieldName?: string) => {
+    if (patientId && fieldName) {
+      const value = patientsMap[patientId]![fieldName as keyof Patient];
+      return value as string;
+    }
+
+    return '';
   };
 
   return (
@@ -70,17 +133,23 @@ const DetailPanel = ({ detail }: Props) => {
         {/* gender */}
         <InfoLabel label="성별" value="-" />
         {/* relationship  */}
-        <InfoLabel label="보호자 관계" value="-" />
+        <InfoLabel label="보호자 관계" value={detail?.patientId ? patientsMap[detail?.patientId]?.guardianName : ''} />
       </Information>
 
       {/* Guardian */}
       <Information title="보호자 정보">
         {/* Name */}
-        <InfoLabel label="이름" value="-" />
+        <InfoLabel
+          label="이름"
+          value={detail?.patientId ? getPatientInfo(patientsMap[detail?.patientId]?.guardianId, 'name') : ''}
+        />
         {/* Birth date */}
         <InfoLabel label="생년월일" value="-" />
         {/* Contact  */}
-        <InfoLabel label="연락처" value="-" />
+        <InfoLabel
+          label="연락처"
+          value={detail?.patientId ? getPatientInfo(patientsMap[detail?.patientId]?.guardianId, 'phone') : ''}
+        />
       </Information>
 
       {/* Reservation */}
@@ -107,32 +176,65 @@ const DetailPanel = ({ detail }: Props) => {
 
         {/* Reservation Status */}
         <InfoLabel
+          disabled={detail?.status === STATUS_TYPE.CANCELLED}
           label="예약상태"
-          value={reservationStatus[0].value}
+          value={detail?.status}
           type="select"
           options={reservationStatus}
-          onChange={value => (statusRef.current = value as string)}
+          onChange={value => (changedRefs.current.status = value as STATUS_TYPE)}
         />
         {/* Cancel date */}
-        <InfoLabel label="취소일자" value="-" />
+        <InfoLabel
+          label="취소일자"
+          value={detail?.deletedAt ? dayjs(detail?.deletedAt).format('YYYY-MM-DD HH:mm') : ''}
+        />
 
         {/* Reason */}
-        <InfoLabel label="취소사유" value="-" />
+        <InfoLabel label="취소사유" value={detail?.cancelReason} />
       </Information>
 
       <Grid size={12} display="flex" justifyContent="center" columnGap={2}>
         <Button variant="outlined" sx={{ width: 100 }} onClick={() => navigate(MAIN_PATH.RESERVATIONS)}>
           리스트
         </Button>
-        <Button variant="contained" sx={{ width: 100 }} onClick={openConfirm}>
-          저장
-        </Button>
+        {detail?.status !== STATUS_TYPE.CANCELLED && (
+          <Button variant="contained" sx={{ width: 100 }} onClick={openConfirm}>
+            저장
+          </Button>
+        )}
       </Grid>
 
       {/* DIALOG */}
-      <ConfirmDialog buttons={[{ label: '확인' }]} {...confirmProps}>
+      <ConfirmDialog buttons={[{ label: '확인', onClick: handleConfirm }]} {...confirmProps}>
         예약확정 상태로 변경 하시겠습니까?
       </ConfirmDialog>
+
+      {/* REASON DIALOG */}
+      <Dialog
+        maxWidth="sm"
+        title="취소 사유 입력"
+        buttons={[{ label: '확인', onClick: handleUpdate }]}
+        {...reasonProps}
+      >
+        <Grid container rowGap={2} alignItems="center" columnSpacing={2}>
+          <Grid size={3}>
+            <Typography>취소사유</Typography>
+          </Grid>
+          <Grid size={9}>
+            <Select
+              fullWidth
+              placeholder="취소사유 선택"
+              options={reasonTypeOptions}
+              onChange={val => (changedRefs.current.reasonType = val as ReasonType)}
+            />
+          </Grid>
+
+          <Grid size={3}>사유입력</Grid>
+          <Grid size={9}>
+            <TextField fullWidth multiline rows={4} onChange={val => (changedRefs.current.reason = val)} />
+          </Grid>
+        </Grid>
+      </Dialog>
     </Grid>
   );
 };

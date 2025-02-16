@@ -14,6 +14,8 @@ class Patient extends DataModel<Patient> {
 
   guardianId?: ID;
 
+  guardianName?: string;
+
   constructor(payload: Obj) {
     super();
 
@@ -30,6 +32,7 @@ class Patient extends DataModel<Patient> {
       email: this.email,
       address: this.address,
       guardianId: this.guardianId,
+      guardianName: this.guardianName,
     };
   }
 }

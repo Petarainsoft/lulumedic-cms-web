@@ -1,88 +1,69 @@
+import { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
+
 import Grid from '@mui/material/Grid2';
 import Typography from 'components/atoms/Typography';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import MultipleSelect from 'components/atoms/Select/MultipleSelect';
+import CheckboxGroup from 'components/atoms/Checkbox/CheckboxGroup';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Select from 'components/atoms/Select';
+import TextField from 'components/atoms/Input';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 
 import {
   ReservationStatusLabel,
   MedicalStatus,
   reservationPeriodOptions,
   reservationKeywordTypeOptions,
-  ReservationPeriod,
-  ReservationKeywordType,
   STATUS_TYPE,
 } from 'core/enum';
-import Select from 'components/atoms/Select';
-import TextField from 'components/atoms/Input';
-import Button from '@mui/material/Button';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import useValuesRef from 'hooks/useValuesRef';
-import { Any } from 'constants/types';
 
-const reservationStatus = Object.keys(ReservationStatusLabel).map(key => ({
-  label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
-  value: key,
-}));
+import { Any, ObjMap } from 'constants/types';
 
-const medicalStatusOptions = Object.keys(MedicalStatus).map(key => ({
-  label: MedicalStatus[key as keyof typeof MedicalStatus],
-  value: key,
-}));
+// MODELS
+import Department from 'models/appointment/Department';
+import { SearchFilter } from 'services/ReservationService';
 
-type SearchFilter = {
-  status?: STATUS_TYPE[];
-  medicalStatus?: MedicalStatus[];
-  department?: string;
-  period?: ReservationPeriod;
-  startDate?: string;
-  endDate?: string;
-  keywordType?: ReservationKeywordType;
-  keyword?: string;
+const reservationStatus = Object.keys(ReservationStatusLabel)
+  .map(key => ({
+    label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
+    value: key,
+  }))
+  .filter(item => item.value !== 'All' && item.value !== STATUS_TYPE.COMPLETED);
+
+const medicalStatusOptions = Object.keys(MedicalStatus)
+  .map(key => ({
+    label: MedicalStatus[key as keyof typeof MedicalStatus],
+    value: key,
+  }))
+  .filter(item => item.value !== 'All');
+
+type Props = {
+  onFilterChange: (filter: SearchFilter) => void;
 };
-const Filter = () => {
-  const [searchRefs, setSearchRefs] = useValuesRef<SearchFilter>({});
+const Filter = ({ onFilterChange }: Props) => {
+  const [searchState, setSearchState] = useState<SearchFilter>({});
 
-  // const handleChangeFilter = (fieldName: keyof SearchFilter, value: Any) => {
-  //   if (fieldName == 'status') {
-  //     // TODO
-  //     const clone = [...((searchRefs.current.status as Any) || [])];
-  //     clone.push(value);
-  //     setSearchRefs('status', clone as Any);
-  //   }
-
-  //   if (fieldName == 'medicalStatus') {
-  //   }
-  // };
-
-  const handleCheckbox = (fieldName: keyof SearchFilter, checked: boolean, value: STATUS_TYPE | MedicalStatus) => {
-    if (fieldName == 'status') {
-      // TODO
-
-      if (checked) {
-        const clone = [...((searchRefs.current.status as Any) || [])];
-        clone.push(value);
-        setSearchRefs('status', clone as Any);
-      } else {
-        const clone = [...((searchRefs.current.status as Any) || [])];
-        clone.splice(clone.indexOf(value), 1);
-        setSearchRefs('status', clone as Any);
-      }
-    }
-
-    if (fieldName == 'medicalStatus') {
-      if (checked) {
-        const clone = [...((searchRefs.current.status as Any) || [])];
-        clone.push(value);
-        setSearchRefs('medicalStatus', clone as Any);
-      } else {
-        const clone = [...((searchRefs.current.status as Any) || [])];
-        clone.splice(clone.indexOf(value), 1);
-        setSearchRefs('medicalStatus', clone as Any);
-      }
-    }
+  const { departments, departmentsMap } = useOutletContext<{
+    departments: Department[];
+    departmentsMap: ObjMap<Department>;
+  }>();
+  const departmentOptions = departments.map(item => ({
+    label: item.name,
+    value: item.id,
+  }));
+  const handleChangeFilter = (fieldName: keyof SearchFilter, value: Any) => {
+    setSearchState({ ...searchState, [fieldName]: value });
   };
 
+  const onSearch = () => {
+    onFilterChange(searchState);
+  };
+
+  const onReset = () => {
+    setSearchState({});
+  };
   return (
     <Grid
       container
@@ -98,21 +79,11 @@ const Filter = () => {
         <Typography color="textDisabled">예약상태</Typography>
       </Grid>
       <Grid size={10}>
-        <FormGroup sx={{ flexDirection: 'row' }}>
-          {reservationStatus.map(item => (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  onChange={e => {
-                    handleCheckbox('status', e.target.checked, item.value as STATUS_TYPE);
-                    console.log(searchRefs.current);
-                  }}
-                />
-              }
-              label={item.label}
-            />
-          ))}
-        </FormGroup>
+        <CheckboxGroup
+          values={searchState?.status}
+          options={reservationStatus}
+          onChange={val => handleChangeFilter('status', val)}
+        />
       </Grid>
 
       {/* Medical */}
@@ -120,19 +91,39 @@ const Filter = () => {
         <Typography color="textDisabled">진료상태</Typography>
       </Grid>
       <Grid size={10}>
-        <FormGroup sx={{ flexDirection: 'row' }}>
-          {medicalStatusOptions.map(item => (
-            <FormControlLabel control={<Checkbox />} label={item.label} />
-          ))}
-        </FormGroup>
+        <CheckboxGroup options={medicalStatusOptions} onChange={val => handleChangeFilter('medicalStatus', val)} />
       </Grid>
 
       {/* Department */}
       <Grid size={1.5}>
         <Typography color="textDisabled">진료상태</Typography>
       </Grid>
-      <Grid size={10}>
-        <Select sx={{ width: 180 }} placeholder="진료과 선택" />
+      <Grid size={10} display="flex" columnGap={3} alignItems="center">
+        <MultipleSelect
+          sx={{ width: 180 }}
+          placeholder="진료과 선택"
+          options={departmentOptions}
+          value={searchState.department}
+          onChange={val => {
+            handleChangeFilter('department', val);
+          }}
+        />
+
+        <Grid display="flex" columnGap={1} rowGap={1} flexWrap="wrap">
+          {(searchState.department || []).map(item => (
+            <Chip
+              key={item}
+              label={departmentsMap[item]?.name || ''}
+              color="primary"
+              onDelete={() => {
+                const clone = [...(searchState.department || [])];
+                const index = clone.indexOf(item);
+                clone.splice(index, 1);
+                handleChangeFilter('department', clone);
+              }}
+            />
+          ))}
+        </Grid>
       </Grid>
 
       {/* Period */}
@@ -143,9 +134,10 @@ const Filter = () => {
         <Select
           sx={{ width: 180 }}
           fullWidth
-          defaultValue={reservationPeriodOptions[1].value}
+          value={searchState?.period || reservationPeriodOptions[1].value}
           placeholder="접수일자"
           options={reservationPeriodOptions}
+          onChange={val => handleChangeFilter('period', val)}
         />
       </Grid>
 
@@ -170,17 +162,27 @@ const Filter = () => {
       <Grid size="auto">
         <Select
           sx={{ width: 180 }}
-          defaultValue={reservationKeywordTypeOptions[0].value}
+          value={searchState?.keywordType || reservationKeywordTypeOptions[0].value}
           placeholder="검색 키워드"
           options={reservationKeywordTypeOptions}
+          onChange={val => handleChangeFilter('keywordType', val)}
         />
       </Grid>
       <Grid size={6}>
-        <TextField fullWidth placeholder="키워드를 입력해 주세요" />
+        <TextField
+          fullWidth
+          placeholder="키워드를 입력해 주세요"
+          value={searchState?.keyword || ''}
+          onChange={val => handleChangeFilter('keyword', val)}
+        />
       </Grid>
       <Grid size="grow" display="flex" justifyContent="end" px={1} columnGap={1}>
-        <Button variant="outlined">검색 초기화</Button>
-        <Button variant="contained">검색</Button>
+        <Button variant="outlined" onClick={onReset}>
+          검색 초기화
+        </Button>
+        <Button variant="contained" onClick={onSearch}>
+          검색
+        </Button>
       </Grid>
     </Grid>
   );

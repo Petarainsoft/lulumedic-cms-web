@@ -29,6 +29,7 @@ const MainPage = () => {
   const [patientsMap, setPatientsMap] = useState<ObjMap<Patient>>({});
   const [doctorsMap, setDoctorsMap] = useState<ObjMap<Doctor>>({});
   const [departmentsMap, setDepartmentsMap] = useState<ObjMap<Department>>({});
+  const [departments, setDepartments] = useState<Department[]>([]);
   const [timeSlotMap, setTimeSlotMap] = useState<ObjMap<TimeSlot>>({});
 
   useEffect(() => {
@@ -56,6 +57,7 @@ const MainPage = () => {
       }
 
       if (departments) {
+        setDepartments(departments);
         setDepartmentsMap(() => {
           return departments.reduce((acc, item) => {
             acc[item.id] = item;
@@ -95,7 +97,7 @@ const MainPage = () => {
             ))}
           </Grid> */}
 
-          <Outlet context={{ patientsMap, doctorsMap, departmentsMap, timeSlotMap }} />
+          <Outlet context={{ patientsMap, doctorsMap, departmentsMap, timeSlotMap, departments }} />
         </MainLayout>
       </Grid>
     </Grid>

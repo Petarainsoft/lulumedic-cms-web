@@ -1,10 +1,15 @@
 import { ID, Obj } from 'constants/types';
+import { STATUS_TYPE } from 'core/enum';
 import DataModel from 'models/base/DataModel';
 
 class Appointment extends DataModel<Appointment> {
   timeslotId?: ID;
 
   patientId?: ID;
+
+  cancelReason?: string;
+
+  status?: STATUS_TYPE;
 
   constructor(payload: Obj) {
     super();
@@ -18,6 +23,8 @@ class Appointment extends DataModel<Appointment> {
     return {
       timeslotId: this.timeslotId!,
       patientId: this.patientId,
+      cancelReason: this.cancelReason,
+      status: this.status,
     };
   }
 }

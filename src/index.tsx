@@ -14,12 +14,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import App from './App';
+import GlobalNotistask from 'components/organisms/GlobalNotistask';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={appTheme}>
       {/* Global reset css across browsers and devices  */}
       <CssBaseline enableColorScheme />
+      <GlobalNotistask />
+
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <App />
       </LocalizationProvider>

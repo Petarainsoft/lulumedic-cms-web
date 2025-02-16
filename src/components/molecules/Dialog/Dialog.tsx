@@ -61,7 +61,7 @@ const Dialog = ({
 
 const StyledDialog = styled(Dialog)`
   .MuiPaper-root {
-    max-width: 340px;
+    // min-width: 340px;
     display: flex;
     align-items: center;
     padding: 32px 24px;
