@@ -122,7 +122,7 @@ const ReservationList = () => {
         width: 130,
       },
     ],
-    [reservations, patientsMap, departmentsMap, doctorsMap, timeSlotMap]
+    [reservations.length, patientsMap, departmentsMap, doctorsMap, timeSlotMap]
   );
 
   useEffect(() => {

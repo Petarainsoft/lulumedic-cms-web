@@ -26,8 +26,6 @@ const LoginPanel = () => {
     });
 
     if (res?.data) {
-      console.log({ res });
-
       localStorage.setItem('accessToken', res.data.accessToken);
       // todo: Later will need to save refreshToken in more secure way (e.g. HTTP-only cookie)
       localStorage.setItem('refreshToken', res.data.refreshToken);
@@ -37,6 +35,8 @@ const LoginPanel = () => {
       // TODO: Save to context
       localStorage.setItem('loginInfo', JSON.stringify({ username, password }));
       navigate('/');
+    } else {
+      alert('로그인 실패');
     }
   };
   return (

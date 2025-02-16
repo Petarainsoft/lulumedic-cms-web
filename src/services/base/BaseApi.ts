@@ -13,19 +13,18 @@ export type AppResponse<T> = {
   status?: string;
 };
 
-const access_token = localStorage.getItem('accessToken');
 const axiosInstance = axios.create({
   baseURL: env.API_URI,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${access_token}`,
+    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   },
 });
 
 axiosInstance.interceptors.response.use(
   response => response.data,
   async error => {
-    return Promise.reject(error);
+    return error;
 
     // const originalRequest = error.config;
 
@@ -58,8 +57,13 @@ axiosInstance.interceptors.response.use(
 );
 
 axiosInstance.interceptors.request.use(
-  config => config,
-  error => Promise.reject(error)
+  configs => {
+    configs.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
+    return configs;
+  },
+  error => {
+    return Promise.reject(error);
+  }
 );
 
 export const get = async <D>(url: string): Promise<AppResponse<D>> => {
