@@ -22,7 +22,7 @@ const breadcrumbs = [
   // Reservation
   {
     path: MAIN_PATH.RESERVATIONS,
-    label: '예약 상세',
+    label: '약속 목록',
   },
   {
     path: MAIN_PATH.RESERVATION_DETAIL,
@@ -33,18 +33,19 @@ const breadcrumbs = [
 const AppBreadcrumbs = () => {
   const location = useLocation();
 
-  // console.log({ location });
+  console.log({ location });
 
   return (
     <MuiBreadcrumbs aria-label="breadcrumb">
       {breadcrumbs.map(
         (item, index) =>
-          location.pathname.includes(item.path, index) && (
-            <Link to={item.path} key={index}>
-              <Typography variant="bodyMedium" color={breadcrumbs.length - 1 === index ? '' : 'text.disabled'}>
-                {item.label}
-              </Typography>
-            </Link>
+          location.pathname.includes(item.path) && (
+            // <Link to={item.path} key={index}>
+
+            // </Link>
+            <Typography variant="bodyMedium" color={breadcrumbs.length - 1 === index ? '' : 'text.disabled'}>
+              {item.label}
+            </Typography>
           )
       )}
     </MuiBreadcrumbs>

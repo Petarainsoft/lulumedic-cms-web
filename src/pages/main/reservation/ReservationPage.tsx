@@ -4,7 +4,7 @@ import ReservationList from './panels/ReservationList';
 
 const ReservationPage = () => {
   return (
-    <Grid container>
+    <Grid container height="100%" overflow="auto">
       <Grid size={12}>
         <Filter />
       </Grid>

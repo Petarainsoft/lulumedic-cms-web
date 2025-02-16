@@ -1,9 +1,23 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import Appointment from 'models/appointment/Appointment';
 import DetailPanel from '../panels/DetailPanel';
-
+import { fetchReservationById } from 'services/ReservationService';
 const ReservationDetailPage = () => {
-  console.log(111);
+  const params = useParams();
+  const [detail, setDetail] = useState<Appointment>();
 
-  return <DetailPanel />;
+  useEffect(() => {
+    (async () => {
+      if (params?.id) {
+        const res = await fetchReservationById(params?.id);
+        setDetail(res);
+      }
+    })();
+  }, [params]);
+
+  return <DetailPanel detail={detail} />;
 };
 
 export { ReservationDetailPage as Component };

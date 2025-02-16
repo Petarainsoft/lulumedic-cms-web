@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import TextField from 'components/atoms/Input';
@@ -8,26 +8,34 @@ import { Image } from 'components/atoms/Image';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
-import logo from 'assets/logo_2.svg';
+// Services
+import { loginApi } from 'services/AuthService';
 
-const userName = 'staff001';
-const password = 'staff001';
+import logo from 'assets/logo_2.svg';
 
 const LoginPanel = () => {
   const navigate = useNavigate();
 
-  const usernameRef = useRef<string>('');
-  const passwordRef = useRef<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
-  const handleLogin = () => {
-    if (usernameRef.current !== userName || passwordRef.current !== password) {
-      return;
-    } else {
-      localStorage.setItem('accessToken', '1');
+  const handleLogin = async () => {
+    const res = await loginApi({
+      username,
+      password,
+    });
+
+    if (res?.data) {
+      console.log({ res });
+
+      localStorage.setItem('accessToken', res.data.accessToken);
       // todo: Later will need to save refreshToken in more secure way (e.g. HTTP-only cookie)
-      localStorage.setItem('refreshToken', '1');
+      localStorage.setItem('refreshToken', res.data.refreshToken);
       // todo: Later save to context
-      localStorage.setItem('name', '1');
+      localStorage.setItem('name', res.data.user.username);
+
+      // TODO: Save to context
+      localStorage.setItem('loginInfo', JSON.stringify({ username, password }));
       navigate('/');
     }
   };
@@ -44,14 +52,14 @@ const LoginPanel = () => {
       <Paper>
         <Stack justifyContent="center" alignItems="center" p={6} rowGap={2} width="100%">
           <Image src={logo} width={200} height={60} />
-          <TextField sx={{ width: 300 }} onChange={value => (usernameRef.current = value)} placeholder="아이디" />
+          <TextField sx={{ width: 300 }} onChange={value => setUsername(value)} placeholder="아이디" />
           <TextField
             sx={{ width: 300 }}
-            onChange={value => (passwordRef.current = value)}
+            onChange={value => setPassword(value)}
             type="password"
             placeholder="비밀번호"
           />
-          <Button variant="contained" fullWidth sx={{ mt: 3 }} onClick={handleLogin}>
+          <Button variant="contained" fullWidth sx={{ mt: 3 }} onClick={handleLogin} disabled={!username || !password}>
             로그인
           </Button>
         </Stack>

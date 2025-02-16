@@ -4,24 +4,87 @@ import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { ReservationStatus, MedicalStatus, reservationPeriodOptions, reservationKeywordTypeOptions } from 'core/enum';
+import {
+  ReservationStatus,
+  MedicalStatus,
+  reservationPeriodOptions,
+  reservationKeywordTypeOptions,
+  ReservationPeriod,
+  ReservationKeywordType,
+} from 'core/enum';
 import Select from 'components/atoms/Select';
 import TextField from 'components/atoms/Input';
 import Button from '@mui/material/Button';
-import { DatePicker } from '@mui/x-date-pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import useValuesRef from 'hooks/useValuesRef';
+import { Any } from 'constants/types';
 
 const reservationStatus = Object.keys(ReservationStatus).map(key => ({
   label: ReservationStatus[key as keyof typeof ReservationStatus],
   value: key,
 }));
 
-const medicalStatus = Object.keys(MedicalStatus).map(key => ({
+const medicalStatusOptions = Object.keys(MedicalStatus).map(key => ({
   label: MedicalStatus[key as keyof typeof MedicalStatus],
   value: key,
 }));
 
+type SearchFilter = {
+  status?: ReservationStatus[];
+  medicalStatus?: MedicalStatus[];
+  department?: string;
+  period?: ReservationPeriod;
+  startDate?: string;
+  endDate?: string;
+  keywordType?: ReservationKeywordType;
+  keyword?: string;
+};
 const Filter = () => {
-  console.log({ reservationPeriodOptions });
+  const [searchRefs, setSearchRefs] = useValuesRef<SearchFilter>({});
+
+  const handleChangeFilter = (fieldName: keyof SearchFilter, value: Any) => {
+    if (fieldName == 'status') {
+      // TODO
+      const clone = [...((searchRefs.current.status as Any) || [])];
+      clone.push(value);
+      setSearchRefs('status', clone as Any);
+    }
+
+    if (fieldName == 'medicalStatus') {
+    }
+  };
+
+  const handleCheckbox = (
+    fieldName: keyof SearchFilter,
+    checked: boolean,
+    value: ReservationStatus | MedicalStatus
+  ) => {
+    if (fieldName == 'status') {
+      // TODO
+
+      if (checked) {
+        const clone = [...((searchRefs.current.status as Any) || [])];
+        clone.push(value);
+        setSearchRefs('status', clone as Any);
+      } else {
+        const clone = [...((searchRefs.current.status as Any) || [])];
+        clone.splice(clone.indexOf(value), 1);
+        setSearchRefs('status', clone as Any);
+      }
+    }
+
+    if (fieldName == 'medicalStatus') {
+      if (checked) {
+        const clone = [...((searchRefs.current.status as Any) || [])];
+        clone.push(value);
+        setSearchRefs('medicalStatus', clone as Any);
+      } else {
+        const clone = [...((searchRefs.current.status as Any) || [])];
+        clone.splice(clone.indexOf(value), 1);
+        setSearchRefs('medicalStatus', clone as Any);
+      }
+    }
+  };
 
   return (
     <Grid
@@ -40,7 +103,17 @@ const Filter = () => {
       <Grid size={10}>
         <FormGroup sx={{ flexDirection: 'row' }}>
           {reservationStatus.map(item => (
-            <FormControlLabel control={<Checkbox />} label={item.label} />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={e => {
+                    handleCheckbox('status', e.target.checked, item.value as ReservationStatus);
+                    console.log(searchRefs.current);
+                  }}
+                />
+              }
+              label={item.label}
+            />
           ))}
         </FormGroup>
       </Grid>
@@ -51,7 +124,7 @@ const Filter = () => {
       </Grid>
       <Grid size={10}>
         <FormGroup sx={{ flexDirection: 'row' }}>
-          {medicalStatus.map(item => (
+          {medicalStatusOptions.map(item => (
             <FormControlLabel control={<Checkbox />} label={item.label} />
           ))}
         </FormGroup>
@@ -80,17 +153,17 @@ const Filter = () => {
       </Grid>
 
       {/* DATE */}
-      <Grid size={0.5}>
+      <Grid size="auto">
         <Typography color="textDisabled">시작일</Typography>
       </Grid>
-      <Grid size={1.5}>
-        <DatePicker />
+      <Grid size={2}>
+        <DatePicker format="YYYY-MM-DD" />
       </Grid>
-      <Grid size={0.5}>
+      <Grid size="auto">
         <Typography color="textDisabled">종료일</Typography>
       </Grid>
-      <Grid size={5}>
-        <DatePicker />
+      <Grid size={4}>
+        <DatePicker format="YYYY-MM-DD" />
       </Grid>
 
       {/* Search keyword */}
@@ -105,12 +178,12 @@ const Filter = () => {
           options={reservationKeywordTypeOptions}
         />
       </Grid>
-      <Grid size={5}>
-        <TextField fullWidth />
+      <Grid size={6}>
+        <TextField fullWidth placeholder="키워드를 입력해 주세요" />
       </Grid>
-      <Grid size="grow" display="flex" justifyContent="end" columnGap={1}>
-        <Button variant="outlined">Reset</Button>
-        <Button variant="contained">Search</Button>
+      <Grid size="grow" display="flex" justifyContent="end" px={1} columnGap={1}>
+        <Button variant="outlined">검색 초기화</Button>
+        <Button variant="contained">검색</Button>
       </Grid>
     </Grid>
   );
