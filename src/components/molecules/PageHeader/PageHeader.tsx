@@ -10,7 +10,7 @@ const PageHeader = ({ className }: Props) => {
     <Grid className={className}>
       {/* <Grid size={12} className="Title" p={1} width="100%" position="relative" mr={4}></Grid> */}
       <Typography width="100%" className="Title" p={1} position="relative">
-        Title
+        병원관리
       </Typography>
       <Grid className="triangle" />
     </Grid>
