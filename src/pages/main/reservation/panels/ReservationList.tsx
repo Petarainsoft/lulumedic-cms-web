@@ -3,10 +3,8 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { dayjs } from 'utils/dateTime';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-import { Link } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Typography from 'components/atoms/Typography';
-import Button from '@mui/material/Button';
 
 // SERVICES
 import { fetchReservations } from 'services/ReservationService';

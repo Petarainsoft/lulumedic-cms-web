@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { dayjs } from 'utils/dateTime';
-import { Link, useSearchParams, useParams, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import MonthlyCalendar from 'components/organisms/Calendar/MonthlyCalendar';
 import WeeklyCalendar from 'components/organisms/Calendar/WeeklyCalendar';
-import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TabPanel from '@mui/lab/TabPanel';
 import TabList from '@mui/lab/TabList';
@@ -12,20 +11,15 @@ import TabContext from '@mui/lab/TabContext';
 
 import Grid from '@mui/material/Grid2';
 import CalenDarFilter from './CalendarFilter';
-import { MAIN_PATH } from 'routes';
-import Typography from 'components/atoms/Typography';
 import RegisterPanel from 'pages/main/DoctorRegister/panels/RegisterFormPanel';
 
-const ScheduleCalendar = ({ className }: { className?: string }) => {
+const ScheduleCalendar = () => {
   const [searchParams] = useSearchParams();
-  const location = useLocation();
-  const params = useParams();
-  const doctorId = params?.id;
   const view = searchParams.get('view');
 
   const [tabVal, setTabVal] = useState(0);
 
-  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChangeTab = (_event: React.SyntheticEvent, newValue: number) => {
     console.log({ newValue });
     setTabVal(newValue);
   };

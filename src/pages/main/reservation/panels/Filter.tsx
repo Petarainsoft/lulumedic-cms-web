@@ -5,12 +5,13 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import {
-  ReservationStatus,
+  ReservationStatusLabel,
   MedicalStatus,
   reservationPeriodOptions,
   reservationKeywordTypeOptions,
   ReservationPeriod,
   ReservationKeywordType,
+  STATUS_TYPE,
 } from 'core/enum';
 import Select from 'components/atoms/Select';
 import TextField from 'components/atoms/Input';
@@ -19,8 +20,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import useValuesRef from 'hooks/useValuesRef';
 import { Any } from 'constants/types';
 
-const reservationStatus = Object.keys(ReservationStatus).map(key => ({
-  label: ReservationStatus[key as keyof typeof ReservationStatus],
+const reservationStatus = Object.keys(ReservationStatusLabel).map(key => ({
+  label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
   value: key,
 }));
 
@@ -30,7 +31,7 @@ const medicalStatusOptions = Object.keys(MedicalStatus).map(key => ({
 }));
 
 type SearchFilter = {
-  status?: ReservationStatus[];
+  status?: STATUS_TYPE[];
   medicalStatus?: MedicalStatus[];
   department?: string;
   period?: ReservationPeriod;
@@ -42,23 +43,19 @@ type SearchFilter = {
 const Filter = () => {
   const [searchRefs, setSearchRefs] = useValuesRef<SearchFilter>({});
 
-  const handleChangeFilter = (fieldName: keyof SearchFilter, value: Any) => {
-    if (fieldName == 'status') {
-      // TODO
-      const clone = [...((searchRefs.current.status as Any) || [])];
-      clone.push(value);
-      setSearchRefs('status', clone as Any);
-    }
+  // const handleChangeFilter = (fieldName: keyof SearchFilter, value: Any) => {
+  //   if (fieldName == 'status') {
+  //     // TODO
+  //     const clone = [...((searchRefs.current.status as Any) || [])];
+  //     clone.push(value);
+  //     setSearchRefs('status', clone as Any);
+  //   }
 
-    if (fieldName == 'medicalStatus') {
-    }
-  };
+  //   if (fieldName == 'medicalStatus') {
+  //   }
+  // };
 
-  const handleCheckbox = (
-    fieldName: keyof SearchFilter,
-    checked: boolean,
-    value: ReservationStatus | MedicalStatus
-  ) => {
+  const handleCheckbox = (fieldName: keyof SearchFilter, checked: boolean, value: STATUS_TYPE | MedicalStatus) => {
     if (fieldName == 'status') {
       // TODO
 
@@ -107,7 +104,7 @@ const Filter = () => {
               control={
                 <Checkbox
                   onChange={e => {
-                    handleCheckbox('status', e.target.checked, item.value as ReservationStatus);
+                    handleCheckbox('status', e.target.checked, item.value as STATUS_TYPE);
                     console.log(searchRefs.current);
                   }}
                 />

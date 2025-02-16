@@ -3,7 +3,7 @@ import env from 'constants/env';
 import { Any } from 'constants/types';
 
 // TODO
-import { loginApi } from 'services/AuthService';
+// import { loginApi } from 'services/AuthService';
 export type AppResponse<T> = {
   data: T;
   meta: {
@@ -27,33 +27,33 @@ axiosInstance.interceptors.response.use(
   async error => {
     return Promise.reject(error);
 
-    const originalRequest = error.config;
+    // const originalRequest = error.config;
 
-    if (error.status === 401) {
-      // TODO refresh token
-      const loginInfo = localStorage.getItem('loginInfo');
-      if (loginInfo) {
-        const { username, password } = JSON.parse(loginInfo);
-        const res = await loginApi({ username, password });
+    // if (error.status === 401) {
+    //   // TODO refresh token
+    //   const loginInfo = localStorage.getItem('loginInfo');
+    //   if (loginInfo) {
+    //     const { username, password } = JSON.parse(loginInfo);
+    //     const res = await loginApi({ username, password });
 
-        if (res?.data) {
-          localStorage.setItem('accessToken', res.data.accessToken);
-          localStorage.setItem('refreshToken', res.data.refreshToken);
-          localStorage.setItem('name', res.data.user.username);
-          localStorage.setItem('loginInfo', JSON.stringify({ username, password }));
+    //     if (res?.data) {
+    //       localStorage.setItem('accessToken', res.data.accessToken);
+    //       localStorage.setItem('refreshToken', res.data.refreshToken);
+    //       localStorage.setItem('name', res.data.user.username);
+    //       localStorage.setItem('loginInfo', JSON.stringify({ username, password }));
 
-          axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${res.data.accessToken}`;
+    //       axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${res.data.accessToken}`;
 
-          return await axiosInstance(originalRequest);
-        } else {
-          window.location.href = '/auth/login';
-        }
-      } else {
-        window.location.href = '/auth/login';
-      }
-    }
+    //       return await axiosInstance(originalRequest);
+    //     } else {
+    //       window.location.href = '/auth/login';
+    //     }
+    //   } else {
+    //     window.location.href = '/auth/login';
+    //   }
+    // }
 
-    return Promise.reject(error);
+    // return Promise.reject(error);
   }
 );
 

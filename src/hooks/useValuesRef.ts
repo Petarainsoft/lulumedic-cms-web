@@ -1,4 +1,4 @@
-import { RefObject, MutableRefObject, useCallback, useRef } from 'react';
+import { RefObject, useCallback, useRef } from 'react';
 
 type Nullable<Value> = Value | null | undefined;
 

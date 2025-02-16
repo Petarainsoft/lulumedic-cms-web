@@ -50,12 +50,19 @@ export const exposureOptions = Object.keys(Exposure).map(key => ({
   value: key,
 }));
 
-export enum ReservationStatus {
-  All = '전체',
-  Waiting = '예약대기',
-  Confirm = '예약확정',
-  Cancelled = '예약취소',
+export enum STATUS_TYPE {
+  PENDING = 'PENDING',
+  APPROVAL = 'APPROVAL',
+  CONFIRMED = 'CONFIRMED',
+  CANCELLED = 'CANCELLED',
 }
+
+export const ReservationStatusLabel = {
+  All: '전체',
+  [STATUS_TYPE.PENDING]: '예약대기',
+  [STATUS_TYPE.CONFIRMED]: '예약확정',
+  [STATUS_TYPE.CANCELLED]: '예약취소',
+};
 
 export enum MedicalStatus {
   All = '전체',

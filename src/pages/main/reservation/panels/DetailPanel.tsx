@@ -5,11 +5,10 @@ import { dayjs } from 'utils/dateTime';
 import Grid from '@mui/material/Grid2';
 import Information, { InfoLabel } from '../components/Information';
 import Button from '@mui/material/Button';
-import Dialog from 'components/molecules/Dialog';
 import ConfirmDialog from 'components/molecules/Dialog';
 
 // CONSTANTS
-import { ReservationStatus } from 'core/enum';
+import { ReservationStatusLabel } from 'core/enum';
 import { ID, ObjMap } from 'constants/types';
 import { MAIN_PATH } from 'routes';
 
@@ -24,12 +23,12 @@ import TimeSlot from 'models/appointment/TimeSlot';
 import useOpen from 'hooks/useOpen';
 import { useRef } from 'react';
 
-const reservationStatus = Object.keys(ReservationStatus)
+const reservationStatus = Object.keys(ReservationStatusLabel)
   .map(key => ({
-    label: ReservationStatus[key as keyof typeof ReservationStatus],
+    label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
     value: key,
   }))
-  .filter(item => item.label !== ReservationStatus.All);
+  .filter(item => item.label !== ReservationStatusLabel.All);
 
 type Props = {
   detail?: Appointment;
