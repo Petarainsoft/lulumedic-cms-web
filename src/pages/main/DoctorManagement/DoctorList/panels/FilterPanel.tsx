@@ -23,7 +23,7 @@ const FilterPanel = () => {
   const [departmentsSelected, setDepartmentsSelected] = useState<ID[]>([]);
 
   return (
-    <Grid container alignItems="center" rowGap={5} borderTop={1} borderBottom={1} py={2} borderColor="divider">
+    <Grid container alignItems="center" rowGap={3} borderTop={1} borderBottom={1} py={2} borderColor="divider">
       {/* Department */}
       <Grid size={2}>
         <Typography variant="bodyMedium">진료과</Typography>

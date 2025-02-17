@@ -1,4 +1,6 @@
+const env = import.meta.env;
+
 export default {
-  ENV: process.env.NODE_ENV as unknown as 'production' | 'development',
-  TCS_URI: process.env.VITE_APP_API_URI,
+  ENV: env.NODE_ENV as unknown as 'production' | 'development',
+  API_URI: env.VITE_APP_API_URI,
 };

@@ -15,13 +15,13 @@ type Props = Grid2Props;
 
 const sidebars = [
   {
-    label: 'Reservations',
+    label: '예약 리스트',
     path: MAIN_PATH.RESERVATIONS,
     icon: BookOnlineIcon,
     disabled: false,
   },
   {
-    label: 'Doctors schedule',
+    label: '의사 관리',
     path: MAIN_PATH.DOCTOR_MANAGEMENT,
     icon: LocalHospitalIcon,
     disabled: true,

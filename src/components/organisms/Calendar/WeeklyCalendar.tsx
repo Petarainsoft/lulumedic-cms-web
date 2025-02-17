@@ -9,6 +9,7 @@ import WeeklyTime from './components/WeeklyTime';
 // HOOKS
 import useCalendar from './hooks/useCalendar';
 import TimeNameColumn from './components/TimeNameColumn';
+import { ScheduleData } from './MonthlyCalendar';
 
 const today = dayjs();
 
@@ -59,20 +60,37 @@ const WeekDayList = ({ weekdays, daysInWeekDay }: { weekdays: string[]; daysInWe
 type Props = {
   currentDate: Dayjs;
   startOfWeek?: string;
+  scheduleMapByDate?: Record<string, ScheduleData[]>;
 };
-const WeeklyCalendar = ({ currentDate }: Props) => {
+const WeeklyCalendar = ({ currentDate, scheduleMapByDate }: Props) => {
   const { weekdays, daysMapToWeeks } = useCalendar(currentDate);
 
-  console.log({ daysMapToWeeks });
-
+  // console.log({ daysMapToWeeks, scheduleMapByDate });
   return (
-    <Grid container>
-      <Grid size="auto" mt={7.7} borderRight={1} borderColor="divider">
+    <Grid container height="100%">
+      <Grid size="auto" borderRight={1} borderColor="divider">
+        <Grid height={62} />
         <TimeNameColumn />
       </Grid>
-      <Grid size="grow">
+      <Grid size="grow" display="flex" flexDirection="column" height="100%">
         <WeekDayList weekdays={weekdays} daysInWeekDay={daysMapToWeeks[0]} />
-        <WeeklyTime />
+        {/* Render all weeks */}
+
+        <Grid className="WeeklyTimeWrap" display="flex" flexDirection="column" overflow="auto">
+          {daysMapToWeeks.map((days, index) => (
+            <WeeklyTime daysInWeekDay={days} scheduleMapByDate={scheduleMapByDate} />
+
+            // <WeekDayList
+            //   key={index}
+            //   weekdays={weekdays}
+            //   daysInWeekDay={days}
+            // />
+          ))}
+        </Grid>
+
+        {/* <Grid className="WeeklyTimeWrap" display="flex" flexDirection="column" overflow="auto">
+          <WeeklyTime weekdays={weekdays} />
+        </Grid> */}
       </Grid>
     </Grid>
   );

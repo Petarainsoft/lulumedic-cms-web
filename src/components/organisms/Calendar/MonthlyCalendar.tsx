@@ -10,8 +10,8 @@ import Typography from 'components/atoms/Typography';
 import useCalendar from './hooks/useCalendar';
 
 export type ScheduleData = {
-  startTime: string;
-  endTime: string;
+  startTime: Dayjs;
+  endTime: Dayjs;
   description?: string;
 };
 const today = dayjs();
@@ -23,17 +23,17 @@ const WorkingList = ({ data }: { data?: ScheduleData[] }) => {
 
   return (
     <>
-      {dataToShow?.map(item => (
+      {dataToShow?.map((item, index) => (
         <Stack direction="row" columnGap={1} px={1}>
-          <Typography color="textDisabled" key={item.startTime} variant="bodySmall" align="left">
-            {item.startTime} ~ {item.endTime}
+          <Typography color="textDisabled" key={index} variant="bodySmall" align="left">
+            {item.startTime.format('HH:mm')} ~ {item.endTime.format('HH:mm')}
           </Typography>
           <Typography variant="bodySmall">{item.description}</Typography>
         </Stack>
       ))}
 
       {count && (
-        <Typography textAlign="right" variant="bodySmall" color="primary" sx={{ cursor: 'pointer' }}>
+        <Typography mt={2} textAlign="right" variant="bodySmall" color="primary" sx={{ cursor: 'pointer' }}>
           +{count} 더보기
         </Typography>
       )}
@@ -138,7 +138,7 @@ const MonthlyCalendar = ({ currentDate, scheduleMapByDate }: Props) => {
   console.log({ daysMapFiltered, daysMapToWeeks, month });
 
   return (
-    <Grid height="100%">
+    <Grid height="100%" display="flex" flexDirection="column">
       <WeekDayList weekdays={weekdays} />
 
       <Grid overflow="auto">

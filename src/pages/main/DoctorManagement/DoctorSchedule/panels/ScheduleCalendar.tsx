@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { dayjs } from 'utils/dateTime';
 import { useSearchParams } from 'react-router-dom';
+import styled from '@emotion/styled';
 
 import MonthlyCalendar, { ScheduleData } from 'components/organisms/Calendar/MonthlyCalendar';
 import WeeklyCalendar from 'components/organisms/Calendar/WeeklyCalendar';
@@ -16,22 +17,23 @@ import DoctorSchedule from 'models/appointment/DoctorSchedule';
 
 type Props = {
   doctorSchedules: DoctorSchedule[];
+  className?: string;
 };
 
-const ScheduleCalendar = ({ doctorSchedules }: Props) => {
+const ScheduleCalendar = ({ doctorSchedules, className }: Props) => {
   const scheduleMapByDate = doctorSchedules.reduce(
     (acc, cur) => {
       const date = cur.date || '';
       acc[date] = acc[date] || [];
 
       const temp = {
-        startTime: dayjs(`${date} ${cur.startTime}`).format('HH:mm') || '',
-        endTime: dayjs(`${date} ${cur.endTime}`).format('HH:mm') || '',
+        startTime: dayjs(`${date} ${cur.startTime}`),
+        endTime: dayjs(`${date} ${cur.endTime}`),
         description: '진료',
       };
 
       // TEST
-      for (let i = 0; i <= 8; i++) {
+      for (let i = 0; i < 1; i++) {
         acc[date].push(temp);
       }
 
@@ -52,7 +54,7 @@ const ScheduleCalendar = ({ doctorSchedules }: Props) => {
   };
   return (
     <TabContext value={tabVal}>
-      <Grid overflow="auto" display="flex" flexDirection="column">
+      <Grid overflow="auto" display="flex" flexDirection="column" className={className}>
         <TabList onChange={handleChangeTab}>
           <Tab id="view" label="의사정보" />
           <Tab id="schedule" label="스케줄" />
@@ -63,14 +65,27 @@ const ScheduleCalendar = ({ doctorSchedules }: Props) => {
             <RegisterPanel />
           </TabPanel>
           <TabPanel value={1} sx={{ padding: 0 }}>
-            <Grid rowGap={2} container display="flex" direction="row" columnGap={2} height="100%" overflow="auto">
+            <Grid
+              rowGap={2}
+              container
+              display="flex"
+              flexWrap="nowrap"
+              direction="row"
+              columnGap={2}
+              height="100%"
+              overflow="auto"
+              flexDirection="column"
+            >
               <Grid size={12}>
                 <CalenDarFilter />
               </Grid>
 
               <Grid size={12} height="100%" overflow="auto">
                 {view == 'weekly' ? (
-                  <WeeklyCalendar currentDate={dayjs(searchParams.get('date') || undefined)} />
+                  <WeeklyCalendar
+                    currentDate={dayjs(searchParams.get('date') || undefined)}
+                    scheduleMapByDate={scheduleMapByDate}
+                  />
                 ) : (
                   <MonthlyCalendar
                     currentDate={dayjs(searchParams.get('date') || undefined)}
@@ -86,4 +101,10 @@ const ScheduleCalendar = ({ doctorSchedules }: Props) => {
   );
 };
 
-export default ScheduleCalendar;
+const ScheduleCalendarStyled = styled(ScheduleCalendar)`
+  .MuiTabPanel-root {
+    height: 100%;
+  }
+`;
+
+export default ScheduleCalendarStyled;

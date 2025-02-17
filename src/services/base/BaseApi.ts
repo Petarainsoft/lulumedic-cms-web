@@ -25,9 +25,16 @@ axiosInstance.interceptors.response.use(
   response => response.data,
   async error => {
     if (error.status === 401) {
-      window.location.href = '/auth/login';
+      console.log(error);
+      const { status } = error.response.data;
+      console.log({ status });
+      if (status == 'ERROR_USER_NOT_FOUND') {
+        return;
+      } else {
+        window.location.href = '/auth/login';
+        return error;
+      }
     }
-    return error;
 
     // const originalRequest = error.config;
 
