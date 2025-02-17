@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+// import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from '@emotion/react';
 
@@ -17,15 +17,15 @@ import App from './App';
 import GlobalNotistask from 'components/organisms/GlobalNotistask';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <ThemeProvider theme={appTheme}>
-      {/* Global reset css across browsers and devices  */}
-      <CssBaseline enableColorScheme />
-      <GlobalNotistask />
+  // <StrictMode>
+  <ThemeProvider theme={appTheme}>
+    {/* Global reset css across browsers and devices  */}
+    <CssBaseline enableColorScheme />
+    <GlobalNotistask />
 
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <App />
-      </LocalizationProvider>
-    </ThemeProvider>
-  </StrictMode>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <App />
+    </LocalizationProvider>
+  </ThemeProvider>
+  // </StrictMode>
 );

@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import Grid from '@mui/material/Grid2';
@@ -6,7 +6,7 @@ import Sidebar from 'components/molecules/Sidebar/Sidebar';
 import PageHeader from 'components/molecules/PageHeader/PageHeader';
 import MainLayout from 'components/templates/MainLayout';
 import Navbar from 'components/molecules/Navbar/NavBar';
-import AppBreadcrumbs from 'components/molecules/AppBreadcrumbs/AppBreadcrumbs';
+import AppBreadcrumbs, { BreadcrumbProvider } from 'components/molecules/AppBreadcrumbs/AppBreadcrumbs';
 
 // SERVICES
 import { fetchPatients } from 'services/PatientService';
@@ -25,9 +25,10 @@ import { fetchTimeSlots } from 'services/TimeSlotService';
 
 const MainPage = () => {
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [patientsMap, setPatientsMap] = useState<ObjMap<Patient>>({});
   const [doctorsMap, setDoctorsMap] = useState<ObjMap<Doctor>>({});
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [departmentsMap, setDepartmentsMap] = useState<ObjMap<Department>>({});
   const [departments, setDepartments] = useState<Department[]>([]);
   const [timeSlotMap, setTimeSlotMap] = useState<ObjMap<TimeSlot>>({});
@@ -48,6 +49,7 @@ const MainPage = () => {
         });
       }
       if (doctors) {
+        setDoctors(doctors);
         setDoctorsMap(() => {
           return doctors.reduce((acc, item) => {
             acc[item.id] = item;
@@ -78,7 +80,10 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    navigate('reservations');
+    console.log({ location });
+    if (location.pathname == '/') {
+      navigate('reservations');
+    }
   }, []);
 
   return (
@@ -88,17 +93,19 @@ const MainPage = () => {
       </Grid>
 
       <Grid size="grow" height="100%">
-        <MainLayout rowGap={2} navBar={<PageHeader />}>
-          <Navbar />
-          <AppBreadcrumbs />
-          {/* <Grid flex={1} overflow="auto">
+        <BreadcrumbProvider>
+          <MainLayout rowGap={2} navBar={<PageHeader />}>
+            <Navbar />
+            <AppBreadcrumbs />
+            {/* <Grid flex={1} overflow="auto">
             {temp.map(item => (
               <div>{item}</div>
             ))}
           </Grid> */}
 
-          <Outlet context={{ patientsMap, doctorsMap, departmentsMap, timeSlotMap, departments }} />
-        </MainLayout>
+            <Outlet context={{ patientsMap, doctorsMap, departmentsMap, timeSlotMap, departments, doctors }} />
+          </MainLayout>
+        </BreadcrumbProvider>
       </Grid>
     </Grid>
   );

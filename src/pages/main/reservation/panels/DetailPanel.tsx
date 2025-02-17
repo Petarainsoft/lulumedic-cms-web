@@ -34,7 +34,7 @@ const reservationStatus = Object.keys(ReservationStatusLabel)
     label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
     value: key,
   }))
-  .filter(item => item.label !== ReservationStatusLabel.All);
+  .filter(item => item.label !== ReservationStatusLabel.All && item.value !== STATUS_TYPE.COMPLETED);
 
 const DetailPanel = () => {
   const params = useParams();
@@ -117,6 +117,24 @@ const DetailPanel = () => {
     return '';
   };
 
+  const getDoctor = () => {
+    if (detail?.timeslotId) {
+      const doctorId = timeSlotMap?.[detail?.timeslotId]?.doctorId;
+      return doctorId ? doctorsMap[doctorId]?.name : '';
+    }
+
+    return '';
+  };
+
+  const getAppointmentDate = () => {
+    if (detail?.timeslotId) {
+      const workingDate = timeSlotMap?.[detail?.timeslotId]?.workingDate;
+      return workingDate ? dayjs(workingDate).format('YYYY-MM-DD HH:mm') : '';
+    }
+
+    return '';
+  };
+
   return (
     <Grid container rowGap={4} columnSpacing={2} height="100%" overflow="auto">
       {/* Patient */}
@@ -133,7 +151,7 @@ const DetailPanel = () => {
         {/* gender */}
         <InfoLabel label="성별" value="-" />
         {/* relationship  */}
-        <InfoLabel label="보호자 관계" value={detail?.patientId ? patientsMap[detail?.patientId]?.guardianName : ''} />
+        <InfoLabel label="보호자 관계" value={detail?.patientId ? patientsMap[detail?.patientId]?.relationship : ''} />
       </Information>
 
       {/* Guardian */}
@@ -141,14 +159,14 @@ const DetailPanel = () => {
         {/* Name */}
         <InfoLabel
           label="이름"
-          value={detail?.patientId ? getPatientInfo(patientsMap[detail?.patientId]?.guardianId, 'name') : ''}
+          value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'name') : ''}
         />
         {/* Birth date */}
         <InfoLabel label="생년월일" value="-" />
         {/* Contact  */}
         <InfoLabel
           label="연락처"
-          value={detail?.patientId ? getPatientInfo(patientsMap[detail?.patientId]?.guardianId, 'phone') : ''}
+          value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'phone') : ''}
         />
       </Information>
 
@@ -157,22 +175,25 @@ const DetailPanel = () => {
         {/* Reservation number */}
         <InfoLabel label="예약번호" value={detail?.id} />
         {/* Reception date */}
-        <InfoLabel label="접수일자" value="-" />
+        <InfoLabel label="접수일자" value={dayjs(detail?.createdAt).format('YYYY-MM-DD HH:mm')} />
 
         {/* Make an appointment */}
-        <InfoLabel label="진료예약" value={dayjs(detail?.createdAt).format('YYYY-MM-DD HH:mm')} />
+        <InfoLabel label="진료예약" value={getAppointmentDate()} />
         {/* Department */}
         <InfoLabel label="진료과" value={getDepartment(detail?.timeslotId || '')} />
 
         {/* Treatment status */}
         <InfoLabel label="진료상태" value="-" />
-        {/*  */}
-        <InfoLabel label="초재진 구분" value="-" />
+        {/* First time visit */}
+        <InfoLabel
+          label="초재진 구분"
+          value={detail?.patientId ? getPatientInfo(detail.patientId, 'firstTimeVisit') : ''}
+        />
 
-        {/*  */}
-        <InfoLabel label="담당의사" value="-" />
+        {/* Doctor name  */}
+        <InfoLabel label="담당의사" value={detail?.timeslotId ? getDoctor() : ''} />
         {/* Symptom description */}
-        <InfoLabel label="증상설명" value="-" />
+        <InfoLabel label="증상설명" value={detail?.symptoms} />
 
         {/* Reservation Status */}
         <InfoLabel

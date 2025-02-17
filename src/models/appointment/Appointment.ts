@@ -11,6 +11,8 @@ class Appointment extends DataModel<Appointment> {
 
   status?: STATUS_TYPE;
 
+  symptoms?: string;
+
   constructor(payload: Obj) {
     super();
 
@@ -25,6 +27,7 @@ class Appointment extends DataModel<Appointment> {
       patientId: this.patientId,
       cancelReason: this.cancelReason,
       status: this.status,
+      symptoms: this.symptoms,
     };
   }
 }

@@ -21,7 +21,7 @@ const AppPagination = ({
   className,
   page = 1,
   pageCount,
-  total = 0,
+  // total = 0,
   pageSize,
   rowsPerPageOptions = [5, 10, 20],
   onPageChange,
@@ -38,9 +38,9 @@ const AppPagination = ({
       mt={2}
     >
       <Grid size="auto" sx={{ display: 'flex', alignItems: 'center' }}>
-        <Typography variant="labelLarge" color="text.secondary">
+        {/* <Typography variant="labelLarge" color="text.secondary">
           Page Size
-        </Typography>
+        </Typography> */}
 
         <Select
           value={pageSize}
@@ -52,7 +52,7 @@ const AppPagination = ({
         />
       </Grid>
 
-      <Grid size="auto">
+      <Grid size="grow" offset={3.5}>
         <Pagination
           count={pageCount}
           color="primary"
@@ -62,11 +62,11 @@ const AppPagination = ({
         />
       </Grid>
 
-      <Grid size="auto" sx={{ display: 'flex', alignItems: 'center' }}>
+      {/* <Grid size="auto" sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography variant="labelLarge" color="text.secondary">
           Total {total}
         </Typography>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

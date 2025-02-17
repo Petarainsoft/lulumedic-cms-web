@@ -20,11 +20,11 @@ const options = [
 const Navbar = () => {
   return (
     <Stack columnGap={2} direction="row" alignItems="center">
-      <Image src={icon} width={80} height={20} />
+      <Image src={icon} width={120} height={40} />
 
       <Stack flex="1" direction="row" columnGap={1}>
-        <Select options={options} placeholder="예약내역" />
-        <Select options={options} placeholder="병원관리" />
+        <Select options={options} placeholder="예약내역" disabled />
+        <Select options={options} placeholder="병원관리" disabled />
       </Stack>
 
       <Stack textAlign="right">

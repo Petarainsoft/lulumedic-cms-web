@@ -20,6 +20,7 @@ import { ObjMap } from 'constants/types';
 import Doctor from 'models/accounts/Doctor';
 import TimeSlot from 'models/appointment/TimeSlot';
 import { ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
+import DataTable from 'components/organisms/DataTable';
 
 const GridToolbar = () => {
   return (
@@ -56,6 +57,9 @@ const ReservationList = () => {
       {
         field: 'firstTimeVisit',
         headerName: '초재진 구분',
+        renderCell: ({ row }) => {
+          return patientsMap[row?.patientId]?.firstTimeVisit;
+        },
         // width: 230,
       },
       {
@@ -149,12 +153,12 @@ const ReservationList = () => {
         <Filter onFilterChange={values => onSearch(values)} />
       </Grid>
 
-      <Grid size={12}>
-        <DataGrid
+      <Grid size={12} overflow="auto">
+        <DataTable
           columns={columns}
           rows={reservations}
           onRowClick={val => {
-            navigate(`../${MAIN_PATH.RESERVATION_DETAIL}/${val.id}`);
+            navigate(`${val.id}`);
           }}
           slots={{
             toolbar: GridToolbar,

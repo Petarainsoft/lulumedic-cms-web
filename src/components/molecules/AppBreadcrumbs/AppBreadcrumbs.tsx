@@ -1,55 +1,57 @@
-import { useLocation } from 'react-router-dom';
+import { useMatches, useLocation } from 'react-router-dom';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 // import { Link } from 'react-router-dom';
 
-import { MAIN_PATH } from 'routes';
+import { RouterHandle } from 'routes';
 import { Typography } from '@mui/material';
+import { useMemo, useContext, createContext, useState, PropsWithChildren } from 'react';
 
-const breadcrumbs = [
-  {
-    path: MAIN_PATH.MAIN,
-    label: '병원관리',
-  },
-  {
-    path: MAIN_PATH.DOCTOR_MANAGEMENT,
-    label: '의사 리스트',
-  },
-  {
-    path: MAIN_PATH.DOCTOR_CREATE,
-    label: '의사 등록',
-  },
-
-  // Reservation
-  {
-    path: MAIN_PATH.RESERVATIONS,
-    label: '약속 목록',
-  },
-  {
-    path: MAIN_PATH.RESERVATION_DETAIL,
-    label: '예약 상세',
-  },
-];
+const BreadcrumbsContext = createContext<{ subBreadcrumbs?: string; setSubBreadcrumbs: (data: string) => void }>({
+  subBreadcrumbs: '',
+  setSubBreadcrumbs: () => {},
+});
 
 const AppBreadcrumbs = () => {
+  const matches = useMatches();
   const location = useLocation();
+  const { subBreadcrumbs } = useBreadcrumbsContext();
 
-  console.log({ location });
+  const breadcrumbs = useMemo(() => {
+    const lastedMatch = matches[matches.length - 1];
+    const handleData = lastedMatch.handle as RouterHandle;
+    const data = handleData?.crumbs || [];
+
+    if (subBreadcrumbs?.length) {
+      data[data.length - 1] += ` (${subBreadcrumbs})`;
+    }
+
+    return data;
+  }, [location.pathname, subBreadcrumbs]);
 
   return (
     <MuiBreadcrumbs aria-label="breadcrumb">
-      {breadcrumbs.map(
-        (item, index) =>
-          location.pathname.includes(item.path) && (
-            // <Link to={item.path} key={index}>
-
-            // </Link>
-            <Typography variant="bodyMedium" color={breadcrumbs.length - 1 === index ? '' : 'text.disabled'}>
-              {item.label}
-            </Typography>
-          )
-      )}
+      {breadcrumbs.map((item, index) => (
+        <Typography variant="bodyMedium" color={breadcrumbs.length - 1 === index ? '' : 'text.disabled'}>
+          {item}
+        </Typography>
+      ))}
     </MuiBreadcrumbs>
   );
 };
+
+export const BreadcrumbProvider = ({ children }: PropsWithChildren) => {
+  const [subBreadcrumbs, setSubBreadcrumbs] = useState('');
+  const values = useMemo(
+    () => ({
+      subBreadcrumbs,
+      setSubBreadcrumbs: (val: string) => setSubBreadcrumbs(val),
+    }),
+    [subBreadcrumbs]
+  );
+
+  return <BreadcrumbsContext.Provider value={values}>{children}</BreadcrumbsContext.Provider>;
+};
+
+export const useBreadcrumbsContext = () => useContext(BreadcrumbsContext);
 
 export default AppBreadcrumbs;

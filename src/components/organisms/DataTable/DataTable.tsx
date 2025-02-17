@@ -69,6 +69,7 @@ export type DataTableProps = Pick<
   | 'checkboxSelection'
   | 'rowModesModel'
   | 'onRowSelectionModelChange'
+  | 'onRowClick'
 > & {
   density?: DataGridProps['density'];
   autoHeight?: DataGridProps['autoHeight'];

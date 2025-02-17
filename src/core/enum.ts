@@ -111,3 +111,20 @@ export const reasonTypeOptions = Object.keys(ReasonType).map(key => ({
   label: reasonTypeLabels[key as keyof typeof ReasonType],
   value: key,
 }));
+
+// PARENTS = 'PARENTS',
+// SPOUSE = 'SPOUSE',
+// CHILDREN = 'CHILDREN',
+export enum Relationship {
+  Self = 'Self',
+  Children = 'CHILDREN',
+  Parent = 'PARENTS',
+  Spouse = 'SPOUSE',
+}
+
+export const relationshipLabels = {
+  [Relationship.Self]: '본인',
+  [Relationship.Children]: '자녀',
+  [Relationship.Parent]: '부모',
+  [Relationship.Spouse]: '기타',
+};

@@ -9,7 +9,7 @@ import { MAIN_PATH } from 'routes';
 
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import Typography from 'components/atoms/Typography';
-// import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 
 type Props = Grid2Props;
 
@@ -20,13 +20,12 @@ const sidebars = [
     icon: BookOnlineIcon,
     disabled: false,
   },
-  // {
-  //   label: 'Doctors',
-  //   path: MAIN_PATH.DOCTOR_MANAGEMENT,
-  //   icon: LocalHospitalIcon,
-  //   disabled: true,
-
-  // },
+  {
+    label: 'Doctors schedule',
+    path: MAIN_PATH.DOCTOR_MANAGEMENT,
+    icon: LocalHospitalIcon,
+    disabled: true,
+  },
 ];
 
 const Sidebar = ({ className }: Props) => {

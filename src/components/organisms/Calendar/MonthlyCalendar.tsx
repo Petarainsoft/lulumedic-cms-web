@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Dayjs } from 'utils/dateTime';
+import { dayjs, Dayjs } from 'utils/dateTime';
 
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
@@ -8,6 +8,38 @@ import Typography from 'components/atoms/Typography';
 
 // HOOKS
 import useCalendar from './hooks/useCalendar';
+
+export type ScheduleData = {
+  startTime: string;
+  endTime: string;
+  description?: string;
+};
+const today = dayjs();
+
+const WorkingList = ({ data }: { data?: ScheduleData[] }) => {
+  const dataToShow = (data || []).slice(0, 4); // only show item
+  console.log({ dataToShow, data });
+  const count = (data?.length || 0) - dataToShow.length;
+
+  return (
+    <>
+      {dataToShow?.map(item => (
+        <Stack direction="row" columnGap={1} px={1}>
+          <Typography color="textDisabled" key={item.startTime} variant="bodySmall" align="left">
+            {item.startTime} ~ {item.endTime}
+          </Typography>
+          <Typography variant="bodySmall">{item.description}</Typography>
+        </Stack>
+      ))}
+
+      {count && (
+        <Typography textAlign="right" variant="bodySmall" color="primary" sx={{ cursor: 'pointer' }}>
+          +{count} 더보기
+        </Typography>
+      )}
+    </>
+  );
+};
 
 const WeekDayList = ({ weekdays }: { weekdays: string[] }) => {
   return (
@@ -30,9 +62,18 @@ const WeekDayList = ({ weekdays }: { weekdays: string[] }) => {
   );
 };
 
-const DaysInMonth = ({ days, currentDate }: { days: Dayjs[]; currentDate: Dayjs }) => {
+const DaysInMonth = ({
+  days,
+  currentDate,
+  workingData,
+}: {
+  days: Dayjs[];
+  currentDate: Dayjs;
+  workingData?: Record<string, ScheduleData[]>;
+}) => {
+  console.log({ days });
   return (
-    <Stack justifyContent="space-evenly" flexDirection="row" height={100}>
+    <Stack justifyContent="space-evenly" flexDirection="row" height={150}>
       {(days || []).map((day, index) => (
         <Stack
           width="100%"
@@ -42,16 +83,33 @@ const DaysInMonth = ({ days, currentDate }: { days: Dayjs[]; currentDate: Dayjs 
         >
           <Typography
             key={index}
-            variant="bodyMedium"
             align="left"
             flex="1"
-            p={2}
+            p={1}
             borderRight={1}
             borderBottom={1}
             borderColor="divider"
             color={day.format('ddd') == 'Sun' ? 'error' : ''}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}
           >
-            {day.format('D')}
+            <Typography
+              variant="bodyMedium"
+              fontWeight="bold"
+              p={0.5}
+              borderRadius="100%"
+              textAlign="center"
+              sx={{
+                bgcolor: today.isSame(day, 'date') ? '#12BD7E' : '',
+                color: today.isSame(day, 'date') ? 'white' : '',
+                width: 30,
+              }}
+            >
+              {day.format('D')}
+            </Typography>
+            {workingData?.[day.format('YYYY-MM-DD')] && <WorkingList data={workingData?.[day.format('YYYY-MM-DD')]} />}
           </Typography>
         </Stack>
       ))}
@@ -62,8 +120,9 @@ const DaysInMonth = ({ days, currentDate }: { days: Dayjs[]; currentDate: Dayjs 
 type Props = {
   currentDate: Dayjs;
   startOfWeek?: string;
+  scheduleMapByDate?: Record<string, ScheduleData[]>;
 };
-const MonthlyCalendar = ({ currentDate }: Props) => {
+const MonthlyCalendar = ({ currentDate, scheduleMapByDate }: Props) => {
   console.log({ currentDate });
   const month = currentDate.month();
   const year = currentDate.year();
@@ -84,7 +143,7 @@ const MonthlyCalendar = ({ currentDate }: Props) => {
 
       <Grid overflow="auto">
         {(daysMapFiltered || []).map(days => (
-          <DaysInMonth days={days} currentDate={currentDate} />
+          <DaysInMonth days={days} currentDate={currentDate} workingData={scheduleMapByDate} />
         ))}
       </Grid>
     </Grid>

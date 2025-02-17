@@ -1,4 +1,5 @@
 import { ID, Obj } from 'constants/types';
+import { Relationship, relationshipLabels } from 'core/enum';
 import DataModel from 'models/base/DataModel';
 
 class Patient extends DataModel<Patient> {
@@ -14,7 +15,7 @@ class Patient extends DataModel<Patient> {
 
   guardianId?: ID;
 
-  guardianName?: string;
+  guardianName?: Relationship;
 
   constructor(payload: Obj) {
     super();
@@ -34,6 +35,14 @@ class Patient extends DataModel<Patient> {
       guardianId: this.guardianId,
       guardianName: this.guardianName,
     };
+  }
+
+  get relationship() {
+    return this.guardianName ? relationshipLabels[this.guardianName] : relationshipLabels[Relationship.Self];
+  }
+
+  get firstTimeVisit() {
+    return '초진';
   }
 }
 

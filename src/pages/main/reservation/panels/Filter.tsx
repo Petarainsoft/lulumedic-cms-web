@@ -37,7 +37,7 @@ const medicalStatusOptions = Object.keys(MedicalStatus)
     label: MedicalStatus[key as keyof typeof MedicalStatus],
     value: key,
   }))
-  .filter(item => item.value !== 'All');
+  .filter(item => item.value !== 'All' && item.value !== 'Waiting');
 
 type Props = {
   onFilterChange: (filter: SearchFilter) => void;
@@ -91,12 +91,16 @@ const Filter = ({ onFilterChange }: Props) => {
         <Typography color="textDisabled">진료상태</Typography>
       </Grid>
       <Grid size={10}>
-        <CheckboxGroup options={medicalStatusOptions} onChange={val => handleChangeFilter('medicalStatus', val)} />
+        <CheckboxGroup
+          values={searchState?.medicalStatus}
+          options={medicalStatusOptions}
+          onChange={val => handleChangeFilter('medicalStatus', val)}
+        />
       </Grid>
 
       {/* Department */}
       <Grid size={1.5}>
-        <Typography color="textDisabled">진료상태</Typography>
+        <Typography color="textDisabled">진료과</Typography>
       </Grid>
       <Grid size={10} display="flex" columnGap={3} alignItems="center">
         <MultipleSelect
@@ -151,7 +155,7 @@ const Filter = ({ onFilterChange }: Props) => {
       <Grid size="auto">
         <Typography color="textDisabled">종료일</Typography>
       </Grid>
-      <Grid size={4}>
+      <Grid size={{ xs: 4, sm: 5 }}>
         <DatePicker format="YYYY-MM-DD" />
       </Grid>
 
@@ -168,7 +172,7 @@ const Filter = ({ onFilterChange }: Props) => {
           onChange={val => handleChangeFilter('keywordType', val)}
         />
       </Grid>
-      <Grid size={6}>
+      <Grid size={{ xs: 5, md: 6 }}>
         <TextField
           fullWidth
           placeholder="키워드를 입력해 주세요"
