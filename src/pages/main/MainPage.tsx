@@ -2,8 +2,8 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import Grid from '@mui/material/Grid2';
-import Sidebar from 'components/molecules/Sidebar/Sidebar';
-import PageHeader from 'components/molecules/PageHeader/PageHeader';
+// import Sidebar from 'components/molecules/Sidebar/Sidebar';
+// import PageHeader from 'components/molecules/PageHeader/PageHeader';
 import MainLayout from 'components/templates/MainLayout';
 import Navbar from 'components/molecules/Navbar/NavBar';
 import AppBreadcrumbs, { BreadcrumbProvider } from 'components/molecules/AppBreadcrumbs/AppBreadcrumbs';
@@ -80,21 +80,20 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    console.log({ location });
     if (location.pathname == '/') {
       navigate('reservations');
     }
-  }, []);
+  }, [location]);
 
   return (
     <Grid height="100vh" container>
-      <Grid size={2}>
+      {/* <Grid size={2}>
         <Sidebar />
-      </Grid>
+      </Grid> */}
 
       <Grid size="grow" height="100%">
         <BreadcrumbProvider>
-          <MainLayout rowGap={2} navBar={<PageHeader />}>
+          <MainLayout rowGap={2}>
             <Navbar />
             <AppBreadcrumbs />
             {/* <Grid flex={1} overflow="auto">

@@ -12,10 +12,11 @@ export enum MAIN_PATH {
 
 export type RouterHandle = {
   title: string;
+  value: string;
   crumbs: string[];
 };
 
-const mainRoutes: RouteObject[] = [
+export const mainRoutes: RouteObject[] = [
   // Reservation
   {
     path: MAIN_PATH.RESERVATIONS,
@@ -30,6 +31,7 @@ const mainRoutes: RouteObject[] = [
         lazy: () => import('pages/main/reservation/reservationList/ReservationListPage'),
         handle: {
           title: '예약 리스트',
+          value: MAIN_PATH.RESERVATIONS,
           crumbs: ['예약내역', '예약 리스트'],
         } as RouterHandle,
       },
@@ -56,6 +58,7 @@ const mainRoutes: RouteObject[] = [
         index: true,
         handle: {
           title: '의사 리스트',
+          value: MAIN_PATH.DOCTOR_MANAGEMENT,
           crumbs: ['병원관리', '의사 리스트'],
         } as RouterHandle,
         lazy: () => import('pages/main/DoctorManagement/DoctorList/DoctorListPage'),

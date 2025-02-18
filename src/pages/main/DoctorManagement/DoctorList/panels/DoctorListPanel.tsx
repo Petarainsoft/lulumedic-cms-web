@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 
 // CONSTANTS
 import { MAIN_PATH } from 'routes';
-import { doctorList } from 'core/constants';
+// import { doctorList } from 'core/constants';
 import Doctor from 'models/accounts/Doctor';
 import { ObjMap } from 'constants/types';
 import Department from 'models/appointment/Department';

@@ -77,7 +77,7 @@ const WeeklyCalendar = ({ currentDate, scheduleMapByDate }: Props) => {
         {/* Render all weeks */}
 
         <Grid className="WeeklyTimeWrap" display="flex" flexDirection="column" overflow="auto">
-          {daysMapToWeeks.map((days, index) => (
+          {daysMapToWeeks.map(days => (
             <WeeklyTime daysInWeekDay={days} scheduleMapByDate={scheduleMapByDate} />
 
             // <WeekDayList

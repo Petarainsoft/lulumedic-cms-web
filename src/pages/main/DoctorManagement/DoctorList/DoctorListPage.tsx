@@ -4,7 +4,7 @@ import DoctorListPanel from './panels/DoctorListPanel';
 
 const DoctorListPage = () => {
   return (
-    <Stack direction="column" rowGap={3}>
+    <Stack direction="column" rowGap={3} overflow="auto">
       <FilterPanel />
       <DoctorListPanel />
     </Stack>

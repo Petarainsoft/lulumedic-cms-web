@@ -134,7 +134,7 @@ const Filter = ({ onFilterChange }: Props) => {
       <Grid size={1.5}>
         <Typography color="textDisabled">기간</Typography>
       </Grid>
-      <Grid size={2}>
+      <Grid size={1.5}>
         <Select
           sx={{ width: 180 }}
           fullWidth
@@ -172,7 +172,7 @@ const Filter = ({ onFilterChange }: Props) => {
           onChange={val => handleChangeFilter('keywordType', val)}
         />
       </Grid>
-      <Grid size={{ xs: 5, md: 6 }}>
+      <Grid size={{ xs: 4, md: 5 }}>
         <TextField
           fullWidth
           placeholder="키워드를 입력해 주세요"

@@ -23,8 +23,6 @@ const Select = ({ options, placeholder, defaultValue, onChange, ...rest }: Selec
     {} as Record<string, SelectOption>
   );
 
-  console.log({ optionMapByValue }, rest.value);
-
   const handleChange = (event: SelectChangeEvent<unknown>) => {
     if (onChange) {
       onChange(event.target.value as ID);
@@ -36,9 +34,9 @@ const Select = ({ options, placeholder, defaultValue, onChange, ...rest }: Selec
       onChange={handleChange}
       displayEmpty
       renderValue={value => {
-        console.log(333, value);
         if (value || defaultValue) {
           const option = optionMapByValue?.[(value || defaultValue) as keyof typeof optionMapByValue];
+
           return option?.label;
         }
 

@@ -1,6 +1,6 @@
 import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid2';
-import Typography from '@mui/material/Typography';
+// import Typography from '@mui/material/Typography';
 import Select from 'components/atoms/Select';
 
 // ICONS

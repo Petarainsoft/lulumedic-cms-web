@@ -28,8 +28,8 @@ axiosInstance.interceptors.response.use(
       console.log(error);
       const { status } = error.response.data;
       console.log({ status });
-      if (status == 'ERROR_USER_NOT_FOUND') {
-        return;
+      if (status == 'ERROR_USER_NOT_FOUND' || status == 'ERROR_WRONG_PASSWORD') {
+        return error;
       } else {
         window.location.href = '/auth/login';
         return error;

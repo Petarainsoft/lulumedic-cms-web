@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { dayjs } from 'utils/dateTime';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 
 import Stack from '@mui/material/Stack';
 import Typography from 'components/atoms/Typography';
@@ -15,7 +15,7 @@ import Patient from 'models/accounts/Patient';
 import Appointment from 'models/appointment/Appointment';
 import Department from 'models/appointment/Department';
 
-import { MAIN_PATH } from 'routes';
+// import { MAIN_PATH } from 'routes';
 import { ObjMap } from 'constants/types';
 import Doctor from 'models/accounts/Doctor';
 import TimeSlot from 'models/appointment/TimeSlot';
@@ -153,7 +153,7 @@ const ReservationList = () => {
         <Filter onFilterChange={values => onSearch(values)} />
       </Grid>
 
-      <Grid size={12} overflow="auto">
+      <Grid size={12}>
         <DataTable
           columns={columns}
           rows={reservations}
