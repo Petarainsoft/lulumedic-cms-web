@@ -23,7 +23,7 @@ const AppPagination = ({
   pageCount,
   // total = 0,
   pageSize,
-  rowsPerPageOptions = [5, 10, 20],
+  rowsPerPageOptions = [30, 60, 90],
   onPageChange,
   onPageSizeChange,
 }: PaginationProps) => {

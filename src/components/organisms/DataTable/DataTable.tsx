@@ -16,7 +16,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Stack from '@mui/material/Stack';
 import { TimePickerProps } from '@mui/x-date-pickers';
 
-const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
+const PAGE_SIZE_OPTIONS = [30, 60, 90];
 
 export type TableGridActionsCellItem = Pick<GridActionsCellItemProps, 'label' | 'icon' | 'onClick' | 'key' | 'sx'> & {
   type: 'edit' | 'delete' | 'add' | 'add-above' | 'add-below';
@@ -74,7 +74,7 @@ export type DataTableProps = Pick<
   density?: DataGridProps['density'];
   autoHeight?: DataGridProps['autoHeight'];
   disablePagination?: boolean;
-  defaultPageSize?: 10 | 20 | 50 | 100;
+  defaultPageSize?: 30 | 60 | 90;
   showToolbar?: boolean;
   //   noRowsLabel?: NoRowsOverlayProps['label'];
   //   headerTitle?: ToolbarProps['headerTitle'];
@@ -84,7 +84,7 @@ export type DataTableProps = Pick<
 };
 
 const DataTable = ({
-  defaultPageSize = 10,
+  defaultPageSize = 30,
   minHeight = 300,
   slots,
   slotProps,
@@ -92,7 +92,7 @@ const DataTable = ({
   ...rest
 }: DataTableProps) => {
   return (
-    <Stack height="100%" width="100%" direction="column" className="DataTable-Wrapper">
+    <Stack height="100%" width="100%" direction="column" className="DataTable-Wrapper" overflow="auto">
       <DataGrid
         initialState={{
           pagination: { paginationModel: { pageSize: hideFooterPagination ? -1 : defaultPageSize, page: 0 } },

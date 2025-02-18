@@ -92,9 +92,9 @@ const Navbar = () => {
 
       <Stack flex="1" direction="row" columnGap={1}>
         <Select defaultValue={parentRouter} options={mainPaths} onChange={onSelectPageChange} />
-        {childrenPaths.length && (
+        {childrenPaths.length ? (
           <Select options={childrenPaths} defaultValue={childrenRouter} onChange={onChildrenChange} />
-        )}
+        ) : null}
       </Stack>
 
       <Stack textAlign="right">

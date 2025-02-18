@@ -22,11 +22,11 @@ import TimeSlot from 'models/appointment/TimeSlot';
 import { ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
 import DataTable from 'components/organisms/DataTable';
 
-const GridToolbar = () => {
+const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
   return (
     <Stack alignItems="center" direction="row" my={1}>
-      <Typography flex="1" color="primary" variant="titleLarge">
-        리스트 0
+      <Typography flex="1" color="primary" variant="titleLarge" fontWeight="bold">
+        리스트 {totalRecord}
       </Typography>
     </Stack>
   );
@@ -148,12 +148,12 @@ const ReservationList = () => {
   };
 
   return (
-    <Grid container height="100%" overflow="auto">
+    <Grid container height="100%" overflow="auto" flexDirection="column" flexWrap="nowrap">
       <Grid size={12}>
         <Filter onFilterChange={values => onSearch(values)} />
       </Grid>
 
-      <Grid size={12}>
+      <Grid size={12} height="100%" overflow="auto">
         <DataTable
           columns={columns}
           rows={reservations}
@@ -161,7 +161,7 @@ const ReservationList = () => {
             navigate(`${val.id}`);
           }}
           slots={{
-            toolbar: GridToolbar,
+            toolbar: () => <GridToolbar totalRecord={reservations.length} />,
             noRowsOverlay: () => (
               <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 예약 내역이 없습니다.
