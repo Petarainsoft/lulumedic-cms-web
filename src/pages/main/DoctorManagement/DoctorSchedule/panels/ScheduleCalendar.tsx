@@ -14,6 +14,8 @@ import Grid from '@mui/material/Grid2';
 import CalenDarFilter from './CalendarFilter';
 import RegisterPanel from 'pages/main/DoctorManagement/DoctorRegister/panels/RegisterFormPanel';
 import DoctorSchedule from 'models/appointment/DoctorSchedule';
+import { Button } from '@mui/material';
+import ScheduleCalendarProvider from '../contexts/ScheduleCalendarContext';
 
 type Props = {
   doctorSchedules: DoctorSchedule[];
@@ -29,14 +31,14 @@ const ScheduleCalendar = ({ doctorSchedules, className }: Props) => {
       const temp = {
         startTime: dayjs(`${date} ${cur.startTime}`),
         endTime: dayjs(`${date} ${cur.endTime}`),
-        description: '진료',
+        description: cur.workingType,
       };
 
       // TEST
-      for (let i = 0; i < 1; i++) {
-        acc[date].push(temp);
-      }
-
+      // for (let i = 0; i < 1; i++) {
+      //   acc[date].push(temp);
+      // }
+      acc[date].push(temp);
       return acc;
     },
     {} as Record<string, ScheduleData[]>
@@ -54,7 +56,7 @@ const ScheduleCalendar = ({ doctorSchedules, className }: Props) => {
   };
   return (
     <TabContext value={tabVal}>
-      <Grid overflow="auto" display="flex" flexDirection="column" className={className}>
+      <Grid overflow="auto" display="flex" flexDirection="column" className={className} rowGap={2}>
         <TabList onChange={handleChangeTab}>
           <Tab id="view" label="의사정보" />
           <Tab id="schedule" label="스케줄" />
@@ -76,26 +78,34 @@ const ScheduleCalendar = ({ doctorSchedules, className }: Props) => {
               overflow="auto"
               flexDirection="column"
             >
-              <Grid size={12}>
-                <CalenDarFilter />
-              </Grid>
+              <ScheduleCalendarProvider>
+                <Grid size={12}>
+                  <CalenDarFilter />
+                </Grid>
 
-              <Grid size={12} height="100%" overflow="auto">
-                {view == 'weekly' ? (
-                  <WeeklyCalendar
-                    currentDate={dayjs(searchParams.get('date') || undefined)}
-                    scheduleMapByDate={scheduleMapByDate}
-                  />
-                ) : (
-                  <MonthlyCalendar
-                    currentDate={dayjs(searchParams.get('date') || undefined)}
-                    scheduleMapByDate={scheduleMapByDate}
-                  />
-                )}
-              </Grid>
+                <Grid size={12} height="100%" overflow="auto">
+                  {view == 'weekly' ? (
+                    <WeeklyCalendar
+                      currentDate={dayjs(searchParams.get('date') || undefined)}
+                      scheduleMapByDate={scheduleMapByDate}
+                    />
+                  ) : (
+                    <MonthlyCalendar
+                      currentDate={dayjs(searchParams.get('date') || undefined)}
+                      scheduleMapByDate={scheduleMapByDate}
+                    />
+                  )}
+                </Grid>
+              </ScheduleCalendarProvider>
             </Grid>
           </TabPanel>
         </Grid>
+
+        {tabVal ? (
+          <Grid textAlign="center">
+            <Button variant="outlined">리스트 이동</Button>
+          </Grid>
+        ) : null}
       </Grid>
     </TabContext>
   );

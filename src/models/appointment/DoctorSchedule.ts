@@ -1,4 +1,5 @@
 import { ID, Obj } from 'constants/types';
+import { WORKING_TYPE } from 'core/enum';
 import DataModel from 'models/base/DataModel';
 
 class DoctorSchedule extends DataModel<DoctorSchedule> {
@@ -6,7 +7,7 @@ class DoctorSchedule extends DataModel<DoctorSchedule> {
   endTime?: string;
   date?: string;
   doctorId?: ID;
-
+  workingType?: WORKING_TYPE;
   constructor(payload: Obj) {
     super();
 
@@ -21,6 +22,7 @@ class DoctorSchedule extends DataModel<DoctorSchedule> {
       endTime: this.endTime,
       date: this.date,
       doctorId: this.doctorId,
+      workingType: this.workingType,
     };
   }
 }

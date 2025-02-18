@@ -1,7 +1,7 @@
 // import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from '@emotion/react';
-
+import { dayjs } from 'utils/dateTime';
 import appTheme from './theme/appTheme';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -16,6 +16,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import App from './App';
 import GlobalNotistask from 'components/organisms/GlobalNotistask';
 
+dayjs.locale('ko');
+
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>
   <ThemeProvider theme={appTheme}>
@@ -23,7 +25,7 @@ createRoot(document.getElementById('root')!).render(
     <CssBaseline enableColorScheme />
     <GlobalNotistask />
 
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
       <App />
     </LocalizationProvider>
   </ThemeProvider>

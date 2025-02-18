@@ -4,13 +4,9 @@ import DataModel from 'models/base/DataModel';
 
 class Appointment extends DataModel<Appointment> {
   timeslotId?: ID;
-
   patientId?: ID;
-
   cancelReason?: string;
-
   status?: STATUS_TYPE;
-
   symptoms?: string;
 
   constructor(payload: Obj) {

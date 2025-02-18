@@ -1,20 +1,21 @@
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { dayjs, Dayjs } from 'utils/dateTime';
-
 // COMPONENTS
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import Typography from 'components/atoms/Typography';
 import WeeklyTime from './components/WeeklyTime';
+import { ScheduleData } from './MonthlyCalendar';
 
 // HOOKS
 import useCalendar from './hooks/useCalendar';
-import TimeNameColumn from './components/TimeNameColumn';
-import { ScheduleData } from './MonthlyCalendar';
+import { useScheduleCalendarContext } from 'pages/main/DoctorManagement/DoctorSchedule/contexts/ScheduleCalendarContext';
 
 const today = dayjs();
 
 const WeekDayList = ({ weekdays, daysInWeekDay }: { weekdays: string[]; daysInWeekDay: Dayjs[] }) => {
-  const dayInWeekDayMap = daysInWeekDay.reduce(
+  const dayInWeekDayMap = (daysInWeekDay || []).reduce(
     (acc, date) => {
       const dayName = date.format('ddd');
       acc[dayName] = date;
@@ -25,7 +26,7 @@ const WeekDayList = ({ weekdays, daysInWeekDay }: { weekdays: string[]; daysInWe
   );
 
   return (
-    <Stack direction="row" justifyContent="space-evenly">
+    <Stack direction="row" justifyContent="space-evenly" ml={3}>
       {weekdays.map((item, index) => (
         <>
           <Typography
@@ -36,19 +37,26 @@ const WeekDayList = ({ weekdays, daysInWeekDay }: { weekdays: string[]; daysInWe
             borderRight={1}
             borderColor="divider"
             bgcolor={'background.default'}
-            color={item == 'Sun' ? 'error' : ''}
+            color={item == '일' ? 'error' : ''}
             display="flex"
             justifyContent="center"
+            alignItems="center"
             flexDirection="column"
             rowGap={1}
           >
-            <Typography>{item}</Typography>
+            <Typography fontWeight="bold">{item}</Typography>
             <Typography
               sx={{
-                bgcolor: today.isSame(dayInWeekDayMap[item]) ? '#12BD7E' : '',
+                borderRadius: '100%',
+                width: 35,
+                py: 0.5,
+                px: 1,
+                textAlign: 'center',
+                bgcolor: today.isSame(dayInWeekDayMap[item], 'date') ? '#12BD7E' : '',
+                color: today.isSame(dayInWeekDayMap[item], 'date') ? 'white' : '',
               }}
             >
-              {dayInWeekDayMap[item].format('D')}
+              {dayInWeekDayMap[item]?.format('D')}
             </Typography>
           </Typography>
         </>
@@ -62,35 +70,30 @@ type Props = {
   startOfWeek?: string;
   scheduleMapByDate?: Record<string, ScheduleData[]>;
 };
+
 const WeeklyCalendar = ({ currentDate, scheduleMapByDate }: Props) => {
+  const [searchParams] = useSearchParams();
+  const { setWeeklyRange } = useScheduleCalendarContext();
+  const week = searchParams.get('week');
   const { weekdays, daysMapToWeeks } = useCalendar(currentDate);
 
-  // console.log({ daysMapToWeeks, scheduleMapByDate });
+  useEffect(() => {
+    if (week) {
+      setWeeklyRange({
+        startTime: daysMapToWeeks[+week - 1][0],
+        endTime: daysMapToWeeks[+week - 1][daysMapToWeeks[+week - 1].length - 1],
+      });
+    }
+  }, [week, daysMapToWeeks]);
+
   return (
     <Grid container height="100%">
-      <Grid size="auto" borderRight={1} borderColor="divider">
-        <Grid height={62} />
-        <TimeNameColumn />
-      </Grid>
       <Grid size="grow" display="flex" flexDirection="column" height="100%">
-        <WeekDayList weekdays={weekdays} daysInWeekDay={daysMapToWeeks[0]} />
-        {/* Render all weeks */}
+        {week && <WeekDayList weekdays={weekdays} daysInWeekDay={daysMapToWeeks[+week - 1]} />}
 
         <Grid className="WeeklyTimeWrap" display="flex" flexDirection="column" overflow="auto">
-          {daysMapToWeeks.map(days => (
-            <WeeklyTime daysInWeekDay={days} scheduleMapByDate={scheduleMapByDate} />
-
-            // <WeekDayList
-            //   key={index}
-            //   weekdays={weekdays}
-            //   daysInWeekDay={days}
-            // />
-          ))}
+          {week && <WeeklyTime scheduleMapByDate={scheduleMapByDate} daysInWeekDay={daysMapToWeeks[+week - 1]} />}
         </Grid>
-
-        {/* <Grid className="WeeklyTimeWrap" display="flex" flexDirection="column" overflow="auto">
-          <WeeklyTime weekdays={weekdays} />
-        </Grid> */}
       </Grid>
     </Grid>
   );

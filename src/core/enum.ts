@@ -128,3 +128,27 @@ export const relationshipLabels = {
   [Relationship.Parent]: '부모',
   [Relationship.Spouse]: '기타',
 };
+
+export enum WORKING_TYPE {
+  MEDICAL = 'MEDICAL_CONSULTATION',
+  SPECIAL = 'SPECIAL_CONSULTATION',
+  SURGERY = 'SURGERY',
+  CONSULTATION = 'CONSULTATION',
+  NO_CONSULTATION = 'NO_CONSULTATION',
+}
+
+export const WorkingTypeLabels = {
+  [WORKING_TYPE.MEDICAL]: '진료',
+  [WORKING_TYPE.SPECIAL]: '예외 진료',
+  [WORKING_TYPE.SURGERY]: '수술',
+  [WORKING_TYPE.CONSULTATION]: '진료',
+  [WORKING_TYPE.NO_CONSULTATION]: '휴진',
+};
+
+export const WORKING_TYPE_COLOR = {
+  [WORKING_TYPE.MEDICAL]: '#90B9F9',
+  [WORKING_TYPE.SPECIAL]: '#448DFF',
+  [WORKING_TYPE.SURGERY]: '#12BD7E',
+  [WORKING_TYPE.NO_CONSULTATION]: '#FF7676',
+  [WORKING_TYPE.CONSULTATION]: '#90B9F9',
+};

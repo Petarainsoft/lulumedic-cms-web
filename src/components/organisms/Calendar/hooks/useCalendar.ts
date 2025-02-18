@@ -9,7 +9,7 @@ export const EndOfWeek = weekdays[weekdays.length - 1]; // Sat
 
 const getColorDay = (date: Dayjs) => {
   switch (date.format('ddd')) {
-    case 'Sun':
+    case '일':
       return 'error';
     default:
       return '';
@@ -102,7 +102,7 @@ const useCalendar = (currentDate: Dayjs) => {
     return temp;
   }, [calendarDays]);
 
-  console.log({ calendarDays, daysMapToWeeks });
+  console.log(105, { calendarDays, daysMapToWeeks });
 
   return {
     weeksInYear,

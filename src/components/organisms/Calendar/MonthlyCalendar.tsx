@@ -8,6 +8,7 @@ import Typography from 'components/atoms/Typography';
 
 // HOOKS
 import useCalendar from './hooks/useCalendar';
+import { WorkingTypeLabels } from 'core/enum';
 
 export type ScheduleData = {
   startTime: Dayjs;
@@ -18,7 +19,6 @@ const today = dayjs();
 
 const WorkingList = ({ data }: { data?: ScheduleData[] }) => {
   const dataToShow = (data || []).slice(0, 4); // only show item
-  console.log({ dataToShow, data });
   const count = (data?.length || 0) - dataToShow.length;
 
   return (
@@ -28,15 +28,17 @@ const WorkingList = ({ data }: { data?: ScheduleData[] }) => {
           <Typography color="textDisabled" key={index} variant="bodySmall" align="left">
             {item.startTime.format('HH:mm')} ~ {item.endTime.format('HH:mm')}
           </Typography>
-          <Typography variant="bodySmall">{item.description}</Typography>
+          <Typography variant="bodySmall">
+            {WorkingTypeLabels[item.description as keyof typeof WorkingTypeLabels]}
+          </Typography>
         </Stack>
       ))}
 
-      {count && (
+      {count ? (
         <Typography mt={2} textAlign="right" variant="bodySmall" color="primary" sx={{ cursor: 'pointer' }}>
           +{count} 더보기
         </Typography>
-      )}
+      ) : null}
     </>
   );
 };
@@ -51,9 +53,10 @@ const WeekDayList = ({ weekdays }: { weekdays: string[] }) => {
           flex="1"
           py={2}
           borderRight={1}
+          fontWeight="bold"
           borderColor="divider"
           bgcolor={'background.default'}
-          color={item == 'Sun' ? 'error' : ''}
+          color={item == '일' ? 'error' : ''}
         >
           {item}
         </Typography>
@@ -71,7 +74,6 @@ const DaysInMonth = ({
   currentDate: Dayjs;
   workingData?: Record<string, ScheduleData[]>;
 }) => {
-  console.log({ days });
   return (
     <Stack justifyContent="space-evenly" flexDirection="row" height={150}>
       {(days || []).map((day, index) => (
@@ -89,7 +91,7 @@ const DaysInMonth = ({
             borderRight={1}
             borderBottom={1}
             borderColor="divider"
-            color={day.format('ddd') == 'Sun' ? 'error' : ''}
+            color={day.format('ddd') == '일' ? 'error' : ''}
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -123,7 +125,6 @@ type Props = {
   scheduleMapByDate?: Record<string, ScheduleData[]>;
 };
 const MonthlyCalendar = ({ currentDate, scheduleMapByDate }: Props) => {
-  console.log({ currentDate });
   const month = currentDate.month();
   const year = currentDate.year();
 
@@ -134,8 +135,6 @@ const MonthlyCalendar = ({ currentDate, scheduleMapByDate }: Props) => {
       return days.some(day => day.month() == month && day.year() == year);
     });
   }, [month]);
-
-  console.log({ daysMapFiltered, daysMapToWeeks, month });
 
   return (
     <Grid height="100%" display="flex" flexDirection="column">

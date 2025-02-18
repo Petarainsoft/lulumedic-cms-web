@@ -16,11 +16,11 @@ import Doctor from 'models/accounts/Doctor';
 import { ObjMap } from 'constants/types';
 import Department from 'models/appointment/Department';
 
-const GridToolbar = () => {
+const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
   return (
     <Stack alignItems="center" direction="row" my={1}>
-      <Typography flex="1" color="primary" variant="titleLarge">
-        리스트 0
+      <Typography flex="1" color="primary" variant="titleLarge" fontWeight="bold">
+        리스트 {totalRecord}
       </Typography>
       <Link to="create">
         <Button variant="contained">의사 등록</Button>
@@ -31,7 +31,6 @@ const GridToolbar = () => {
 
 const DoctorListPanel = () => {
   const { doctors, departmentsMap } = useOutletContext<{ doctors: Doctor[]; departmentsMap: ObjMap<Department> }>();
-  console.log({ doctors });
 
   const navigate = useNavigate();
   const columns: GridColDef[] = [
@@ -111,7 +110,7 @@ const DoctorListPanel = () => {
         navigate(`${val.id}`);
       }}
       slots={{
-        toolbar: GridToolbar,
+        toolbar: () => <GridToolbar totalRecord={doctors.length} />,
       }}
     />
   );

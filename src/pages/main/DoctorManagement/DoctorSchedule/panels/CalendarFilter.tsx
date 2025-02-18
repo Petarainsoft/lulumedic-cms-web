@@ -1,29 +1,34 @@
+import { useEffect } from 'react';
+
 import { dayjs } from 'utils/dateTime';
 import styled from '@emotion/styled';
-
-import { DateCalendar } from 'components/atoms/DatePicker';
 import Typography from 'components/atoms/Typography';
-import Popover from 'components/atoms/Popover';
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Stack, { StackProps } from '@mui/material/Stack';
+import MonthlyNav from '../../components/MonthlyNav';
+import WeeklyNav from '../../components/WeeklyNav';
 
 // HOOKS
+import useValuesQuery from 'hooks/useValuesQuery';
 
 // ICONS
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import useValuesQuery from 'hooks/useValuesQuery';
 
 type CalendarView = 'monthly' | 'weekly';
 
 type Props = StackProps;
 
+const today = dayjs();
+const startWeekNumber = today.week();
+
 const CalenDarFilter = ({ className }: Props) => {
-  const [filterParams, setFilterParams] = useValuesQuery<{ date: string; view: CalendarView }>(['date', 'view'], {
-    date: dayjs().format('YYYY-MM'),
-    view: 'monthly',
-  });
+  const [filterParams, setFilterParams] = useValuesQuery<{ date: string; view: CalendarView; week: number }>(
+    ['date', 'view', 'week'],
+    {
+      date: dayjs().format('YYYY-MM'),
+      view: 'monthly',
+      week: startWeekNumber,
+    }
+  );
 
   const onChangeCalendar = (action: 'prev' | 'next') => {
     const currentDate = dayjs(filterParams.date, 'YYYY-MM');
@@ -35,17 +40,40 @@ const CalenDarFilter = ({ className }: Props) => {
     }
   };
 
-  const onChangeCalendarView = (view: CalendarView) => {
-    if (view == 'monthly') {
-      setFilterParams('view', 'monthly');
+  const onChangeWeekly = (action: 'prev' | 'next') => {
+    if (action == 'next') {
+      setFilterParams('week', (+filterParams.week || 0) + 1);
     } else {
-      setFilterParams('view', 'weekly');
+      setFilterParams('week', (+filterParams.week || 0) - 1);
     }
+  };
+
+  useEffect(() => {
+    setFilterParams('date', dayjs().format('YYYY-MM'));
+    setFilterParams('view', 'monthly');
+  }, []);
+
+  const onChangeCalendarView = (view: CalendarView) => {
+    setFilterParams('view', view);
+  };
+
+  const onToday = () => {
+    setFilterParams('date', dayjs().format('YYYY-MM'));
+  };
+
+  const onToWeek = () => {
+    setFilterParams('week', startWeekNumber);
   };
 
   return (
     <Stack alignItems="center" className={className} direction="row">
-      <Stack>
+      {filterParams.view == 'monthly' ? (
+        <MonthlyNav onToday={onToday} onChangeMonth={onChangeCalendar} />
+      ) : (
+        <WeeklyNav onToWeek={onToWeek} onChangeWeek={onChangeWeekly} />
+      )}
+
+      {/* <Stack>
         <Popover
           rootElement={<Typography>{filterParams.date}</Typography>}
           anchorOrigin={{
@@ -58,6 +86,7 @@ const CalenDarFilter = ({ className }: Props) => {
           }}
         >
           <DateCalendar
+            disabled
             views={['year', 'month']}
             value={dayjs(filterParams.date)}
             onChange={date => setFilterParams('date', date.format('YYYY-MM'))}
@@ -72,12 +101,12 @@ const CalenDarFilter = ({ className }: Props) => {
         <IconButton onClick={() => onChangeCalendar('next')}>
           <ChevronRightIcon />
         </IconButton>
-      </Stack>
+      </Stack> */}
 
       <Stack flex="1" display="flex" justifyContent="center" alignItems="center">
         <Stack
           bgcolor="background.default"
-          width={140}
+          width={90}
           direction="row"
           justifyContent="center"
           borderRadius={8}
@@ -90,14 +119,14 @@ const CalenDarFilter = ({ className }: Props) => {
             className={`CalendarTab ${filterParams.view == 'monthly' ? 'CalendarActive' : ''}`}
             onClick={() => onChangeCalendarView('monthly')}
           >
-            Monthly
+            월간
           </Typography>
           <Typography
             variant="bodyMedium"
             className={`CalendarTab ${filterParams.view == 'weekly' ? 'CalendarActive' : ''}`}
             onClick={() => onChangeCalendarView('weekly')}
           >
-            Weekly
+            주간
           </Typography>
         </Stack>
       </Stack>
