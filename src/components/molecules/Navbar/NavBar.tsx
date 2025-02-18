@@ -71,8 +71,6 @@ const Navbar = () => {
     );
   }, [parentRouter]);
 
-  console.log({ childrenPaths, childrenRouter });
-
   const onSelectPageChange = (value: ID) => {
     // setParentRouter(value as MAIN_PATH);
     navigate(value as string);
@@ -93,7 +91,7 @@ const Navbar = () => {
       <Stack flex="1" direction="row" columnGap={1}>
         <Select defaultValue={parentRouter} options={mainPaths} onChange={onSelectPageChange} />
         {childrenPaths.length ? (
-          <Select options={childrenPaths} defaultValue={childrenRouter} onChange={onChildrenChange} />
+          <Select options={childrenPaths} value={childrenRouter} onChange={onChildrenChange} />
         ) : null}
       </Stack>
 
