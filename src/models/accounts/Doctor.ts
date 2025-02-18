@@ -17,6 +17,7 @@ class Doctor extends DataModel<Doctor> {
   exposure?: boolean;
   treatmentCriteriaNumberOfPeople?: number;
   treatmentCriteriaTimes?: number;
+  autoConfirmReservation?: boolean;
 
   constructor(payload: Obj) {
     super();
@@ -38,6 +39,7 @@ class Doctor extends DataModel<Doctor> {
       exposure: this.exposure,
       treatmentCriteriaNumberOfPeople: this.treatmentCriteriaNumberOfPeople,
       treatmentCriteriaTimes: this.treatmentCriteriaTimes,
+      autoConfirmReservation: this.autoConfirmReservation,
     };
   }
 }

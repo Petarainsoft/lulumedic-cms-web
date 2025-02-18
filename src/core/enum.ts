@@ -9,6 +9,17 @@ export enum ReservationPossible {
   Available = '치료당일 예약가능',
 }
 
+export const ReservationPossibleValue = {
+  [7]: ReservationPossible.SevenDay,
+  [6]: ReservationPossible.SixDay,
+  [5]: ReservationPossible.FiveDay,
+  [4]: ReservationPossible.FourDay,
+  [3]: ReservationPossible.ThreeDay,
+  [2]: ReservationPossible.TwoDay,
+  [1]: ReservationPossible.OneDay,
+  [0]: ReservationPossible.Available,
+};
+
 export const reservationPossibleOptions = Object.keys(ReservationPossible).map(key => ({
   label: ReservationPossible[key as keyof typeof ReservationPossible],
   value: key,
@@ -25,7 +36,18 @@ export enum CancelPossible {
   Available = '진료당일 취소 가능',
 }
 
-export const cancelPossibleOptions = Object.keys(CancelPossible).map(key => ({
+export const CancelPossibleValue = {
+  [7]: CancelPossible.SevenDay,
+  [6]: CancelPossible.SixDay,
+  [5]: CancelPossible.FiveDay,
+  [4]: CancelPossible.FourDay,
+  [3]: CancelPossible.ThreeDay,
+  [2]: CancelPossible.TwoDay,
+  [1]: CancelPossible.OneDay,
+  [0]: CancelPossible.Available,
+};
+
+export const cancelPossibleOptions = Object.keys(CancelPossibleValue).map(key => ({
   label: CancelPossible[key as keyof typeof CancelPossible],
   value: key,
 }));

@@ -137,7 +137,11 @@ const RegisterForm = ({ doctorDetail }: Props) => {
         />
         <SelectGroup label="진료 예약 취소" options={cancelPossibleOptions} placeholder="취소 기준일 선택해 주세요" />
 
-        <RadioGroupBox label="예약확정" options={reservationConfirmOptions} />
+        <RadioGroupBox
+          label="예약확정"
+          value={doctorDetail?.autoConfirmReservation}
+          options={reservationConfirmOptions}
+        />
         <RadioGroupBox label="노출여부" options={exposureOptions} />
       </Grid>
       <Grid size={12} display="flex" justifyContent="center" columnGap={2} mt={6}>

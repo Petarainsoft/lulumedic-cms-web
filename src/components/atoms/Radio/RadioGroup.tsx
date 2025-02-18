@@ -10,13 +10,14 @@ import { Value } from 'constants/types';
 export type RadioGroupProps = MuiRadioGroupProps & {
   options?: { label: string; value: Value }[];
 };
-const RadioGroup = ({ options }: RadioGroupProps) => {
+const RadioGroup = ({ options, value }: RadioGroupProps) => {
+  console.log({ value });
   return (
     <FormControl>
       {/* <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel> */}
       <MuiRadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
         {(options || []).map(item => (
-          <FormControlLabel value={item.value} control={<Radio />} label={item.label} />
+          <FormControlLabel value={item.value} control={<Radio checked={item.value === value} />} label={item.label} />
         ))}
       </MuiRadioGroup>
     </FormControl>

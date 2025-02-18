@@ -24,7 +24,6 @@ const RegisterPanel = () => {
     }
 
     return () => {
-      console.log(123);
       // setSubBreadcrumbs('');
     };
   }, [detail, subBreadcrumbs]);

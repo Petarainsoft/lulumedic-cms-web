@@ -15,6 +15,7 @@ import { MAIN_PATH } from 'routes';
 import Doctor from 'models/accounts/Doctor';
 import { ObjMap } from 'constants/types';
 import Department from 'models/appointment/Department';
+import { CancelPossibleValue, ReservationPossibleValue } from 'core/enum';
 
 const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
   return (
@@ -56,31 +57,37 @@ const DoctorListPanel = () => {
     {
       field: 'position',
       headerName: '포지션',
-      // width: 230,
+      width: 200,
     },
     {
-      field: 'reservationStatus',
+      field: 'autoConfirmReservation', // auto confirm
       headerName: '예약확정',
+      renderCell: ({ value }) => {
+        return value ? '자동확정' : '';
+      },
       // flex: 1,
     },
     {
-      field: 'availableDate',
+      field: 'reservationAvailableDates',
       headerName: '예약 가능일',
-      width: 130,
+      width: 180,
+      valueFormatter: (value: number) => ReservationPossibleValue[value as keyof typeof ReservationPossibleValue],
     },
     {
-      field: 'cancelDate',
+      field: 'cancellationAvailableDates',
       headerName: '취소 가능일',
-      width: 130,
+      valueFormatter: (value: number) => CancelPossibleValue[value as keyof typeof CancelPossibleValue],
+
+      width: 150,
     },
     {
-      field: 'medicalCondition',
+      field: 'exposure',
       headerName: '노출여부',
-      flex: 1,
+      width: 200,
       renderCell: ({ value, row }) => {
         return (
-          <Stack direction="row" justifyContent="space-evenly" alignItems="center" height="100%">
-            <Typography variant="bodyMedium">{value}</Typography>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" height="100%">
+            <Typography variant="bodyMedium">{`${value ? '노출' : ''}`}</Typography>
             <Button
               variant="outlined"
               onClick={e => {

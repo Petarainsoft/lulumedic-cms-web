@@ -22,7 +22,7 @@ const AppBreadcrumbs = () => {
     const data = handleData?.crumbs || [];
 
     if (subBreadcrumbs?.length) {
-      data[data.length - 1] += ` (${subBreadcrumbs})`;
+      // data[data.length - 1] += ` (${subBreadcrumbs})`;
     }
 
     return data;
