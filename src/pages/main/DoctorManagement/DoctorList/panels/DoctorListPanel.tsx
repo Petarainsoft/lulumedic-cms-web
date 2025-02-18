@@ -15,7 +15,7 @@ import { MAIN_PATH } from 'routes';
 import Doctor from 'models/accounts/Doctor';
 import { ObjMap } from 'constants/types';
 import Department from 'models/appointment/Department';
-import { CancelPossibleValue, ReservationPossibleValue } from 'core/enum';
+import { CancelPossibleValue, Exposure, ReservationPossibleValue } from 'core/enum';
 
 const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
   return (
@@ -87,7 +87,7 @@ const DoctorListPanel = () => {
       renderCell: ({ value, row }) => {
         return (
           <Stack direction="row" justifyContent="space-between" alignItems="center" height="100%">
-            <Typography variant="bodyMedium">{`${value ? '노출' : ''}`}</Typography>
+            <Typography variant="bodyMedium">{`${value ? Exposure.Exposure : Exposure.NotExposure}`}</Typography>
             <Button
               variant="outlined"
               onClick={e => {

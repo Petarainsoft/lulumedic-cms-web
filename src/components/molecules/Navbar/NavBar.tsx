@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import { Image } from 'components/atoms/Image';
 import mainRoutes, { MAIN_PATH } from 'routes/mainRoutes';
 
-import icon from 'assets/lulu-medic-logo.png';
+import icon from 'assets/logo_2.svg';
 import { useEffect, useMemo, useState } from 'react';
 import { ID } from 'constants/types';
 
@@ -87,7 +87,7 @@ const Navbar = () => {
   return (
     <Stack columnGap={2} direction="row" alignItems="center">
       <Stack onClick={() => navigate('/')} sx={{ cursor: 'pointer' }}>
-        <Image src={icon} width={100} height={20} />
+        <Image src={icon} width={120} height={40} />
       </Stack>
 
       <Stack flex="1" direction="row" columnGap={1}>

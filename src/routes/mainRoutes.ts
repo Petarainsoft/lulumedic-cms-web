@@ -57,9 +57,9 @@ export const mainRoutes: RouteObject[] = [
       {
         index: true,
         handle: {
-          title: '의사 리스트',
+          title: '의사 관리',
           value: MAIN_PATH.DOCTOR_MANAGEMENT,
-          crumbs: ['병원관리', '의사 리스트'],
+          crumbs: ['병원관리', '의사 관리'],
         } as RouterHandle,
         lazy: () => import('pages/main/DoctorManagement/DoctorList/DoctorListPage'),
       },
@@ -67,7 +67,7 @@ export const mainRoutes: RouteObject[] = [
         path: `:id`,
         handle: {
           title: '의사 상세',
-          crumbs: ['병원관리', '의사 리스트', '의사 상세'],
+          crumbs: ['병원관리', '의사 관리', '의사 상세'],
         } as RouterHandle,
         lazy: () => import('pages/main/DoctorManagement/DoctorRegister/DoctorRegisterPage'),
       },
@@ -75,7 +75,7 @@ export const mainRoutes: RouteObject[] = [
         path: MAIN_PATH.DOCTOR_CREATE,
         handle: {
           title: '의사 상세',
-          crumbs: ['병원관리', '의사 리스트', '의사 등록'],
+          crumbs: ['병원관리', '의사 관리', '의사 등록'],
         } as RouterHandle,
         lazy: () => import('pages/main/DoctorManagement/DoctorRegister/DoctorRegisterPage'),
       },

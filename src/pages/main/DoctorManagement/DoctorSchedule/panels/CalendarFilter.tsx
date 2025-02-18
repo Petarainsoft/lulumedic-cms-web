@@ -106,7 +106,7 @@ const CalenDarFilter = ({ className }: Props) => {
       <Stack flex="1" display="flex" justifyContent="center" alignItems="center">
         <Stack
           bgcolor="background.default"
-          width={90}
+          width={100}
           direction="row"
           justifyContent="center"
           borderRadius={8}
@@ -116,6 +116,8 @@ const CalenDarFilter = ({ className }: Props) => {
         >
           <Typography
             variant="bodyMedium"
+            width={40}
+            textAlign="center"
             className={`CalendarTab ${filterParams.view == 'monthly' ? 'CalendarActive' : ''}`}
             onClick={() => onChangeCalendarView('monthly')}
           >
@@ -123,6 +125,8 @@ const CalenDarFilter = ({ className }: Props) => {
           </Typography>
           <Typography
             variant="bodyMedium"
+            width={40}
+            textAlign="center"
             className={`CalendarTab ${filterParams.view == 'weekly' ? 'CalendarActive' : ''}`}
             onClick={() => onChangeCalendarView('weekly')}
           >
