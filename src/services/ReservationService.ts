@@ -11,6 +11,14 @@ export type SearchFilter = {
   endDate?: string;
   keywordType?: ReservationKeywordType;
   keyword?: string;
+
+  patientName?: string;
+  patientPhone?: string;
+  startAppointmentDate?: string;
+  endAppointmentDate?: string;
+  startReceiptDate?: string;
+  endReceiptDate?: string;
+  patientId?: ID;
 };
 
 export const fetchReservations = async (payload?: SearchFilter) => {

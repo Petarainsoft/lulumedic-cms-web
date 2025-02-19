@@ -76,7 +76,9 @@ axiosInstance.interceptors.request.use(
 );
 
 export const get = async <D>(url: string, queryParams?: Obj): Promise<AppResponse<D>> => {
-  return await axiosInstance.get(url, { params: queryParams });
+  console.log({ queryParams });
+
+  return await axiosInstance.get(url);
 };
 
 export const post = async <D>(url: string, payload: Any): Promise<AppResponse<D>> => {
