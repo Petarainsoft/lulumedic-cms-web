@@ -44,8 +44,6 @@ const ScheduleCalendar = ({ doctorSchedules, className }: Props) => {
     {} as Record<string, ScheduleData[]>
   );
 
-  console.log({ scheduleMapByDate, doctorSchedules });
-
   const [searchParams] = useSearchParams();
   const view = searchParams.get('view');
 

@@ -1,11 +1,6 @@
 import { ID, Obj } from 'constants/types';
 import DataModel from 'models/base/DataModel';
 
-// "cancellationAvailableDates": 3,
-// "autoConfirmReservation": true,
-// "exposure": true,
-// "treatmentCriteriaNumberOfPeople": 16,
-// "treatmentCriteriaTimes": 35,
 class Doctor extends DataModel<Doctor> {
   name?: string;
   position?: string;
@@ -27,8 +22,9 @@ class Doctor extends DataModel<Doctor> {
     }
   }
 
-  toBody(): DoctorBody {
+  toDto(): DoctorDto {
     return {
+      id: this.id,
       name: this.name,
       position: this.position,
       degree: this.degree,
@@ -39,6 +35,22 @@ class Doctor extends DataModel<Doctor> {
       exposure: this.exposure,
       treatmentCriteriaNumberOfPeople: this.treatmentCriteriaNumberOfPeople,
       treatmentCriteriaTimes: this.treatmentCriteriaTimes,
+      autoConfirmReservation: this.autoConfirmReservation,
+    };
+  }
+
+  toBody(): DoctorBody {
+    return {
+      name: this.name,
+      position: this.position,
+      degree: +this.degree!,
+      specialty: this.specialty,
+      departmentId: this.departmentId,
+      reservationAvailableDates: +this.reservationAvailableDates!,
+      cancellationAvailableDates: +this.cancellationAvailableDates!,
+      exposure: this.exposure,
+      treatmentCriteriaNumberOfPeople: +this.treatmentCriteriaNumberOfPeople!,
+      treatmentCriteriaTimes: +this.treatmentCriteriaTimes!,
       autoConfirmReservation: this.autoConfirmReservation,
     };
   }

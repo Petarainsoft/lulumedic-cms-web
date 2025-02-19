@@ -36,7 +36,6 @@ const CheckboxGroup = ({ options, values, onChange }: Props) => {
   const [checked, setChecked] = useState<boolean[]>(() => options.map(() => false));
 
   useEffect(() => {
-    console.log({ values });
     if (!values) {
       setChecked(checked.map(() => false));
     }

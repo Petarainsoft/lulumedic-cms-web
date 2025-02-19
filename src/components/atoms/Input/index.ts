@@ -1,5 +1,5 @@
 export { default } from './TextField';
-// export { default as FormInput } from './FormInput';
+export { default as InputForm } from './InputForm';
 export { default as InputUpload } from './InputUpload';
 // export { default as InputMask } from './InputMask';
 // export { default as InputFormulas } from './InputFormulas';

@@ -1,9 +1,10 @@
 import { useMatches, useLocation } from 'react-router-dom';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 // import { Link } from 'react-router-dom';
+import Stack from '@mui/material/Stack';
 
 import { RouterHandle } from 'routes';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { useMemo, useContext, createContext, useState, PropsWithChildren } from 'react';
 
 const BreadcrumbsContext = createContext<{ subBreadcrumbs?: string; setSubBreadcrumbs: (data: string) => void }>({
@@ -21,21 +22,20 @@ const AppBreadcrumbs = () => {
     const handleData = lastedMatch.handle as RouterHandle;
     const data = handleData?.crumbs || [];
 
-    if (subBreadcrumbs?.length) {
-      // data[data.length - 1] += ` (${subBreadcrumbs})`;
-    }
-
     return data;
   }, [location.pathname, subBreadcrumbs]);
 
   return (
-    <MuiBreadcrumbs aria-label="breadcrumb">
-      {breadcrumbs.map((item, index) => (
-        <Typography variant="bodyMedium" color={breadcrumbs.length - 1 === index ? '' : 'text.disabled'}>
-          {item}
-        </Typography>
-      ))}
-    </MuiBreadcrumbs>
+    <Stack direction="row" columnGap={1} alignItems="center">
+      <MuiBreadcrumbs aria-label="breadcrumb">
+        {breadcrumbs.map((item, index) => (
+          <Typography variant="bodyMedium" color={breadcrumbs.length - 1 === index ? '' : 'text.disabled'}>
+            {item}
+          </Typography>
+        ))}
+      </MuiBreadcrumbs>
+      <Typography variant="bodyMedium">{subBreadcrumbs}</Typography>
+    </Stack>
   );
 };
 

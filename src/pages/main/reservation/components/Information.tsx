@@ -15,7 +15,6 @@ export const InfoLabel = ({
   value?: Value;
   type?: 'select' | 'text';
 } & SelectProps) => {
-  console.log({ value });
   return (
     <>
       <Grid size={3}>

@@ -25,9 +25,8 @@ axiosInstance.interceptors.response.use(
   response => response.data,
   async error => {
     if (error.status === 401) {
-      console.log(error);
       const { status } = error.response.data;
-      console.log({ status });
+
       if (status == 'ERROR_USER_NOT_FOUND' || status == 'ERROR_WRONG_PASSWORD') {
         return error;
       } else {

@@ -38,7 +38,6 @@ const useCalendar = (currentDate: Dayjs) => {
       startOfYear = startOfYear.add(1, 'day');
     }
 
-    console.log({ daysOfYear });
     return daysOfYear;
   };
 
@@ -63,7 +62,6 @@ const useCalendar = (currentDate: Dayjs) => {
       if (tempArr?.length) {
         const previousYear = dayjs(firstDayOfYear).subtract(1, 'year').set('month', 11);
         const daysInMonth = getListDaysInMonth(previousYear);
-        console.log('dayOfMonth', daysInMonth);
 
         // get lasted days of previous year
         daysOfPrevYear = daysInMonth.slice(daysInMonth.length - tempArr.length);
@@ -76,8 +74,6 @@ const useCalendar = (currentDate: Dayjs) => {
       // lost days
       const tempArr = weekdays.slice(findIndex + 1);
 
-      console.log(777, tempArr);
-
       // get lasted days of previous year
       if (tempArr?.length) {
         const nextYear = dayjs(lastOfYear).add(1, 'year').set('month', 0);
@@ -85,7 +81,6 @@ const useCalendar = (currentDate: Dayjs) => {
         //   console.log('dayOfMonth', daysInMonth);
         // get first days of next year
         daysOfNextYear = daysInMonth.slice(0, tempArr.length);
-        console.log({ daysOfNextYear });
       }
     }
 
@@ -101,8 +96,6 @@ const useCalendar = (currentDate: Dayjs) => {
 
     return temp;
   }, [calendarDays]);
-
-  console.log(105, { calendarDays, daysMapToWeeks });
 
   return {
     weeksInYear,

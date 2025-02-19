@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState, useDeferredValue } from 'react';
 
 import Grid from '@mui/material/Grid2';
 // import Sidebar from 'components/molecules/Sidebar/Sidebar';
@@ -20,6 +20,7 @@ import { fetchDoctors } from 'services/DoctorService';
 import { fetchTDepartments } from 'services/DepartmentService';
 import TimeSlot from 'models/appointment/TimeSlot';
 import { fetchTimeSlots } from 'services/TimeSlotService';
+import PageSkeleton from 'components/molecules/PageSkeleton/PageSkeleton';
 
 // const temp = Array.from({ length: 100 }, (_, i) => i);
 
@@ -32,6 +33,9 @@ const MainPage = () => {
   const [departmentsMap, setDepartmentsMap] = useState<ObjMap<Department>>({});
   const [departments, setDepartments] = useState<Department[]>([]);
   const [timeSlotMap, setTimeSlotMap] = useState<ObjMap<TimeSlot>>({});
+
+  const doctorLength = useDeferredValue(doctors.length);
+  const departmentsLength = useDeferredValue(departments.length);
 
   useEffect(() => {
     (async () => {
@@ -85,6 +89,13 @@ const MainPage = () => {
     }
   }, [location]);
 
+  const departmentOptions = useMemo(() => {
+    return departments.map(item => ({
+      label: item.name,
+      value: item.id,
+    }));
+  }, [departments]);
+
   return (
     <Grid height="100vh" container>
       {/* <Grid size={2}>
@@ -101,8 +112,21 @@ const MainPage = () => {
               <div>{item}</div>
             ))}
           </Grid> */}
-
-            <Outlet context={{ patientsMap, doctorsMap, departmentsMap, timeSlotMap, departments, doctors }} />
+            {doctorLength && departmentsLength ? (
+              <Outlet
+                context={{
+                  patientsMap,
+                  doctorsMap,
+                  departmentsMap,
+                  timeSlotMap,
+                  departments,
+                  doctors,
+                  departmentOptions,
+                }}
+              />
+            ) : (
+              <PageSkeleton />
+            )}
           </MainLayout>
         </BreadcrumbProvider>
       </Grid>

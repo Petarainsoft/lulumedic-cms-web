@@ -1,6 +1,6 @@
-import { get } from './base/BaseApi';
+import { get, patch, post } from './base/BaseApi';
 import { Any, ID } from 'constants/types';
-import Doctor from 'models/accounts/Doctor';
+import Doctor, { DoctorBody } from 'models/accounts/Doctor';
 import DoctorSchedule from 'models/appointment/DoctorSchedule';
 
 export const fetchDoctors = async () => {
@@ -21,4 +21,16 @@ export const fetchWorkingSchedulesByDoctorId = async (doctorId: ID) => {
   const data = (rs.data || []).map((item: Any) => new DoctorSchedule(item));
 
   return data;
+};
+
+export const updateDoctorById = async (id: ID, payload: DoctorBody) => {
+  const res = await patch<Doctor>(`/doctors/${id}`, payload);
+
+  return res?.data || {};
+};
+
+export const createDoctor = async (payload: DoctorBody) => {
+  const res = await post<Doctor>('/doctors', payload);
+
+  return res?.data || {};
 };

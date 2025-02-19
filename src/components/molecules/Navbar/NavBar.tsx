@@ -25,7 +25,6 @@ const mainPaths = mainRoutes.map(item => ({
   label: item.handle?.title,
   value: item.path,
 }));
-console.log({ mainPaths });
 
 const Navbar = () => {
   const navigate = useNavigate();

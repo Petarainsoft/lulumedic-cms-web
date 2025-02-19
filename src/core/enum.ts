@@ -20,9 +20,9 @@ export const ReservationPossibleValue = {
   [0]: ReservationPossible.Available,
 };
 
-export const reservationPossibleOptions = Object.keys(ReservationPossible).map(key => ({
-  label: ReservationPossible[key as keyof typeof ReservationPossible],
-  value: key,
+export const reservationPossibleOptions = Object.keys(ReservationPossibleValue).map(key => ({
+  label: ReservationPossibleValue[+key as keyof typeof ReservationPossibleValue],
+  value: +key,
 }));
 
 export enum CancelPossible {
@@ -48,27 +48,37 @@ export const CancelPossibleValue = {
 };
 
 export const cancelPossibleOptions = Object.keys(CancelPossibleValue).map(key => ({
-  label: CancelPossible[key as keyof typeof CancelPossible],
-  value: key,
+  label: CancelPossibleValue[+key as keyof typeof CancelPossibleValue],
+  value: +key,
 }));
 
 export enum ReservationConfirm {
-  Auto = '자동확정',
-  Manual = '컨펌확정',
+  Manual,
+  Auto,
 }
 
-export const reservationConfirmOptions = Object.keys(ReservationConfirm).map(key => ({
-  label: ReservationConfirm[key as keyof typeof ReservationConfirm],
+export const RESERVATION_CONFIRM_LABELS: Record<ReservationConfirm, string> = {
+  [ReservationConfirm.Auto]: '자동확정',
+  [ReservationConfirm.Manual]: '컨펌확정',
+};
+
+export const reservationConfirmOptions = Object.keys(RESERVATION_CONFIRM_LABELS).map(key => ({
+  label: RESERVATION_CONFIRM_LABELS[key as unknown as keyof typeof RESERVATION_CONFIRM_LABELS],
   value: key,
 }));
 
 export enum Exposure {
-  Exposure = '노출',
-  NotExposure = '미노출',
+  NotExposure,
+  Exposure,
 }
 
-export const exposureOptions = Object.keys(Exposure).map(key => ({
-  label: Exposure[key as keyof typeof Exposure],
+export const EXPOSURE_LABELS: Record<Exposure, string> = {
+  [Exposure.Exposure]: '노출',
+  [Exposure.NotExposure]: '미노출',
+};
+
+export const exposureOptions = Object.keys(EXPOSURE_LABELS).map(key => ({
+  label: EXPOSURE_LABELS[key as unknown as keyof typeof EXPOSURE_LABELS],
   value: key,
 }));
 
