@@ -29,11 +29,11 @@ const LoginPanel = () => {
     });
 
     if (res?.data) {
-      localStorage.setItem('accessToken', res.data.accessToken);
+      localStorage.setItem('accessToken', res?.data.accessToken);
       // todo: Later will need to save refreshToken in more secure way (e.g. HTTP-only cookie)
-      localStorage.setItem('refreshToken', res.data.refreshToken);
+      localStorage.setItem('refreshToken', res?.data.refreshToken);
       // todo: Later save to context
-      localStorage.setItem('name', res.data.user.username);
+      localStorage.setItem('name', res?.data.user.username);
 
       // TODO: Save to context
       localStorage.setItem('loginInfo', JSON.stringify({ username, password }));

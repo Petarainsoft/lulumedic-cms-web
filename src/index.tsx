@@ -15,6 +15,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import App from './App';
 import GlobalNotistask from 'components/organisms/GlobalNotistask';
+import AppProvider from 'contexts/AppContext';
 
 dayjs.locale('ko');
 
@@ -26,7 +27,9 @@ createRoot(document.getElementById('root')!).render(
     <GlobalNotistask />
 
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-      <App />
+      <AppProvider>
+        <App />
+      </AppProvider>
     </LocalizationProvider>
   </ThemeProvider>
   // </StrictMode>

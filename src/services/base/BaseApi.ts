@@ -1,7 +1,7 @@
 import axios from 'axios';
 import env from 'constants/env';
 import { Any, Obj } from 'constants/types';
-
+import qs from 'qs';
 // TODO
 // import { loginApi } from 'services/AuthService';
 export type AppResponse<T> = {
@@ -76,9 +76,12 @@ axiosInstance.interceptors.request.use(
 );
 
 export const get = async <D>(url: string, queryParams?: Obj): Promise<AppResponse<D>> => {
-  console.log({ queryParams });
-
-  return await axiosInstance.get(url);
+  return await axiosInstance.get(`${url}?`, {
+    params: queryParams,
+    paramsSerializer: params => {
+      return qs.stringify(params);
+    },
+  });
 };
 
 export const post = async <D>(url: string, payload: Any): Promise<AppResponse<D>> => {

@@ -5,26 +5,28 @@ import { MedicalStatus, ReservationPeriod, ReservationKeywordType, STATUS_TYPE }
 export type SearchFilter = {
   status?: STATUS_TYPE[];
   medicalStatus?: MedicalStatus[];
-  department?: ID[];
   period?: ReservationPeriod;
   startDate?: string;
   endDate?: string;
   keywordType?: ReservationKeywordType;
   keyword?: string;
+  departmentId?: ID[];
 
   patientName?: string;
   patientPhone?: string;
+
   startAppointmentDate?: string;
   endAppointmentDate?: string;
+
   startReceiptDate?: string;
   endReceiptDate?: string;
+
   patientId?: ID;
+  id?: ID; // id of reservation
 };
 
 export const fetchReservations = async (payload?: SearchFilter) => {
-  const res = await get<Appointment[]>('/appointments', {
-    params: payload,
-  });
+  const res = await get<Appointment[]>('/appointments/details', payload);
   const data = (res.data || []).map((item: Any) => new Appointment(item));
 
   return data;

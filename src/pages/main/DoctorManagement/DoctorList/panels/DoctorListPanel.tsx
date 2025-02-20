@@ -12,10 +12,10 @@ import DataTable from 'components/organisms/DataTable';
 // CONSTANTS
 import { MAIN_PATH } from 'routes';
 // import { doctorList } from 'core/constants';
-import Doctor from 'models/accounts/Doctor';
 import { ObjMap } from 'constants/types';
 import Department from 'models/appointment/Department';
 import { CancelPossibleValue, Exposure, EXPOSURE_LABELS, ReservationPossibleValue } from 'core/enum';
+import Doctor from 'models/accounts/Doctor';
 
 const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
   return (
@@ -30,8 +30,12 @@ const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
   );
 };
 
-const DoctorListPanel = () => {
-  const { doctors, departmentsMap } = useOutletContext<{ doctors: Doctor[]; departmentsMap: ObjMap<Department> }>();
+type Props = {
+  doctorList: Doctor[];
+  loading?: boolean;
+};
+const DoctorListPanel = ({ doctorList, loading }: Props) => {
+  const { departmentsMap } = useOutletContext<{ departmentsMap: ObjMap<Department> }>();
 
   const navigate = useNavigate();
   const columns: GridColDef[] = [
@@ -112,12 +116,13 @@ const DoctorListPanel = () => {
   return (
     <DataTable
       columns={columns}
-      rows={doctors}
+      rows={doctorList}
+      loading={loading}
       onRowClick={val => {
         navigate(`${val.id}`);
       }}
       slots={{
-        toolbar: () => <GridToolbar totalRecord={doctors.length} />,
+        toolbar: () => <GridToolbar totalRecord={doctorList?.length} />,
       }}
     />
   );

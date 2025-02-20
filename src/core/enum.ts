@@ -105,25 +105,36 @@ export enum MedicalStatus {
 }
 
 export enum ReservationPeriod {
-  Category = '기간 구분',
-  ReceptionDate = '접수일자',
-  ReservationDate = '예약일자',
+  ReceptionDate = 'ReceptionDate',
+  ReservationDate = 'ReservationDate',
 }
 
-export const reservationPeriodOptions = Object.keys(ReservationPeriod).map(key => ({
-  label: ReservationPeriod[key as keyof typeof ReservationPeriod],
+export const ReservationPeriodLabel = {
+  [ReservationPeriod.ReceptionDate]: '접수일자',
+  [ReservationPeriod.ReservationDate]: '예약일자',
+};
+
+export const reservationPeriodOptions = Object.keys(ReservationPeriodLabel).map(key => ({
+  label: ReservationPeriodLabel[key as keyof typeof ReservationPeriod],
   value: key,
 }));
 
 export enum ReservationKeywordType {
-  Name = '이름',
-  Contact = '연락처',
-  Appointment = '예약번호',
-  Patient = '환자번호',
+  Name = 'Name',
+  Contact = 'Contact',
+  Appointment = 'Appointment',
+  Patient = 'Patient',
 }
 
-export const reservationKeywordTypeOptions = Object.keys(ReservationKeywordType).map(key => ({
-  label: ReservationKeywordType[key as keyof typeof ReservationKeywordType],
+export const ReservationKeywordTypeLabel = {
+  [ReservationKeywordType.Name]: '이름',
+  [ReservationKeywordType.Contact]: '연락처',
+  [ReservationKeywordType.Appointment]: '예약번호',
+  [ReservationKeywordType.Patient]: '환자번호',
+};
+
+export const reservationKeywordTypeOptions = Object.keys(ReservationKeywordTypeLabel).map(key => ({
+  label: ReservationKeywordTypeLabel[key as keyof typeof ReservationKeywordType],
   value: key,
 }));
 

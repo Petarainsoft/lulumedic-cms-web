@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState, useTransition } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { dayjs } from 'utils/dateTime';
 import { GridColDef } from '@mui/x-data-grid';
@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack';
 import Typography from 'components/atoms/Typography';
 import Grid from '@mui/material/Grid2';
 import Filter from './Filter';
+import DataTable from 'components/organisms/DataTable';
 
 // SERVICES
 import { fetchReservations, SearchFilter } from 'services/ReservationService';
@@ -19,8 +20,7 @@ import Department from 'models/appointment/Department';
 import { ObjMap } from 'constants/types';
 import Doctor from 'models/accounts/Doctor';
 import TimeSlot from 'models/appointment/TimeSlot';
-import { ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
-import DataTable from 'components/organisms/DataTable';
+import { ReservationKeywordType, ReservationPeriod, ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
 
 const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
   return (
@@ -34,7 +34,7 @@ const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
 
 const ReservationList = () => {
   const [reservations, setReservations] = useState<Appointment[]>([]);
-
+  const [loading, setTransition] = useTransition();
   const { patientsMap, departmentsMap, doctorsMap, timeSlotMap } = useOutletContext<{
     patientsMap: ObjMap<Patient>;
     departmentsMap: ObjMap<Department>;
@@ -135,16 +135,67 @@ const ReservationList = () => {
     [reservations.length, patientsMap, departmentsMap, doctorsMap, timeSlotMap]
   );
 
-  useEffect(() => {
-    (async () => {
-      await onSearch();
-    })();
-  }, []);
-
   const onSearch = async (payload?: SearchFilter) => {
-    const res = await fetchReservations(payload);
+    // handle filter
 
-    setReservations(res);
+    console.log({ payload });
+    // return;
+    if (payload?.period == ReservationPeriod.ReceptionDate) {
+      payload.startReceiptDate = payload.startDate;
+      payload.endReceiptDate = payload.endDate;
+
+      payload.startAppointmentDate = undefined;
+      payload.endAppointmentDate = undefined;
+    } else if (payload?.period == ReservationPeriod.ReservationDate) {
+      payload.startAppointmentDate = payload.startDate;
+      payload.endAppointmentDate = payload.endDate;
+
+      payload.startReceiptDate = undefined;
+      payload.endReceiptDate = undefined;
+    }
+
+    if (payload?.keywordType == ReservationKeywordType.Name) {
+      payload.patientName = payload.keyword;
+
+      payload.patientId = undefined;
+      payload.patientPhone = undefined;
+      payload.id = undefined;
+    } else if (payload?.keywordType == ReservationKeywordType.Contact) {
+      payload.patientPhone = payload.keyword;
+
+      payload.patientId = undefined;
+      payload.patientName = undefined;
+      payload.id = undefined;
+    } else if (payload?.keywordType == ReservationKeywordType.Appointment) {
+      payload.id = payload.keyword;
+
+      payload.patientId = undefined;
+      payload.patientName = undefined;
+      payload.patientPhone = undefined;
+    } else if (payload?.keywordType == ReservationKeywordType.Patient) {
+      payload.patientId = payload.keyword;
+
+      payload.patientName = undefined;
+      payload.patientPhone = undefined;
+      payload.id = undefined;
+    }
+
+    setTransition(async () => {
+      const res = await fetchReservations({
+        id: payload?.id,
+        departmentId: payload?.departmentId,
+        status: payload?.status?.length ? payload?.status : undefined,
+        patientName: payload?.patientName,
+        patientPhone: payload?.patientPhone,
+        patientId: payload?.patientId,
+        startReceiptDate: payload?.startReceiptDate,
+        endReceiptDate: payload?.endReceiptDate,
+        startAppointmentDate: payload?.startAppointmentDate,
+        endAppointmentDate: payload?.endAppointmentDate,
+      });
+
+      setReservations(res);
+    });
   };
 
   return (
@@ -157,6 +208,7 @@ const ReservationList = () => {
         <DataTable
           columns={columns}
           rows={reservations}
+          loading={loading}
           onRowClick={val => {
             navigate(`${val.id}`);
           }}

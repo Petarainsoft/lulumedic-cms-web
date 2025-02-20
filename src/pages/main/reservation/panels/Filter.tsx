@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { dayjs } from 'utils/dateTime';
 
 import Grid from '@mui/material/Grid2';
 import Typography from 'components/atoms/Typography';
@@ -17,6 +18,8 @@ import {
   reservationPeriodOptions,
   reservationKeywordTypeOptions,
   STATUS_TYPE,
+  ReservationPeriod,
+  ReservationKeywordType,
 } from 'core/enum';
 
 import { Any, ObjMap } from 'constants/types';
@@ -24,6 +27,17 @@ import { Any, ObjMap } from 'constants/types';
 // MODELS
 import Department from 'models/appointment/Department';
 import { SearchFilter } from 'services/ReservationService';
+
+const defaultEndDate = dayjs();
+const defaultStartDate = defaultEndDate.subtract(2, 'month');
+
+const filterDefault = {
+  period: ReservationPeriod.ReceptionDate,
+  keywordType: ReservationKeywordType.Name,
+
+  startDate: defaultStartDate.format('YYYY-MM-DD'),
+  endDate: defaultEndDate.format('YYYY-MM-DD'),
+};
 
 const reservationStatus = Object.keys(ReservationStatusLabel)
   .map(key => ({
@@ -43,7 +57,7 @@ type Props = {
   onFilterChange: (filter: SearchFilter) => void;
 };
 const Filter = ({ onFilterChange }: Props) => {
-  const [searchState, setSearchState] = useState<SearchFilter>({});
+  const [searchState, setSearchState] = useState<SearchFilter>(filterDefault);
 
   const { departments, departmentsMap } = useOutletContext<{
     departments: Department[];
@@ -53,8 +67,31 @@ const Filter = ({ onFilterChange }: Props) => {
     label: item.name,
     value: item.id,
   }));
+
+  useEffect(() => {
+    (async () => {
+      await onSearch();
+    })();
+  }, []);
+
   const handleChangeFilter = (fieldName: keyof SearchFilter, value: Any) => {
-    setSearchState({ ...searchState, [fieldName]: value });
+    if (fieldName === 'startDate') {
+      if (dayjs(value).isAfter(searchState.endDate)) {
+        searchState.startDate = searchState.endDate;
+        searchState.endDate = value;
+
+        setSearchState({ ...searchState });
+      }
+    } else if (fieldName === 'endDate') {
+      if (dayjs(value).isBefore(searchState.startDate)) {
+        searchState.endDate = searchState.startDate;
+        searchState.startDate = value;
+
+        setSearchState({ ...searchState });
+      }
+    } else {
+      setSearchState({ ...searchState, [fieldName]: value });
+    }
   };
 
   const onSearch = () => {
@@ -62,14 +99,14 @@ const Filter = ({ onFilterChange }: Props) => {
   };
 
   const onReset = () => {
-    setSearchState({});
+    setSearchState(filterDefault);
   };
   return (
     <Grid
       container
       alignItems="center"
       rowGap={2}
-      columnSpacing={1}
+      columnGap={1}
       borderTop={1}
       borderBottom={1}
       borderColor="divider"
@@ -107,84 +144,96 @@ const Filter = ({ onFilterChange }: Props) => {
           sx={{ width: 180 }}
           placeholder="진료과 선택"
           options={departmentOptions}
-          value={searchState.department}
+          value={searchState.departmentId}
           onChange={val => {
-            handleChangeFilter('department', val);
+            handleChangeFilter('departmentId', val);
           }}
         />
 
         <Grid display="flex" columnGap={1} rowGap={1} flexWrap="wrap">
-          {(searchState.department || []).map(item => (
+          {(searchState.departmentId || []).map(item => (
             <Chip
               key={item}
               label={departmentsMap[item]?.name || ''}
               color="primary"
               onDelete={() => {
-                const clone = [...(searchState.department || [])];
+                const clone = [...(searchState.departmentId || [])];
                 const index = clone.indexOf(item);
                 clone.splice(index, 1);
-                handleChangeFilter('department', clone);
+                handleChangeFilter('departmentId', clone);
               }}
             />
           ))}
         </Grid>
       </Grid>
 
-      {/* Period */}
-      <Grid size={1.5}>
-        <Typography color="textDisabled">기간</Typography>
-      </Grid>
-      <Grid size={1.5}>
-        <Select
-          sx={{ width: 180 }}
-          fullWidth
-          value={searchState?.period || reservationPeriodOptions[1].value}
-          placeholder="접수일자"
-          options={reservationPeriodOptions}
-          onChange={val => handleChangeFilter('period', val)}
-        />
-      </Grid>
+      <Grid size={12} container columnGap={1} alignItems="center">
+        {/* Period */}
+        <Grid size={1.5}>
+          <Typography color="textDisabled">기간</Typography>
+        </Grid>
+        <Grid size="auto">
+          <Select
+            sx={{ width: 180 }}
+            fullWidth
+            value={searchState?.period}
+            placeholder="접수일자"
+            options={reservationPeriodOptions}
+            onChange={val => handleChangeFilter('period', val)}
+          />
+        </Grid>
+        {/* DATE */}
 
-      {/* DATE */}
-      <Grid size="auto">
-        <Typography color="textDisabled">시작일</Typography>
-      </Grid>
-      <Grid size={2}>
-        <DatePicker format="YYYY-MM-DD" />
-      </Grid>
-      <Grid size="auto">
-        <Typography color="textDisabled">종료일</Typography>
-      </Grid>
-      <Grid size={{ xs: 4, sm: 5 }}>
-        <DatePicker format="YYYY-MM-DD" />
+        <Grid size="auto">
+          <Typography color="textDisabled">시작일</Typography>
+        </Grid>
+        <Grid size={1.5}>
+          <DatePicker
+            value={dayjs(searchState?.startDate)}
+            format="YYYY-MM-DD"
+            onChange={val => handleChangeFilter('startDate', val?.format('YYYY-MM-DD'))}
+          />
+        </Grid>
+        <Grid size="auto">
+          <Typography color="textDisabled">종료일</Typography>
+        </Grid>
+        <Grid size={1.5}>
+          <DatePicker
+            value={dayjs(searchState?.endDate)}
+            format="YYYY-MM-DD"
+            onChange={val => handleChangeFilter('endDate', val?.format('YYYY-MM-DD'))}
+          />
+        </Grid>
       </Grid>
 
       {/* Search keyword */}
-      <Grid size={1.5}>
-        <Typography color="textDisabled">검색 키워드</Typography>
-      </Grid>
-      <Grid size="auto">
-        <Select
-          sx={{ width: 180 }}
-          value={searchState?.keywordType || reservationKeywordTypeOptions[0].value}
-          placeholder="검색 키워드"
-          options={reservationKeywordTypeOptions}
-          onChange={val => handleChangeFilter('keywordType', val)}
-        />
-      </Grid>
-      <Grid size={{ xs: 4, md: 5 }}>
-        <TextField
-          fullWidth
-          placeholder="키워드를 입력해 주세요"
-          value={searchState?.keyword || ''}
-          onChange={val => handleChangeFilter('keyword', val)}
-        />
+      <Grid size={12} container columnGap={1} alignItems="center">
+        <Grid size={1.5}>
+          <Typography color="textDisabled">검색 키워드</Typography>
+        </Grid>
+        <Grid size="auto">
+          <Select
+            sx={{ width: 180 }}
+            value={searchState?.keywordType}
+            placeholder="검색 키워드"
+            options={reservationKeywordTypeOptions}
+            onChange={val => handleChangeFilter('keywordType', val)}
+          />
+        </Grid>
+        <Grid size={4}>
+          <TextField
+            fullWidth
+            placeholder="키워드를 입력해 주세요"
+            value={searchState?.keyword || ''}
+            onChange={val => handleChangeFilter('keyword', val)}
+          />
+        </Grid>
       </Grid>
       <Grid size="grow" display="flex" justifyContent="end" px={1} columnGap={1}>
-        <Button variant="outlined" onClick={onReset}>
+        <Button variant="outlined" className="MuiButton-noBorderRadius" onClick={onReset}>
           검색 초기화
         </Button>
-        <Button variant="contained" onClick={onSearch}>
+        <Button variant="contained" className="MuiButton-noBorderRadius" onClick={onSearch}>
           검색
         </Button>
       </Grid>

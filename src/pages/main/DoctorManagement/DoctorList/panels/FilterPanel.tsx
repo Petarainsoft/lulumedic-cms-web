@@ -6,11 +6,16 @@ import Button from '@mui/material/Button';
 import MultipleSelect from 'components/atoms/Select/MultipleSelect';
 import { useOutletContext } from 'react-router-dom';
 import Department from 'models/appointment/Department';
-import { ID, ObjMap } from 'constants/types';
+import { Any, ObjMap } from 'constants/types';
 import { useState } from 'react';
 import Chip from '@mui/material/Chip';
+import { SearchFilter } from 'services/DoctorService';
 
-const FilterPanel = () => {
+type Props = {
+  onFilterChange: (filter: SearchFilter) => void;
+};
+
+const FilterPanel = ({ onFilterChange }: Props) => {
   const { departments, departmentsMap } = useOutletContext<{
     departments: Department[];
     departmentsMap: ObjMap<Department>;
@@ -20,7 +25,19 @@ const FilterPanel = () => {
     value: item.id,
   }));
 
-  const [departmentsSelected, setDepartmentsSelected] = useState<ID[]>([]);
+  const [searchState, setSearchState] = useState<SearchFilter>({});
+
+  const onSearch = () => {
+    onFilterChange(searchState);
+  };
+
+  const handleChangeFilter = (fieldName: keyof SearchFilter, value: Any) => {
+    setSearchState({ ...searchState, [fieldName]: value });
+  };
+
+  const onReset = () => {
+    setSearchState({});
+  };
 
   return (
     <Grid container alignItems="center" rowGap={3} borderTop={1} borderBottom={1} py={2} borderColor="divider">
@@ -34,23 +51,23 @@ const FilterPanel = () => {
           sx={{ width: 180 }}
           placeholder="진료과 선택"
           options={departmentOptions}
-          value={departmentsSelected}
+          value={searchState.departmentId || []}
           onChange={val => {
-            setDepartmentsSelected(val);
+            handleChangeFilter('departmentId', val);
           }}
         />
 
         <Grid display="flex" columnGap={1} rowGap={1} flexWrap="wrap">
-          {(departmentsSelected || []).map(item => (
+          {(searchState?.departmentId || []).map(item => (
             <Chip
               key={item}
               label={departmentsMap[item]?.name || ''}
               color="primary"
               onDelete={() => {
-                const clone = [...(departmentsSelected || [])];
+                const clone = [...(searchState?.departmentId || [])];
                 const index = clone.indexOf(item);
                 clone.splice(index, 1);
-                setDepartmentsSelected(clone);
+                handleChangeFilter('departmentId', clone);
               }}
             />
           ))}
@@ -62,14 +79,19 @@ const FilterPanel = () => {
       </Grid>
 
       <Grid size={7}>
-        <TextField sx={{ width: '30%' }} placeholder="의사명을 검색해 주세요" />
+        <TextField
+          sx={{ width: '30%' }}
+          placeholder="의사명을 검색해 주세요"
+          value={searchState.name || ''}
+          onChange={value => handleChangeFilter('name', value)}
+        />
       </Grid>
 
       <Grid size={3} display="flex" columnGap={1} justifyContent="end">
-        <Button variant="outlined" className="MuiButton-noBorderRadius">
+        <Button variant="outlined" onClick={onReset}>
           검색 초기화
         </Button>
-        <Button variant="contained" className="MuiButton-noBorderRadius">
+        <Button variant="contained" onClick={onSearch}>
           검색
         </Button>
       </Grid>

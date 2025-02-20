@@ -3,8 +3,13 @@ import { Any, ID } from 'constants/types';
 import Doctor, { DoctorBody } from 'models/accounts/Doctor';
 import DoctorSchedule from 'models/appointment/DoctorSchedule';
 
-export const fetchDoctors = async () => {
-  const res = await get<Doctor[]>('/doctors');
+export type SearchFilter = {
+  departmentId?: ID[];
+  name?: string;
+};
+
+export const fetchDoctors = async (payload?: SearchFilter) => {
+  const res = await get<Doctor[]>('/doctors', payload);
   const data = (res.data || []).map((item: Any) => new Doctor(item));
 
   return data;
