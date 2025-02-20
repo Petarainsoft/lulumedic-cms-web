@@ -81,6 +81,10 @@ export const mainRoutes: RouteObject[] = [
       },
       {
         path: `:id/${MAIN_PATH.DOCTOR_SCHEDULES}`,
+        handle: {
+          title: '의사 상세',
+          crumbs: ['병원관리', '의사 관리', '스케줄 탭'],
+        } as RouterHandle,
         lazy: () => import('pages/main/DoctorManagement/DoctorSchedule/DoctorSchedulePage'),
       },
     ],
