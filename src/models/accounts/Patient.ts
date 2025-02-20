@@ -1,5 +1,5 @@
 import { ID, Obj } from 'constants/types';
-import { Relationship, relationshipLabels } from 'core/enum';
+import { Gender, GenderLabel, Relationship, relationshipLabels } from 'core/enum';
 import DataModel from 'models/base/DataModel';
 
 class Patient extends DataModel<Patient> {
@@ -16,6 +16,10 @@ class Patient extends DataModel<Patient> {
   guardianId?: ID;
 
   guardianName?: Relationship;
+
+  gender?: Gender;
+
+  dateOfBirth?: string;
 
   constructor(payload: Obj) {
     super();
@@ -34,6 +38,8 @@ class Patient extends DataModel<Patient> {
       address: this.address,
       guardianId: this.guardianId,
       guardianName: this.guardianName,
+      gender: this.gender,
+      dateOfBirth: this.dateOfBirth,
     };
   }
 
@@ -43,6 +49,10 @@ class Patient extends DataModel<Patient> {
 
   get firstTimeVisit() {
     return '초진';
+  }
+
+  get genderLabel() {
+    return this.gender ? GenderLabel[this.gender] : GenderLabel[Gender.OTHER];
   }
 }
 

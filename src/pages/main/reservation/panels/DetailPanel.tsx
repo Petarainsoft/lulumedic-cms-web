@@ -13,7 +13,7 @@ import Typography from 'components/atoms/Typography';
 import TextField from 'components/atoms/Input';
 
 // CONSTANTS
-import { ReasonType, reasonTypeOptions, ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
+import { Gender, ReasonType, reasonTypeOptions, ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
 import { ID, ObjMap } from 'constants/types';
 import { MAIN_PATH } from 'routes';
 
@@ -144,12 +144,15 @@ const DetailPanel = () => {
         {/* Name */}
         <InfoLabel label="이름" value={detail?.patientId ? patientsMap[detail?.patientId]?.name : ''} />
         {/* Birth date  */}
-        <InfoLabel label="생년월일" value="-" />
+        <InfoLabel label="생년월일" value={detail?.patientId ? patientsMap[detail?.patientId]?.dateOfBirth : ''} />
         {/* Contact */}
         <InfoLabel label="연락처" value={detail?.patientId ? patientsMap[detail?.patientId]?.phone : ''} />
 
         {/* gender */}
-        <InfoLabel label="성별" value="-" />
+        <InfoLabel
+          label="성별"
+          value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'genderLabel') : ''}
+        />
         {/* relationship  */}
         <InfoLabel label="보호자 관계" value={detail?.patientId ? patientsMap[detail?.patientId]?.relationship : ''} />
       </Information>
@@ -162,7 +165,10 @@ const DetailPanel = () => {
           value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'name') : ''}
         />
         {/* Birth date */}
-        <InfoLabel label="생년월일" value="-" />
+        <InfoLabel
+          label="생년월일"
+          value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'dateOfBirth') : ''}
+        />
         {/* Contact  */}
         <InfoLabel
           label="연락처"

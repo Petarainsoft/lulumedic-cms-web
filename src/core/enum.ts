@@ -184,3 +184,15 @@ export const WORKING_TYPE_COLOR = {
   [WORKING_TYPE.NO_CONSULTATION]: '#FF7676',
   [WORKING_TYPE.CONSULTATION]: '#90B9F9',
 };
+
+export enum Gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
+}
+
+export const GenderLabel = {
+  [Gender.MALE]: '남자',
+  [Gender.FEMALE]: '논자',
+  [Gender.OTHER]: '기타',
+};
