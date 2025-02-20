@@ -13,7 +13,7 @@ import Typography from 'components/atoms/Typography';
 import TextField from 'components/atoms/Input';
 
 // CONSTANTS
-import { Gender, ReasonType, reasonTypeOptions, ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
+import { ReasonType, reasonTypeOptions, ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
 import { ID, ObjMap } from 'constants/types';
 import { MAIN_PATH } from 'routes';
 
