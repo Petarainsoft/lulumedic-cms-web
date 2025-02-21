@@ -17,6 +17,10 @@ import Stack from '@mui/material/Stack';
 import { TimePickerProps } from '@mui/x-date-pickers';
 
 const PAGE_SIZE_OPTIONS = [30, 60, 90];
+export const autosizeOptions = {
+  includeHeaders: true,
+  includeOutliers: true,
+};
 
 export type TableGridActionsCellItem = Pick<GridActionsCellItemProps, 'label' | 'icon' | 'onClick' | 'key' | 'sx'> & {
   type: 'edit' | 'delete' | 'add' | 'add-above' | 'add-below';
@@ -70,6 +74,8 @@ export type DataTableProps = Pick<
   | 'rowModesModel'
   | 'onRowSelectionModelChange'
   | 'onRowClick'
+  | 'onColumnWidthChange'
+  | 'autosizeOptions'
 > & {
   density?: DataGridProps['density'];
   autoHeight?: DataGridProps['autoHeight'];

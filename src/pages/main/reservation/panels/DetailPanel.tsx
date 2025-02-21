@@ -136,7 +136,7 @@ const DetailPanel = () => {
   };
 
   return (
-    <Grid container rowGap={4} columnSpacing={2} height="100%" overflow="auto">
+    <Grid container rowGap={4} columnSpacing={2} height="100%" overflow="auto" direction="column">
       {/* Patient */}
       <Information title="환자정보">
         {/* Patient number */}
@@ -158,23 +158,25 @@ const DetailPanel = () => {
       </Information>
 
       {/* Guardian */}
-      <Information title="보호자 정보">
-        {/* Name */}
-        <InfoLabel
-          label="이름"
-          value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'name') : ''}
-        />
-        {/* Birth date */}
-        <InfoLabel
-          label="생년월일"
-          value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'dateOfBirth') : ''}
-        />
-        {/* Contact  */}
-        <InfoLabel
-          label="연락처"
-          value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'phone') : ''}
-        />
-      </Information>
+      {detail?.patientId && patientsMap[detail.patientId]?.guardianId && (
+        <Information title="보호자 정보">
+          {/* Name */}
+          <InfoLabel
+            label="이름"
+            value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'name') : ''}
+          />
+          {/* Birth date */}
+          <InfoLabel
+            label="생년월일"
+            value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'dateOfBirth') : ''}
+          />
+          {/* Contact  */}
+          <InfoLabel
+            label="연락처"
+            value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'phone') : ''}
+          />
+        </Information>
+      )}
 
       {/* Reservation */}
       <Information title="예약정보">

@@ -1,7 +1,7 @@
-import { useMemo, useState, useTransition } from 'react';
+import { useLayoutEffect, useMemo, useState, useTransition } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { dayjs } from 'utils/dateTime';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, useGridApiRef } from '@mui/x-data-grid';
 
 import Stack from '@mui/material/Stack';
 import Typography from 'components/atoms/Typography';
@@ -12,16 +12,21 @@ import DataTable from 'components/organisms/DataTable';
 // SERVICES
 import { fetchReservations, SearchFilter } from 'services/ReservationService';
 
+import { ObjMap } from 'constants/types';
+
+// MODELS
+import Doctor from 'models/accounts/Doctor';
+import TimeSlot from 'models/appointment/TimeSlot';
 import Patient from 'models/accounts/Patient';
 import Appointment from 'models/appointment/Appointment';
 import Department from 'models/appointment/Department';
 
-// import { MAIN_PATH } from 'routes';
-import { ObjMap } from 'constants/types';
-import Doctor from 'models/accounts/Doctor';
-import TimeSlot from 'models/appointment/TimeSlot';
 import { ReservationKeywordType, ReservationPeriod, ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
+import { useQueryElementTable } from 'hooks';
 
+export type GirdColDefColId = GridColDef & {
+  columnId?: string;
+};
 const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
   return (
     <Stack alignItems="center" direction="row" my={1}>
@@ -32,9 +37,11 @@ const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
   );
 };
 
-const ReservationList = () => {
+const ReservationList = ({ className }: { className?: string }) => {
+  const apiRef = useGridApiRef();
   const [reservations, setReservations] = useState<Appointment[]>([]);
   const [loading, setTransition] = useTransition();
+  const { tableWrapperRef, setCurrentTableWidth, tableWidth } = useQueryElementTable();
   const { patientsMap, departmentsMap, doctorsMap, timeSlotMap } = useOutletContext<{
     patientsMap: ObjMap<Patient>;
     departmentsMap: ObjMap<Department>;
@@ -47,16 +54,17 @@ const ReservationList = () => {
       {
         field: 'patientId',
         headerName: '환자번호',
-        width: 130,
+        resizable: false,
       },
       {
         field: 'id', // reservationNumber
         headerName: '예약번호',
-        width: 100,
+        resizable: false,
       },
       {
         field: 'firstTimeVisit',
         headerName: '초재진 구분',
+        resizable: false,
         renderCell: ({ row }) => {
           return patientsMap[row?.patientId]?.firstTimeVisit;
         },
@@ -65,6 +73,7 @@ const ReservationList = () => {
       {
         field: 'patientName',
         headerName: '이름',
+        resizable: false,
         renderCell: ({ row }) => {
           return patientsMap[row?.patientId]?.name;
         },
@@ -72,12 +81,13 @@ const ReservationList = () => {
       {
         field: 'birthDate',
         headerName: '생년월일',
+        resizable: false,
         // width: 230,
       },
       {
         field: 'contact',
         headerName: '연락처',
-        width: 130,
+        resizable: false,
         renderCell: ({ row }) => {
           return patientsMap[row?.patientId]?.phone;
         },
@@ -85,13 +95,14 @@ const ReservationList = () => {
       {
         field: 'createdAt', // make appointment date
         headerName: '진료예약',
-        width: 130,
+        resizable: false,
         valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
       },
       {
         field: 'department',
         headerName: '진료과',
-        width: 130,
+        resizable: false,
+        // width: 130,
         renderCell: ({ row }) => {
           const doctorId = timeSlotMap?.[row?.timeslotId]?.doctorId;
 
@@ -107,7 +118,7 @@ const ReservationList = () => {
       {
         field: 'doctorName',
         headerName: '담당의사',
-        width: 100,
+        resizable: false,
         renderCell: ({ row }) => {
           const doctorId = timeSlotMap?.[row?.timeslotId]?.doctorId;
           return doctorId ? doctorsMap[doctorId]?.name : '';
@@ -116,19 +127,20 @@ const ReservationList = () => {
       {
         field: 'status',
         headerName: '예약상태',
-        width: 130,
+        resizable: false,
         valueFormatter: (value: STATUS_TYPE) => (value ? ReservationStatusLabel[value] : ''),
       },
       {
         field: 'medicalStatus',
         headerName: '진료상태',
-        width: 130,
+        resizable: false,
+
         // valueFormatter: (value: STATUS_TYPE) => (value ? ReservationStatusLabel[value] : ''),
       },
       {
         field: 'reservationTime',
         headerName: '접수일자',
-        width: 130,
+        resizable: false,
         valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
       },
     ],
@@ -198,14 +210,44 @@ const ReservationList = () => {
     });
   };
 
+  useLayoutEffect(() => {
+    if (apiRef && reservations.length) {
+      apiRef.current.autosizeColumns({
+        includeHeaders: true,
+        includeOutliers: true,
+      });
+    }
+
+    if (tableWrapperRef.current) {
+      setCurrentTableWidth('.MuiDataGrid-columnHeader');
+    }
+  }, [apiRef, reservations.length, tableWrapperRef.current]);
+
   return (
-    <Grid container height="100%" overflow="auto" flexDirection="column" flexWrap="nowrap">
+    <Grid container height="100%" overflow="auto" flexDirection="column" flexWrap="nowrap" className={className}>
       <Grid size={12}>
         <Filter onFilterChange={values => onSearch(values)} />
       </Grid>
-
-      <Grid size={12} height="100%" overflow="auto">
+      <Grid size={12} height="100%" overflow="auto" ref={tableWrapperRef} sx={{ width: tableWidth || '100%' }}>
         <DataTable
+          className="Table-list"
+          autosizeOptions={{
+            columns: [
+              'patientId',
+              'id',
+              'firstTimeVisit',
+              'patientName',
+              'birthDate',
+              'contact',
+              'createdAt',
+              'department',
+              'doctorName',
+              'status',
+              'medicalStatus',
+              'reservationTime',
+            ],
+          }}
+          apiRef={apiRef}
           columns={columns}
           rows={reservations}
           loading={loading}

@@ -1,6 +1,7 @@
 import { useLayoutEffect } from 'react';
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
 
+import { MAIN_PATH } from 'routes';
 import RegisterForm from '../form/RegisterForm';
 import { Obj, ObjMap } from 'constants/types';
 import Doctor from 'models/accounts/Doctor';
@@ -15,6 +16,8 @@ import useNotification from 'hooks/useNotification';
 const RegisterPanel = () => {
   const params = useParams();
   const id = params?.id;
+  const navigate = useNavigate();
+
   const { doctorsMap, departmentsMap } = useOutletContext<{
     doctorsMap: ObjMap<Doctor>;
     departmentsMap: ObjMap<Department>;
@@ -46,6 +49,7 @@ const RegisterPanel = () => {
       res = await updateDoctorById(detail.id!, new Doctor(values).toBody());
     } else {
       res = await createDoctor(new Doctor(values).toBody());
+      navigate(`/${MAIN_PATH.DOCTOR_MANAGEMENT}`);
     }
 
     if (res) {

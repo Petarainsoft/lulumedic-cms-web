@@ -4,7 +4,7 @@ import { dayjs } from 'utils/dateTime';
 
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useScheduleCalendarContext } from '../DoctorSchedule/contexts/ScheduleCalendarContext';
+import { useScheduleCalendarContext } from '../doctorDetail/contexts/ScheduleCalendarContext';
 // import dayjs from 'dayjs';
 import Typography from 'components/atoms/Typography';
 import Button from '@mui/material/Button';

@@ -4,7 +4,7 @@ export enum MAIN_PATH {
   MAIN = '/',
   DOCTOR_MANAGEMENT = 'doctors',
   DOCTOR_CREATE = 'create',
-  DOCTOR_SCHEDULES = 'schedules',
+  DOCTOR_DETAIL = 'detail',
 
   RESERVATIONS = 'reservations',
   RESERVATION_DETAIL = 'reservations-detail',
@@ -64,14 +64,6 @@ export const mainRoutes: RouteObject[] = [
         lazy: () => import('pages/main/DoctorManagement/DoctorList/DoctorListPage'),
       },
       {
-        path: `:id`,
-        handle: {
-          title: '의사 상세',
-          crumbs: ['병원관리', '의사 관리', '의사 상세'],
-        } as RouterHandle,
-        lazy: () => import('pages/main/DoctorManagement/DoctorRegister/DoctorRegisterPage'),
-      },
-      {
         path: MAIN_PATH.DOCTOR_CREATE,
         handle: {
           title: '의사 상세',
@@ -80,13 +72,21 @@ export const mainRoutes: RouteObject[] = [
         lazy: () => import('pages/main/DoctorManagement/DoctorRegister/DoctorRegisterPage'),
       },
       {
-        path: `:id/${MAIN_PATH.DOCTOR_SCHEDULES}`,
+        path: `:id`,
         handle: {
           title: '의사 상세',
-          crumbs: ['병원관리', '의사 관리', '스케줄 탭'],
+          crumbs: ['병원관리', '의사 관리', '의사 상세'],
         } as RouterHandle,
-        lazy: () => import('pages/main/DoctorManagement/DoctorSchedule/DoctorSchedulePage'),
+        lazy: () => import('pages/main/DoctorManagement/doctorDetail/DoctorDetailPage'),
       },
+      // {
+      //   path: `:id/${MAIN_PATH.DOCTOR_DETAIL}`,
+      //   handle: {
+      //     title: '의사 상세',
+      //     crumbs: ['병원관리', '의사 관리', '스케줄 탭'],
+      //   } as RouterHandle,
+      //   lazy: () => import('pages/main/DoctorManagement/doctorDetail/DoctorDetailPage'),
+      // },
     ],
   },
 ];

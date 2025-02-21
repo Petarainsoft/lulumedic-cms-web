@@ -10,7 +10,7 @@ import { ScheduleData } from './MonthlyCalendar';
 
 // HOOKS
 import useCalendar from './hooks/useCalendar';
-import { useScheduleCalendarContext } from 'pages/main/DoctorManagement/DoctorSchedule/contexts/ScheduleCalendarContext';
+import { useScheduleCalendarContext } from 'pages/main/DoctorManagement/doctorDetail/contexts/ScheduleCalendarContext';
 
 const today = dayjs();
 
