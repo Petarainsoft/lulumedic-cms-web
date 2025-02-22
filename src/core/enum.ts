@@ -85,7 +85,7 @@ export const exposureOptions = Object.keys(EXPOSURE_LABELS).map(key => ({
 export enum STATUS_TYPE {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
-  COMPLETED = 'COMPLETED',
+  // COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
 }
 
@@ -93,7 +93,7 @@ export const ReservationStatusLabel = {
   All: '전체',
   [STATUS_TYPE.PENDING]: '예약대기',
   [STATUS_TYPE.APPROVED]: '예약확정',
-  [STATUS_TYPE.COMPLETED]: '완전한',
+  // [STATUS_TYPE.COMPLETED]: '완전한',
   [STATUS_TYPE.CANCELLED]: '예약취소',
 };
 

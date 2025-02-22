@@ -10,6 +10,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import { formatYearMonth } from 'utils/dateTime/formatDate';
 
 type Props = {
   // date: string;
@@ -46,7 +47,7 @@ const MonthlyNav = ({ onChangeMonth, onToday }: Props) => {
         </Popover>
       </Stack> */}
       <Typography variant="titleLarge" fontWeight="bold">
-        {dayjs(searchParams.get('date')).format('YYYY MMMM')}
+        {formatYearMonth(searchParams.get('date'))}
       </Typography>
       <Stack direction="row">
         <IconButton onClick={() => onChangeMonth('prev')}>

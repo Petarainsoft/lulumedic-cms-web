@@ -8,12 +8,17 @@ export enum MAIN_PATH {
 
   RESERVATIONS = 'reservations',
   RESERVATION_DETAIL = 'reservations-detail',
+
+  DEPARTMENT_MANAGEMENT = 'departments',
+  ID_LIST_MANAGEMENT = 'id-list',
 }
 
 export type RouterHandle = {
   title: string;
-  value: string;
   crumbs: string[];
+  showInMenu?: boolean;
+  path?: string;
+  disabled?: boolean;
 };
 
 export const mainRoutes: RouteObject[] = [
@@ -31,8 +36,9 @@ export const mainRoutes: RouteObject[] = [
         lazy: () => import('pages/main/reservation/reservationList/ReservationListPage'),
         handle: {
           title: '예약 리스트',
-          value: MAIN_PATH.RESERVATIONS,
           crumbs: ['예약내역', '예약 리스트'],
+          showInMenu: true,
+          path: MAIN_PATH.RESERVATIONS,
         } as RouterHandle,
       },
       {
@@ -58,8 +64,9 @@ export const mainRoutes: RouteObject[] = [
         index: true,
         handle: {
           title: '의사 관리',
-          value: MAIN_PATH.DOCTOR_MANAGEMENT,
           crumbs: ['병원관리', '의사 관리'],
+          showInMenu: true,
+          path: MAIN_PATH.DOCTOR_MANAGEMENT,
         } as RouterHandle,
         lazy: () => import('pages/main/DoctorManagement/DoctorList/DoctorListPage'),
       },
@@ -79,14 +86,26 @@ export const mainRoutes: RouteObject[] = [
         } as RouterHandle,
         lazy: () => import('pages/main/DoctorManagement/doctorDetail/DoctorDetailPage'),
       },
-      // {
-      //   path: `:id/${MAIN_PATH.DOCTOR_DETAIL}`,
-      //   handle: {
-      //     title: '의사 상세',
-      //     crumbs: ['병원관리', '의사 관리', '스케줄 탭'],
-      //   } as RouterHandle,
-      //   lazy: () => import('pages/main/DoctorManagement/doctorDetail/DoctorDetailPage'),
-      // },
+      // Department management
+      {
+        path: MAIN_PATH.DEPARTMENT_MANAGEMENT,
+        handle: {
+          title: '진료과 관리',
+          showInMenu: true,
+          disabled: true,
+          // path: MAIN_PATH.DEPARTMENT_MANAGEMENT,
+        } as RouterHandle,
+      },
+      // ID LIST
+      {
+        path: MAIN_PATH.ID_LIST_MANAGEMENT,
+        handle: {
+          title: '아이디 리스트',
+          showInMenu: true,
+          disabled: true,
+          // path: MAIN_PATH.ID_LIST_MANAGEMENT,
+        } as RouterHandle,
+      },
     ],
   },
 ];

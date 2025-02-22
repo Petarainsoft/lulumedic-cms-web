@@ -18,7 +18,6 @@ const tableOverrides = (): Pick<Components, 'MuiTableHead' | 'MuiTableCell' | 'M
         },
 
         '.MuiDataGrid-cell': {
-          backgroundColor: '#ffffff',
           borderBottom: '1px solid #E5E2E1',
           '&.no-padding': {
             padding: 0,

@@ -155,9 +155,10 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
         columns={columns}
         rows={doctorList}
         loading={loading}
-        onRowClick={val => {
-          navigate(`${val.id}`);
-        }}
+        disableRowSelectionOnClick
+        // onRowClick={val => {
+        //   navigate(`${val.id}`);
+        // }}
         slots={{
           toolbar: () => <GridToolbar totalRecord={doctorList?.length} />,
         }}

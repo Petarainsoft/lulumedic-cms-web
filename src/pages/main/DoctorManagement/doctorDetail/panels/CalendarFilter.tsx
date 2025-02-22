@@ -103,20 +103,20 @@ const CalenDarFilter = ({ className }: Props) => {
         </IconButton>
       </Stack> */}
 
-      <Stack flex="1" display="flex" justifyContent="center" alignItems="center">
+      <Stack flex="1" display="flex" justifyContent="center" alignItems="center" marginRight={3}>
         <Stack
           bgcolor="background.default"
-          width={100}
+          width={115}
           direction="row"
           justifyContent="center"
           borderRadius={8}
           px={0.8}
           py={0.5}
-          columnGap={1}
+          columnGap={0.5}
         >
           <Typography
             variant="bodyMedium"
-            width={40}
+            width={50}
             textAlign="center"
             className={`CalendarTab ${filterParams.view == 'monthly' ? 'CalendarActive' : ''}`}
             onClick={() => onChangeCalendarView('monthly')}
@@ -125,7 +125,7 @@ const CalenDarFilter = ({ className }: Props) => {
           </Typography>
           <Typography
             variant="bodyMedium"
-            width={40}
+            width={50}
             textAlign="center"
             className={`CalendarTab ${filterParams.view == 'weekly' ? 'CalendarActive' : ''}`}
             onClick={() => onChangeCalendarView('weekly')}
@@ -135,11 +135,11 @@ const CalenDarFilter = ({ className }: Props) => {
         </Stack>
       </Stack>
 
-      <Stack>
+      {/* <Stack>
         <Button variant="contained" className="MuiButton-noBorderRadius">
           스케줄 작성
         </Button>
-      </Stack>
+      </Stack> */}
     </Stack>
   );
 };

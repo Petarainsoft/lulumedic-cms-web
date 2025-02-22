@@ -29,7 +29,7 @@ const AppBreadcrumbs = () => {
     <Stack direction="row" columnGap={1} alignItems="center">
       <MuiBreadcrumbs aria-label="breadcrumb">
         {breadcrumbs.map((item, index) => (
-          <Typography variant="bodyMedium" color={breadcrumbs.length - 1 === index ? '' : 'text.disabled'}>
+          <Typography key={index} variant="bodyMedium" color={breadcrumbs.length - 1 === index ? '' : 'text.disabled'}>
             {item}
           </Typography>
         ))}

@@ -9,6 +9,7 @@ import mainRoutes, { MAIN_PATH } from 'routes/mainRoutes';
 import icon from 'assets/logo_2.svg';
 import { useEffect, useMemo, useState } from 'react';
 import { ID } from 'constants/types';
+import NavMenu from './components/NavMenu';
 
 // const options = [
 //   {
@@ -52,15 +53,16 @@ const Navbar = () => {
     return mainRoutes.reduce(
       (result, currentRoute) => {
         if (currentRoute.path == parentRouter) {
-          const childrenItem = (currentRoute.children || []).find(i => i.index);
+          const childrenItems = (currentRoute.children || []).filter(item => item.handle?.showInMenu);
 
-          if (childrenItem) {
-            setChildrenRouter(childrenItem.handle?.value as MAIN_PATH);
+          if (childrenItems.length) {
+            console.log({ childrenItems });
+            setChildrenRouter(childrenItems[0].handle?.path as MAIN_PATH);
 
-            result.push({
-              label: childrenItem.handle?.title || '',
-              value: childrenItem.handle?.value || '',
-            });
+            result = childrenItems.map(item => ({
+              label: item.handle?.title || '',
+              value: item.handle?.disabled ? '' : (item.index ? item.handle?.path : item.path) || '',
+            }));
           }
         }
 
@@ -70,15 +72,17 @@ const Navbar = () => {
     );
   }, [parentRouter]);
 
+  console.log({ childrenPaths });
+  useEffect(() => {
+    console.log({ childrenRouter });
+  }, [childrenRouter]);
+
   const onSelectPageChange = (value: ID) => {
-    // setParentRouter(value as MAIN_PATH);
     navigate(value as string);
   };
 
   const onChildrenChange = (value: ID) => {
     navigate(value as string);
-
-    // setChildrenRouter(value as MAIN_PATH);
   };
 
   return (
@@ -87,10 +91,11 @@ const Navbar = () => {
         <Image src={icon} width={120} height={40} />
       </Stack>
 
-      <Stack flex="1" direction="row" columnGap={1}>
-        <Select defaultValue={parentRouter} options={mainPaths} onChange={onSelectPageChange} />
+      <Stack flex="1" direction="row" columnGap={3} alignItems="center">
+        {parentRouter && <NavMenu options={mainPaths} value={parentRouter} onChange={onSelectPageChange} />}
+        {/* <Select defaultValue={parentRouter} options={mainPaths} onChange={onSelectPageChange} /> */}
         {childrenPaths.length ? (
-          <Select options={childrenPaths} value={childrenRouter} onChange={onChildrenChange} />
+          <NavMenu options={childrenPaths} value={childrenRouter} onChange={onChildrenChange} />
         ) : null}
       </Stack>
 

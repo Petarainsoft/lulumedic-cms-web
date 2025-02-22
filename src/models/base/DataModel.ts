@@ -1,4 +1,4 @@
-import BaseDataModel from 'utils/dateTime/dataModel/BaseDataModel';
+import BaseDataModel from 'utils/dataModel/BaseDataModel';
 
 import { ID, Obj } from 'constants/types';
 
