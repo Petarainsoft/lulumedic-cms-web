@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useState, useTransition } from 'react';
+import { useDeferredValue, useEffect, useLayoutEffect, useMemo, useState, useTransition } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { dayjs } from 'utils/dateTime';
 import { GridColDef, useGridApiRef } from '@mui/x-data-grid';
@@ -38,10 +38,13 @@ const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
 };
 
 const ReservationList = ({ className }: { className?: string }) => {
+  const [cachedTableWidth, setCachedTableWidth] = useState(0);
+  const tableWidthAfterResizeFinal = useDeferredValue(cachedTableWidth);
+
   const apiRef = useGridApiRef();
   const [reservations, setReservations] = useState<Appointment[]>([]);
   const [loading, setTransition] = useTransition();
-  const { tableWrapperRef, setCurrentTableWidth, tableWidth } = useQueryElementTable();
+  const { tableWrapperRef, setCurrentTableWidth, tableWidth, forceAddColumnWidth } = useQueryElementTable();
   const { patientsMap, departmentsMap, doctorsMap, timeSlotMap } = useOutletContext<{
     patientsMap: ObjMap<Patient>;
     departmentsMap: ObjMap<Department>;
@@ -54,17 +57,15 @@ const ReservationList = ({ className }: { className?: string }) => {
       {
         field: 'patientId',
         headerName: '환자번호',
-        resizable: false,
       },
       {
         field: 'id', // reservationNumber
         headerName: '예약번호',
-        resizable: false,
       },
       {
         field: 'firstTimeVisit',
         headerName: '초재진 구분',
-        resizable: false,
+
         renderCell: ({ row }) => {
           return patientsMap[row?.patientId]?.firstTimeVisit;
         },
@@ -73,7 +74,7 @@ const ReservationList = ({ className }: { className?: string }) => {
       {
         field: 'patientName',
         headerName: '이름',
-        resizable: false,
+
         renderCell: ({ row }) => {
           return patientsMap[row?.patientId]?.name;
         },
@@ -81,13 +82,13 @@ const ReservationList = ({ className }: { className?: string }) => {
       {
         field: 'birthDate',
         headerName: '생년월일',
-        resizable: false,
+
         // width: 230,
       },
       {
         field: 'contact',
         headerName: '연락처',
-        resizable: false,
+
         renderCell: ({ row }) => {
           return patientsMap[row?.patientId]?.phone;
         },
@@ -95,13 +96,13 @@ const ReservationList = ({ className }: { className?: string }) => {
       {
         field: 'createdAt', // make appointment date
         headerName: '진료예약',
-        resizable: false,
+
         valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
       },
       {
         field: 'department',
         headerName: '진료과',
-        resizable: false,
+
         // width: 130,
         renderCell: ({ row }) => {
           const doctorId = timeSlotMap?.[row?.timeslotId]?.doctorId;
@@ -118,7 +119,7 @@ const ReservationList = ({ className }: { className?: string }) => {
       {
         field: 'doctorName',
         headerName: '담당의사',
-        resizable: false,
+
         renderCell: ({ row }) => {
           const doctorId = timeSlotMap?.[row?.timeslotId]?.doctorId;
           return doctorId ? doctorsMap[doctorId]?.name : '';
@@ -127,20 +128,20 @@ const ReservationList = ({ className }: { className?: string }) => {
       {
         field: 'status',
         headerName: '예약상태',
-        resizable: false,
+
         valueFormatter: (value: STATUS_TYPE) => (value ? ReservationStatusLabel[value] : ''),
       },
       {
         field: 'medicalStatus',
         headerName: '진료상태',
-        resizable: false,
 
         // valueFormatter: (value: STATUS_TYPE) => (value ? ReservationStatusLabel[value] : ''),
       },
       {
         field: 'reservationTime',
         headerName: '접수일자',
-        resizable: false,
+
+        flex: 1,
         valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
       },
     ],
@@ -210,6 +211,22 @@ const ReservationList = ({ className }: { className?: string }) => {
     });
   };
 
+  const onHandleColumnResize = () => {
+    const newWidth = apiRef.current.getAllColumns().reduce((result, current) => result + (current?.width || 0), 0);
+
+    setCachedTableWidth(newWidth);
+  };
+
+  useEffect(() => {
+    const parentNode = tableWrapperRef.current?.parentNode as HTMLDivElement;
+
+    if (tableWrapperRef.current?.offsetWidth && tableWidthAfterResizeFinal <= parentNode?.offsetWidth) {
+      forceAddColumnWidth(tableWidthAfterResizeFinal);
+    } else {
+      forceAddColumnWidth(0);
+    }
+  }, [tableWidthAfterResizeFinal]);
+
   useLayoutEffect(() => {
     if (apiRef && reservations.length) {
       apiRef.current.autosizeColumns({
@@ -231,6 +248,7 @@ const ReservationList = ({ className }: { className?: string }) => {
       <Grid size={12} height="100%" overflow="auto" ref={tableWrapperRef} sx={{ width: tableWidth || '100%' }}>
         <DataTable
           className="Table-list"
+          onColumnResize={onHandleColumnResize}
           autosizeOptions={{
             columns: [
               'patientId',

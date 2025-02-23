@@ -76,6 +76,7 @@ export type DataTableProps = Pick<
   | 'onRowClick'
   | 'onColumnWidthChange'
   | 'autosizeOptions'
+  | 'onColumnResize'
 > & {
   density?: DataGridProps['density'];
   autoHeight?: DataGridProps['autoHeight'];
@@ -138,7 +139,7 @@ const DataTableStyled = styled(DataTable)`
     // border-right: solid 1px ${p => p.theme.palette?.background?.outlineVariant};
   }
   .MuiDataGrid-cell {
-    border-right: solid 1px ${p => p.theme.palette?.background?.outlineVariant};
+    // border-right: solid 1px ${p => p.theme.palette?.background?.outlineVariant};
   }
 
   .MuiDataGrid-row {

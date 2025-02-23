@@ -17,7 +17,7 @@ import Department from 'models/appointment/Department';
 import { CancelPossibleValue, Exposure, EXPOSURE_LABELS, ReservationPossibleValue } from 'core/enum';
 import Doctor from 'models/accounts/Doctor';
 import { useQueryElementTable } from 'hooks';
-import { useLayoutEffect, useMemo } from 'react';
+import { useDeferredValue, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import Grid from '@mui/material/Grid2';
 
 const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
@@ -39,7 +39,11 @@ type Props = {
 };
 const DoctorListPanel = ({ doctorList, loading }: Props) => {
   const apiRef = useGridApiRef();
-  const { tableWrapperRef, setCurrentTableWidth, tableWidth } = useQueryElementTable();
+  const [cachedTableWidth, setCachedTableWidth] = useState(0);
+
+  const tableWidthAfterResizeFinal = useDeferredValue(cachedTableWidth);
+
+  const { tableWrapperRef, setCurrentTableWidth, tableWidth, forceAddColumnWidth } = useQueryElementTable();
 
   const { departmentsMap } = useOutletContext<{ departmentsMap: ObjMap<Department> }>();
 
@@ -49,12 +53,11 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
       {
         field: 'name',
         headerName: '의사명',
-        resizable: false,
       },
       {
         field: 'departmentId',
         headerName: '진료과',
-        resizable: false,
+
         valueGetter: value => {
           return departmentsMap[value]?.name;
         },
@@ -62,17 +65,14 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
       {
         field: 'contact',
         headerName: '연락처',
-        resizable: false,
       },
       {
         field: 'position',
         headerName: '포지션',
-        resizable: false,
       },
       {
         field: 'autoConfirmReservation', // auto confirm
         headerName: '예약확정',
-        resizable: false,
 
         renderCell: ({ value }) => {
           return value ? '자동확정' : '';
@@ -81,19 +81,19 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
       {
         field: 'reservationAvailableDates',
         headerName: '예약 가능일',
-        resizable: false,
+
         valueFormatter: (value: number) => ReservationPossibleValue[value as keyof typeof ReservationPossibleValue],
       },
       {
         field: 'cancellationAvailableDates',
         headerName: '취소 가능일',
-        resizable: false,
+
         valueFormatter: (value: number) => CancelPossibleValue[value as keyof typeof CancelPossibleValue],
       },
       {
         field: 'exposure',
         headerName: '노출여부',
-        resizable: false,
+
         renderCell: ({ value, row }) => {
           return (
             <Stack direction="row" justifyContent="space-between" alignItems="center" height="100%" columnGap={2}>
@@ -114,13 +114,28 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
       {
         field: 'createdAt',
         headerName: '등록일자',
-        resizable: false,
 
+        flex: 1,
         valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
       },
     ],
     [doctorList.length]
   );
+
+  const onHandleColumnResize = () => {
+    const newWidth = apiRef.current.getAllColumns().reduce((result, current) => result + (current?.width || 0), 0);
+    setCachedTableWidth(newWidth);
+  };
+
+  useEffect(() => {
+    const parentNode = tableWrapperRef.current?.parentNode as HTMLDivElement;
+
+    if (tableWrapperRef.current?.offsetWidth && tableWidthAfterResizeFinal <= parentNode.offsetWidth) {
+      forceAddColumnWidth(tableWidthAfterResizeFinal);
+    } else {
+      forceAddColumnWidth(0);
+    }
+  }, [tableWidthAfterResizeFinal]);
 
   useLayoutEffect(() => {
     if (apiRef && doctorList.length) {
@@ -138,6 +153,7 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
   return (
     <Grid ref={tableWrapperRef} height="100%" overflow="auto" sx={{ width: tableWidth || '100%' }}>
       <DataTable
+        onColumnResize={onHandleColumnResize}
         autosizeOptions={{
           columns: [
             'name',
@@ -156,9 +172,6 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
         rows={doctorList}
         loading={loading}
         disableRowSelectionOnClick
-        // onRowClick={val => {
-        //   navigate(`${val.id}`);
-        // }}
         slots={{
           toolbar: () => <GridToolbar totalRecord={doctorList?.length} />,
         }}

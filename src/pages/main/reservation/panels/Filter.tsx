@@ -110,7 +110,7 @@ const Filter = ({ onFilterChange }: Props) => {
       borderTop={1}
       borderBottom={1}
       borderColor="divider"
-      py={4}
+      py={2}
     >
       <Grid size={1.5}>
         <Typography color="textDisabled">예약상태</Typography>
@@ -228,14 +228,15 @@ const Filter = ({ onFilterChange }: Props) => {
             onChange={val => handleChangeFilter('keyword', val)}
           />
         </Grid>
-      </Grid>
-      <Grid size="grow" display="flex" justifyContent="end" px={1} columnGap={1}>
-        <Button variant="outlined" className="MuiButton-noBorderRadius" onClick={onReset}>
-          검색 초기화
-        </Button>
-        <Button variant="contained" className="MuiButton-noBorderRadius" onClick={onSearch}>
-          검색
-        </Button>
+
+        <Grid size="grow" display="flex" justifyContent="end" px={1} columnGap={1}>
+          <Button variant="outlined" className="MuiButton-noBorderRadius" onClick={onReset}>
+            검색 초기화
+          </Button>
+          <Button variant="contained" className="MuiButton-noBorderRadius" onClick={onSearch}>
+            검색
+          </Button>
+        </Grid>
       </Grid>
     </Grid>
   );

@@ -23,10 +23,15 @@ const useQueryElementTable = () => {
     }, timer || 200);
   };
 
+  const forceAddColumnWidth = (value: number) => {
+    setWidth(value);
+  };
+
   return {
     tableWrapperRef,
     tableWidth,
     setCurrentTableWidth,
+    forceAddColumnWidth,
   };
 };
 
