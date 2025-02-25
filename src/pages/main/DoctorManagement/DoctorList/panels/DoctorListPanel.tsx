@@ -205,6 +205,17 @@ const DoctorListPanel = () => {
           rows={doctors}
           loading={loading}
           disableRowSelectionOnClick
+          toolBarActions={[
+            {
+              label: '의사 등록',
+              variant: 'contained',
+              color: 'primary',
+              className: 'MuiButton-noBorderRadius',
+              onClick: () => {
+                navigate('create');
+              },
+            },
+          ]}
           onRowClick={val => {
             navigate(`${val.id}`);
           }}

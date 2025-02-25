@@ -17,13 +17,15 @@ import DoctorSchedule from 'models/appointment/DoctorSchedule';
 import { Button } from '@mui/material';
 import ScheduleCalendarProvider from '../contexts/ScheduleCalendarContext';
 import { MAIN_PATH } from 'routes';
+import Doctor from 'models/accounts/Doctor';
 
 type Props = {
+  doctorDetail?: Doctor;
   doctorSchedules: DoctorSchedule[];
   className?: string;
 };
 
-const DoctorDetailPanel = ({ doctorSchedules, className }: Props) => {
+const DoctorDetailPanel = ({ doctorSchedules, doctorDetail, className }: Props) => {
   const navigate = useNavigate();
 
   const scheduleMapByDate = doctorSchedules.reduce(
@@ -61,6 +63,7 @@ const DoctorDetailPanel = ({ doctorSchedules, className }: Props) => {
   const handleChangeTab = (_event: React.SyntheticEvent, newValue: number) => {
     setTabVal(newValue);
   };
+
   return (
     <TabContext value={tabVal}>
       <Grid overflow="auto" display="flex" flexDirection="column" className={className} rowGap={2}>
@@ -71,7 +74,7 @@ const DoctorDetailPanel = ({ doctorSchedules, className }: Props) => {
 
         <Grid overflow="auto">
           <TabPanel value={0}>
-            <RegisterPanel />
+            <RegisterPanel detail={doctorDetail} />
           </TabPanel>
 
           <TabPanel value={1} sx={{ padding: 0 }}>

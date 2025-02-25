@@ -1,7 +1,7 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useOutletContext, useParams } from 'react-router-dom';
-import { fetchWorkingSchedulesByDoctorId } from 'services/DoctorService';
+import { fetchWorkingSchedulesByDoctorId, findDoctorById } from 'services/DoctorService';
 import DoctorSchedule from 'models/appointment/DoctorSchedule';
 import { useBreadcrumbsContext } from 'components/molecules/AppBreadcrumbs/AppBreadcrumbs';
 import { ObjMap } from 'constants/types';
@@ -12,27 +12,30 @@ import DoctorDetailPanel from './panels/DoctorDetailPanel';
 const DoctorDetailPage = () => {
   const params = useParams();
   const id = params?.id;
+  const [detail, setDetail] = useState<Doctor | undefined>(undefined);
 
   const [doctorSchedules, setDoctorSchedules] = useState<DoctorSchedule[]>([]);
-  const { doctorsMap, departmentsMap } = useOutletContext<{
-    doctorsMap: ObjMap<Doctor>;
+  const { departmentsMap } = useOutletContext<{
     departmentsMap: ObjMap<Department>;
   }>();
 
   const { subBreadcrumbs, setSubBreadcrumbs } = useBreadcrumbsContext();
-  const detail = id ? doctorsMap[id] : undefined;
 
-  useLayoutEffect(() => {
-    if (detail && !subBreadcrumbs) {
-      setSubBreadcrumbs(`(${departmentsMap[detail.departmentId!]?.name} - ${detail.name})`);
-    }
+  useEffect(() => {
+    (async () => {
+      if (id) {
+        const detailRes = await findDoctorById(id);
+        setDetail(detailRes);
+        setSubBreadcrumbs(`(${departmentsMap[detailRes.departmentId!]?.name} - ${detailRes.name})`);
+      }
+    })();
 
     return () => {
       if (subBreadcrumbs) {
         setSubBreadcrumbs('');
       }
     };
-  }, [detail, subBreadcrumbs]);
+  }, [id]);
 
   useEffect(() => {
     (async () => {
@@ -45,7 +48,11 @@ const DoctorDetailPage = () => {
     })();
   }, []);
 
-  return <DoctorDetailPanel doctorSchedules={doctorSchedules} />;
+  if (id) {
+    return detail && <DoctorDetailPanel doctorDetail={detail} doctorSchedules={doctorSchedules} />;
+  }
+
+  return <DoctorDetailPanel doctorDetail={detail} doctorSchedules={doctorSchedules} />;
 };
 
 export { DoctorDetailPage as Component };

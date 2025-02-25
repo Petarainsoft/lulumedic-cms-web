@@ -98,6 +98,7 @@ type Props = {
   doctorDetail?: DoctorDto;
 };
 const RegisterForm = ({ doctorDetail }: Props) => {
+  console.log({ doctorDetail });
   const navigate = useNavigate();
   const {
     methods: { setValue },

@@ -13,6 +13,7 @@ import Typography from 'components/atoms/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { SelectOption } from 'constants/elements';
 import { ID } from 'constants/types';
+import Button, { ButtonProps } from '@mui/material/Button';
 
 // const getPageCount = (rowCount: number, pageSize: number): number => {
 //   if (pageSize > 0 && rowCount > 0) {
@@ -28,9 +29,15 @@ export type TableToolbarProps = {
   totalRecord: number;
   rowsPerPageOptions?: number[];
   sortFields?: SortField[];
+  toolBarActions?: (ButtonProps & { label: string })[];
 };
 
-const TableToolbar = ({ totalRecord, rowsPerPageOptions = [30, 60, 90], sortFields }: TableToolbarProps) => {
+const TableToolbar = ({
+  totalRecord,
+  rowsPerPageOptions = [30, 60, 90],
+  sortFields,
+  toolBarActions,
+}: TableToolbarProps) => {
   const apiRef = useGridApiContext();
   // const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   // const rootProps = useGridRootProps();
@@ -75,6 +82,12 @@ const TableToolbar = ({ totalRecord, rowsPerPageOptions = [30, 60, 90], sortFiel
       <Typography flex="1" color="primary" variant="titleLarge" fontWeight="bold">
         리스트 {totalRecord}
       </Typography>
+
+      {(toolBarActions || []).map(item => (
+        <Button key={item.key} {...item}>
+          {item.label}
+        </Button>
+      ))}
 
       {sortFieldOptions.length ? (
         <Select

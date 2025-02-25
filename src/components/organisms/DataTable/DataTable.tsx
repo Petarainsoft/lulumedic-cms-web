@@ -90,6 +90,7 @@ export type DataTableProps = Pick<
   autoRowHeight?: boolean;
   totalRecord?: number;
   sortFields?: TableToolbarProps['sortFields'];
+  toolBarActions?: TableToolbarProps['toolBarActions'];
   //   color?: TableColor; // default: "default"
 };
 
@@ -101,6 +102,7 @@ const DataTable = ({
   hideFooterPagination,
   totalRecord = 0,
   sortFields,
+  toolBarActions,
   ...rest
 }: DataTableProps) => {
   return (
@@ -114,7 +116,12 @@ const DataTable = ({
         sx={{ minHeight, borderRadius: '8px 8px 0 0' }}
         slots={{
           toolbar: () => (
-            <TableToolbar rowsPerPageOptions={PAGE_SIZE_OPTIONS} totalRecord={totalRecord} sortFields={sortFields} />
+            <TableToolbar
+              toolBarActions={toolBarActions}
+              rowsPerPageOptions={PAGE_SIZE_OPTIONS}
+              totalRecord={totalRecord}
+              sortFields={sortFields}
+            />
           ),
           pagination: Pagination,
           moreActionsIcon: MoreHorizIcon,

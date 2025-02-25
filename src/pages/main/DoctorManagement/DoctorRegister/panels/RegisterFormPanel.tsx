@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react';
-import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { MAIN_PATH } from 'routes';
 import RegisterForm from '../form/RegisterForm';
@@ -13,19 +13,18 @@ import { Form } from 'components/atoms/Form';
 import { createDoctor, updateDoctorById } from 'services/DoctorService';
 import useNotification from 'hooks/useNotification';
 
-const RegisterPanel = () => {
-  const params = useParams();
-  const id = params?.id;
+type Props = {
+  detail?: Doctor | undefined;
+};
+const RegisterPanel = ({ detail }: Props) => {
   const navigate = useNavigate();
+  const { onSuccess, onError } = useNotification();
 
-  const { doctorsMap, departmentsMap } = useOutletContext<{
-    doctorsMap: ObjMap<Doctor>;
+  const { departmentsMap } = useOutletContext<{
     departmentsMap: ObjMap<Department>;
   }>();
-  const { subBreadcrumbs, setSubBreadcrumbs } = useBreadcrumbsContext();
-  const detail = id ? doctorsMap[id] : undefined;
 
-  const { onSuccess, onError } = useNotification();
+  const { subBreadcrumbs, setSubBreadcrumbs } = useBreadcrumbsContext();
 
   useLayoutEffect(() => {
     if (detail && !subBreadcrumbs) {
