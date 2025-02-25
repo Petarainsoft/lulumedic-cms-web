@@ -7,3 +7,7 @@ export const loginApi = async (payload: { username: string; password: string }) 
     payload
   );
 };
+
+export const getNewToken = async (payload: { refreshToken: string }) => {
+  return await post<{ accessToken: string; refreshToken: string }>('/auth/refresh', payload);
+};

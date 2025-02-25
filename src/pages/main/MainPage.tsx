@@ -14,9 +14,7 @@ import { fetchPatients } from 'services/PatientService';
 // MODELS
 import Patient from 'models/accounts/Patient';
 import { ObjMap } from 'constants/types';
-import Doctor from 'models/accounts/Doctor';
 import Department from 'models/appointment/Department';
-import { fetchDoctors } from 'services/DoctorService';
 import { fetchTDepartments } from 'services/DepartmentService';
 import TimeSlot from 'models/appointment/TimeSlot';
 import { fetchTimeSlots } from 'services/TimeSlotService';
@@ -28,19 +26,16 @@ const MainPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [patientsMap, setPatientsMap] = useState<ObjMap<Patient>>({});
-  const [doctorsMap, setDoctorsMap] = useState<ObjMap<Doctor>>({});
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [departmentsMap, setDepartmentsMap] = useState<ObjMap<Department>>({});
   const [departments, setDepartments] = useState<Department[]>([]);
   const [timeSlotMap, setTimeSlotMap] = useState<ObjMap<TimeSlot>>({});
 
-  const doctorLength = useDeferredValue(doctors.length);
   const departmentsLength = useDeferredValue(departments.length);
 
   useEffect(() => {
     (async () => {
       const res = await fetchPatients();
-      const doctors = await fetchDoctors();
+      // const doctors = await fetchDoctors();
       const departments = await fetchTDepartments();
       const timeSlots = await fetchTimeSlots();
 
@@ -50,15 +45,6 @@ const MainPage = () => {
             acc[item.id] = item;
             return acc;
           }, {} as ObjMap<TimeSlot>);
-        });
-      }
-      if (doctors) {
-        setDoctors(doctors);
-        setDoctorsMap(() => {
-          return doctors.reduce((acc, item) => {
-            acc[item.id] = item;
-            return acc;
-          }, {} as ObjMap<Doctor>);
         });
       }
 
@@ -112,15 +98,13 @@ const MainPage = () => {
               <div>{item}</div>
             ))}
           </Grid> */}
-            {doctorLength && departmentsLength ? (
+            {departmentsLength ? (
               <Outlet
                 context={{
                   patientsMap,
-                  doctorsMap,
                   departmentsMap,
                   timeSlotMap,
                   departments,
-                  doctors,
                   departmentOptions,
                 }}
               />

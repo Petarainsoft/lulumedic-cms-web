@@ -37,7 +37,7 @@ export const fetchReservations = async (payload?: SearchFilter) => {
 };
 
 export const fetchReservationById = async (id: ID) => {
-  const res = await get<Appointment>(`/appointments/${id}`);
+  const res = await get<Appointment>(`/appointments/${id}/details`);
   const data = new Appointment(res.data);
 
   return data;

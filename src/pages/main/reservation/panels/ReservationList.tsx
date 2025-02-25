@@ -13,7 +13,6 @@ import { fetchReservations, SearchFilter } from 'services/ReservationService';
 import { ObjMap } from 'constants/types';
 
 // MODELS
-import Doctor from 'models/accounts/Doctor';
 import TimeSlot from 'models/appointment/TimeSlot';
 import Patient from 'models/accounts/Patient';
 import Appointment from 'models/appointment/Appointment';
@@ -40,10 +39,9 @@ const ReservationList = ({ className }: { className?: string }) => {
   const [reservations, setReservations] = useState<Appointment[]>([]);
   const [loading, setTransition] = useTransition();
   const { tableWrapperRef, setCurrentTableWidth, tableWidth, forceAddColumnWidth } = useQueryElementTable();
-  const { patientsMap, departmentsMap, doctorsMap, timeSlotMap } = useOutletContext<{
+  const { patientsMap, departmentsMap, timeSlotMap } = useOutletContext<{
     patientsMap: ObjMap<Patient>;
     departmentsMap: ObjMap<Department>;
-    doctorsMap: ObjMap<Doctor>;
     timeSlotMap: ObjMap<TimeSlot>;
   }>();
   const navigate = useNavigate();
@@ -122,7 +120,7 @@ const ReservationList = ({ className }: { className?: string }) => {
         valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
       },
     ],
-    [reservations.length, patientsMap, departmentsMap, doctorsMap, timeSlotMap]
+    [reservations.length, patientsMap, departmentsMap, timeSlotMap]
   );
 
   const onSearch = async (payload?: SearchFilter) => {

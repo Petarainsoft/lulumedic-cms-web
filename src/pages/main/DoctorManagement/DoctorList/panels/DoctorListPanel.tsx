@@ -16,24 +16,25 @@ import Department from 'models/appointment/Department';
 import { CancelPossibleValue, Exposure, EXPOSURE_LABELS, ReservationPossibleValue } from 'core/enum';
 import Doctor from 'models/accounts/Doctor';
 import { useQueryElementTable } from 'hooks';
-import { useDeferredValue, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from 'react';
 import Grid from '@mui/material/Grid2';
+import { usePagination } from 'components/molecules/Pagination';
+import { fetchDoctors, SearchFilter } from 'services/DoctorService';
+import FilterPanel from './FilterPanel';
 
-type Props = {
-  doctorList: Doctor[];
-  loading?: boolean;
-};
-const DoctorListPanel = ({ doctorList, loading }: Props) => {
+const DoctorListPanel = () => {
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [loading, setLoading] = useTransition();
+  const searchValues = useRef<SearchFilter | undefined>({});
+
   const apiRef = useGridApiRef();
   const [cachedTableWidth, setCachedTableWidth] = useState(0);
-
+  const { paginationModel, setPagination, onPaginationChangePage } = usePagination();
   const tableWidthAfterResizeFinal = useDeferredValue(cachedTableWidth);
-
   const { tableWrapperRef, setCurrentTableWidth, tableWidth, forceAddColumnWidth } = useQueryElementTable();
-
   const { departmentsMap } = useOutletContext<{ departmentsMap: ObjMap<Department> }>();
-
   const navigate = useNavigate();
+
   const columns: GridColDef[] = useMemo(
     () => [
       {
@@ -111,7 +112,7 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
         valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
       },
     ],
-    [doctorList.length]
+    [doctors.length]
   );
 
   const onHandleColumnResize = () => {
@@ -119,6 +120,30 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
     setCachedTableWidth(newWidth);
   };
 
+  useEffect(() => {
+    (async () => {
+      await onSearch({
+        ...searchValues.current,
+        page: paginationModel.page + 1,
+        pageSize: paginationModel.pageSize,
+      });
+    })();
+  }, [paginationModel.page, paginationModel.pageSize]);
+
+  const onSearch = async (payload?: SearchFilter) => {
+    setLoading(async () => {
+      const rs = await fetchDoctors(payload);
+      searchValues.current = payload;
+
+      if (rs?.data) {
+        setDoctors(rs.data);
+        setPagination({
+          ...paginationModel,
+          count: rs.meta?.count || 0,
+        });
+      }
+    });
+  };
   useEffect(() => {
     const parentNode = tableWrapperRef.current?.parentNode as HTMLDivElement;
 
@@ -130,7 +155,7 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
   }, [tableWidthAfterResizeFinal]);
 
   useLayoutEffect(() => {
-    if (apiRef && doctorList.length) {
+    if (apiRef && doctors.length) {
       apiRef.current.autosizeColumns({
         includeHeaders: true,
         includeOutliers: true,
@@ -140,35 +165,51 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
     if (tableWrapperRef.current) {
       setCurrentTableWidth('.MuiDataGrid-columnHeader');
     }
-  }, [apiRef, doctorList.length, tableWrapperRef.current]);
+  }, [apiRef, doctors.length, tableWrapperRef.current]);
 
   return (
-    <Grid ref={tableWrapperRef} height="100%" overflow="auto" sx={{ width: tableWidth || '100%' }}>
-      <DataTable
-        onColumnResize={onHandleColumnResize}
-        autosizeOptions={{
-          columns: [
-            'name',
-            'departmentId',
-            'contact',
-            'position',
-            'autoConfirmReservation',
-            'reservationAvailableDates',
-            'cancellationAvailableDates',
-            'exposure',
-            'createdAt',
-          ],
-        }}
-        apiRef={apiRef}
-        columns={columns}
-        rows={doctorList}
-        loading={loading}
-        totalRecord={doctorList.length}
-        disableRowSelectionOnClick
-        onRowClick={val => {
-          navigate(`${val.id}`);
-        }}
-      />
+    <Grid container height="100%" overflow="auto" flexDirection="column" flexWrap="nowrap">
+      <Grid size={12}>
+        <FilterPanel onFilterChange={onSearch} />
+      </Grid>
+      <Grid size={12} ref={tableWrapperRef} height="100%" overflow="auto" sx={{ width: tableWidth || '100%' }}>
+        <DataTable
+          paginationModel={paginationModel}
+          paginationMode="server"
+          rowCount={paginationModel.count}
+          totalRecord={paginationModel.count}
+          onColumnResize={onHandleColumnResize}
+          onPaginationModelChange={onPaginationChangePage}
+          slots={{
+            noRowsOverlay: () => (
+              <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                의사가 없습니다.
+              </div>
+            ),
+          }}
+          autosizeOptions={{
+            columns: [
+              'name',
+              'departmentId',
+              'contact',
+              'position',
+              'autoConfirmReservation',
+              'reservationAvailableDates',
+              'cancellationAvailableDates',
+              'exposure',
+              'createdAt',
+            ],
+          }}
+          apiRef={apiRef}
+          columns={columns}
+          rows={doctors}
+          loading={loading}
+          disableRowSelectionOnClick
+          onRowClick={val => {
+            navigate(`${val.id}`);
+          }}
+        />
+      </Grid>
     </Grid>
   );
 };

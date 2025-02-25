@@ -11,6 +11,7 @@ import Dialog from 'components/molecules/Dialog';
 import Select from 'components/atoms/Select';
 import Typography from 'components/atoms/Typography';
 import TextField from 'components/atoms/Input';
+import CancelDetail from '../components/CancelDetail';
 
 // CONSTANTS
 import { ReasonType, reasonTypeOptions, ReservationStatusLabel, STATUS_TYPE } from 'core/enum';
@@ -20,15 +21,14 @@ import { MAIN_PATH } from 'routes';
 // MODELS
 import Appointment from 'models/appointment/Appointment';
 import Patient from 'models/accounts/Patient';
-import Department from 'models/appointment/Department';
-import Doctor from 'models/accounts/Doctor';
 import TimeSlot from 'models/appointment/TimeSlot';
 
 // HOOKS
 import useOpen from 'hooks/useOpen';
-import { fetchReservationById, updateReservationById } from 'services/ReservationService';
 import useNotification from 'hooks/useNotification';
-import CancelDetail from '../components/CancelDetail';
+
+// SERVICES
+import { fetchReservationById, updateReservationById } from 'services/ReservationService';
 
 const reservationStatus = Object.keys(ReservationStatusLabel)
   .map(key => ({
@@ -51,10 +51,8 @@ const DetailPanel = () => {
   const [openReason, reasonProps] = useOpen();
   const { onSuccess, onError } = useNotification();
 
-  const { patientsMap, departmentsMap, doctorsMap, timeSlotMap } = useOutletContext<{
+  const { patientsMap, timeSlotMap } = useOutletContext<{
     patientsMap: ObjMap<Patient>;
-    departmentsMap: ObjMap<Department>;
-    doctorsMap: ObjMap<Doctor>;
     timeSlotMap: ObjMap<TimeSlot>;
   }>();
 
@@ -68,15 +66,6 @@ const DetailPanel = () => {
     if (params?.id) {
       const res = await fetchReservationById(params?.id);
       setDetail(res);
-    }
-  };
-
-  const getDepartment = (timeSlotId: ID) => {
-    const doctorId = timeSlotMap?.[timeSlotId]?.doctorId;
-
-    if (doctorId) {
-      const departmentId = doctorsMap?.[doctorId]?.departmentId;
-      return departmentId ? departmentsMap[departmentId!]?.name : '';
     }
   };
 
@@ -118,15 +107,6 @@ const DetailPanel = () => {
     return '';
   };
 
-  const getDoctor = () => {
-    if (detail?.timeslotId) {
-      const doctorId = timeSlotMap?.[detail?.timeslotId]?.doctorId;
-      return doctorId ? doctorsMap[doctorId]?.name : '';
-    }
-
-    return '';
-  };
-
   const getAppointmentDate = () => {
     if (detail?.timeslotId) {
       const workingDate = timeSlotMap?.[detail?.timeslotId]?.workingDate;
@@ -135,6 +115,16 @@ const DetailPanel = () => {
 
     return '';
   };
+
+  const handleSubmit = () => {
+    if (detail?.status === changedRefs.current.status) {
+      goBackList();
+    } else {
+      openConfirm();
+    }
+  };
+
+  const goBackList = () => navigate(MAIN_PATH.RESERVATIONS);
 
   return (
     <Grid container rowGap={4} columnSpacing={2} height="100%" overflow="auto" direction="column" flexWrap="nowrap">
@@ -186,7 +176,7 @@ const DetailPanel = () => {
         {/* Make an appointment */}
         <InfoLabel label="진료예약" value={getAppointmentDate()} />
         {/* Department */}
-        <InfoLabel label="진료과" value={getDepartment(detail?.timeslotId || '')} />
+        <InfoLabel label="진료과" value={detail?.departmentName || ''} />
 
         {/* Treatment status */}
         <InfoLabel label="진료상태" value={detail?.treatmentStatusLabel} />
@@ -197,7 +187,7 @@ const DetailPanel = () => {
         />
 
         {/* Doctor name  */}
-        <InfoLabel label="담당의사" value={detail?.timeslotId ? getDoctor() : ''} />
+        <InfoLabel label="담당의사" value={detail?.doctorName} />
         {/* Symptom description */}
         <InfoLabel label="증상설명" value={detail?.symptoms} />
 
@@ -222,11 +212,11 @@ const DetailPanel = () => {
       </Information>
 
       <Grid size={12} display="flex" justifyContent="center" columnGap={2}>
-        <Button variant="outlined" sx={{ width: 100 }} onClick={() => navigate(MAIN_PATH.RESERVATIONS)}>
+        <Button variant="outlined" sx={{ width: 120 }} onClick={goBackList}>
           리스트
         </Button>
         {detail?.status !== STATUS_TYPE.CANCELLED && (
-          <Button variant="contained" sx={{ width: 100 }} onClick={openConfirm}>
+          <Button variant="contained" sx={{ width: 120 }} onClick={handleSubmit}>
             저장
           </Button>
         )}

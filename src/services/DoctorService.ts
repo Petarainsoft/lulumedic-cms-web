@@ -1,4 +1,4 @@
-import { get, patch, post } from './base/BaseApi';
+import { get, Pagination, patch, post } from './base/BaseApi';
 import { Any, ID } from 'constants/types';
 import Doctor, { DoctorBody } from 'models/accounts/Doctor';
 import DoctorSchedule from 'models/appointment/DoctorSchedule';
@@ -6,13 +6,16 @@ import DoctorSchedule from 'models/appointment/DoctorSchedule';
 export type SearchFilter = {
   departmentId?: ID[];
   name?: string;
-};
+} & Pagination;
 
 export const fetchDoctors = async (payload?: SearchFilter) => {
   const res = await get<Doctor[]>('/doctors', payload);
   const data = (res.data || []).map((item: Any) => new Doctor(item));
 
-  return data;
+  return {
+    data,
+    meta: res?.meta,
+  };
 };
 
 export const findDoctorById = async (id: ID) => {
