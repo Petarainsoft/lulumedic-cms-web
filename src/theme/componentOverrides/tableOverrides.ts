@@ -4,6 +4,17 @@ const tableOverrides = (): Pick<Components, 'MuiTableHead' | 'MuiTableCell' | 'M
   MuiDataGrid: {
     styleOverrides: {
       root: {
+        '.MuiDataGrid-row': {
+          borderBottom: '#E5E2E1',
+          '&:hover': {
+            backgroundColor: '#fff2f2',
+          },
+          // border-bottom: solid 1px ${p => p.theme.palette?.background?.outlineVariant};
+          // &:hover {
+          //   background-color: #fff2f2;
+          // }
+        },
+
         '.MuiDataGrid-withBorderColor ': {
           borderColor: '#E5E2E1',
         },
@@ -21,6 +32,9 @@ const tableOverrides = (): Pick<Components, 'MuiTableHead' | 'MuiTableCell' | 'M
           borderBottom: '1px solid #E5E2E1',
           '&.no-padding': {
             padding: 0,
+          },
+          '&:focus': {
+            outline: 0,
           },
         },
       },

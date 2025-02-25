@@ -28,13 +28,14 @@ import TimeSlot from 'models/appointment/TimeSlot';
 import useOpen from 'hooks/useOpen';
 import { fetchReservationById, updateReservationById } from 'services/ReservationService';
 import useNotification from 'hooks/useNotification';
+import CancelDetail from '../components/CancelDetail';
 
 const reservationStatus = Object.keys(ReservationStatusLabel)
   .map(key => ({
     label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
     value: key,
   }))
-  .filter(item => item.label !== ReservationStatusLabel.All && item.value !== STATUS_TYPE.COMPLETED);
+  .filter(item => item.label !== ReservationStatusLabel.All);
 
 const DetailPanel = () => {
   const params = useParams();
@@ -136,7 +137,7 @@ const DetailPanel = () => {
   };
 
   return (
-    <Grid container rowGap={4} columnSpacing={2} height="100%" overflow="auto" direction="column">
+    <Grid container rowGap={4} columnSpacing={2} height="100%" overflow="auto" direction="column" flexWrap="nowrap">
       {/* Patient */}
       <Information title="환자정보">
         {/* Patient number */}
@@ -149,10 +150,7 @@ const DetailPanel = () => {
         <InfoLabel label="연락처" value={detail?.patientId ? patientsMap[detail?.patientId]?.phone : ''} />
 
         {/* gender */}
-        <InfoLabel
-          label="성별"
-          value={detail?.patientId ? getPatientInfo(patientsMap[detail.patientId]?.guardianId, 'genderLabel') : ''}
-        />
+        <InfoLabel label="성별" value={detail?.patientId ? getPatientInfo(detail?.patientId, 'genderLabel') : ''} />
         {/* relationship  */}
         <InfoLabel label="보호자 관계" value={detail?.patientId ? patientsMap[detail?.patientId]?.relationship : ''} />
       </Information>
@@ -191,7 +189,7 @@ const DetailPanel = () => {
         <InfoLabel label="진료과" value={getDepartment(detail?.timeslotId || '')} />
 
         {/* Treatment status */}
-        <InfoLabel label="진료상태" value="-" />
+        <InfoLabel label="진료상태" value={detail?.treatmentStatusLabel} />
         {/* First time visit */}
         <InfoLabel
           label="초재진 구분"
@@ -215,11 +213,12 @@ const DetailPanel = () => {
         {/* Cancel date */}
         <InfoLabel
           label="취소일자"
-          value={detail?.deletedAt ? dayjs(detail?.deletedAt).format('YYYY-MM-DD HH:mm') : ''}
+          value={detail?.cancelledAt ? dayjs(detail?.cancelledAt).format('YYYY-MM-DD HH:mm') : ''}
         />
 
         {/* Reason */}
-        <InfoLabel label="취소사유" value={detail?.cancelReason} />
+        {/* <InfoLabel label="취소사유" value={detail?.cancelReason} /> */}
+        <CancelDetail cancelType={detail?.reasonType} reasonInput={detail?.cancelReason} />
       </Information>
 
       <Grid size={12} display="flex" justifyContent="center" columnGap={2}>

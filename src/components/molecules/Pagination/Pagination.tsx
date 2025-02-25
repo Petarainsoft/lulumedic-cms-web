@@ -1,10 +1,10 @@
 import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid2';
 // import Typography from '@mui/material/Typography';
-import Select from 'components/atoms/Select';
+// import Select from 'components/atoms/Select';
 
 // ICONS
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 export type PaginationProps = {
   className?: string;
@@ -22,10 +22,10 @@ const AppPagination = ({
   page = 1,
   pageCount,
   // total = 0,
-  pageSize,
-  rowsPerPageOptions = [30, 60, 90],
+  // pageSize,
+  // rowsPerPageOptions = [30, 60, 90],
   onPageChange,
-  onPageSizeChange,
+  // onPageSizeChange,
 }: PaginationProps) => {
   return (
     <Grid
@@ -42,14 +42,14 @@ const AppPagination = ({
           Page Size
         </Typography> */}
 
-        <Select
+        {/* <Select
           value={pageSize}
           onChange={value => onPageSizeChange?.(value as number)}
           options={rowsPerPageOptions.map(num => ({ label: num.toString(), value: num }))}
           name="rowsPage"
           IconComponent={params => <KeyboardArrowDownIcon {...params} fontSize="small" color="secondary" />}
           sx={{ boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 }, width: 80 }}
-        />
+        /> */}
       </Grid>
 
       <Grid size="grow" offset={3.5}>

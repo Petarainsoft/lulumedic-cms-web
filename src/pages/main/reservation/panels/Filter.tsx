@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { dayjs } from 'utils/dateTime';
 
@@ -14,12 +14,11 @@ import Chip from '@mui/material/Chip';
 
 import {
   ReservationStatusLabel,
-  MedicalStatus,
   reservationPeriodOptions,
   reservationKeywordTypeOptions,
-  STATUS_TYPE,
   ReservationPeriod,
   ReservationKeywordType,
+  TreatmentStatusLabel,
 } from 'core/enum';
 
 import { Any, ObjMap } from 'constants/types';
@@ -44,14 +43,12 @@ const reservationStatus = Object.keys(ReservationStatusLabel)
     label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
     value: key,
   }))
-  .filter(item => item.value !== 'All' && item.value !== STATUS_TYPE.COMPLETED);
+  .filter(item => item.value !== 'All');
 
-const medicalStatusOptions = Object.keys(MedicalStatus)
-  .map(key => ({
-    label: MedicalStatus[key as keyof typeof MedicalStatus],
-    value: key,
-  }))
-  .filter(item => item.value !== 'All' && item.value !== 'Waiting');
+const medicalStatusOptions = Object.keys(TreatmentStatusLabel).map(key => ({
+  label: TreatmentStatusLabel[key as keyof typeof TreatmentStatusLabel],
+  value: key,
+}));
 
 type Props = {
   onFilterChange: (filter: SearchFilter) => void;
@@ -67,12 +64,6 @@ const Filter = ({ onFilterChange }: Props) => {
     label: item.name,
     value: item.id,
   }));
-
-  useEffect(() => {
-    (async () => {
-      await onSearch();
-    })();
-  }, []);
 
   const handleChangeFilter = (fieldName: keyof SearchFilter, value: Any) => {
     if (fieldName === 'startDate') {
@@ -101,6 +92,19 @@ const Filter = ({ onFilterChange }: Props) => {
   const onReset = () => {
     setSearchState(filterDefault);
   };
+
+  const departmentsSelected = useMemo(() => {
+    if (searchState.departmentId) {
+      const temp = searchState.departmentId
+        .map(id => departmentsMap[id])
+        .sort((a, b) => a!.name!.localeCompare(b!.name!, 'ko'));
+
+      return temp;
+    }
+
+    return [];
+  }, [searchState.departmentId]);
+
   return (
     <Grid
       container
@@ -129,9 +133,9 @@ const Filter = ({ onFilterChange }: Props) => {
       </Grid>
       <Grid size={10}>
         <CheckboxGroup
-          values={searchState?.medicalStatus}
+          values={searchState?.treatmentStatus}
           options={medicalStatusOptions}
-          onChange={val => handleChangeFilter('medicalStatus', val)}
+          onChange={val => handleChangeFilter('treatmentStatus', val)}
         />
       </Grid>
 
@@ -151,19 +155,21 @@ const Filter = ({ onFilterChange }: Props) => {
         />
 
         <Grid display="flex" columnGap={1} rowGap={1} flexWrap="wrap">
-          {(searchState.departmentId || []).map(item => (
-            <Chip
-              key={item}
-              label={departmentsMap[item]?.name || ''}
-              color="primary"
-              onDelete={() => {
-                const clone = [...(searchState.departmentId || [])];
-                const index = clone.indexOf(item);
-                clone.splice(index, 1);
-                handleChangeFilter('departmentId', clone);
-              }}
-            />
-          ))}
+          {departmentsSelected.length
+            ? departmentsSelected.map(item => (
+                <Chip
+                  key={item?.id}
+                  label={item?.name || ''}
+                  color="primary"
+                  onDelete={() => {
+                    const clone = [...(searchState.departmentId || [])];
+                    const index = clone.indexOf(item!.id);
+                    clone.splice(index, 1);
+                    handleChangeFilter('departmentId', clone);
+                  }}
+                />
+              ))
+            : null}
         </Grid>
       </Grid>
 

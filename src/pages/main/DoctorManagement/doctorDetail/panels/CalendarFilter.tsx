@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { dayjs } from 'utils/dateTime';
 import styled from '@emotion/styled';
 import Typography from 'components/atoms/Typography';
-import Button from '@mui/material/Button';
 import Stack, { StackProps } from '@mui/material/Stack';
 import MonthlyNav from '../../components/MonthlyNav';
 import WeeklyNav from '../../components/WeeklyNav';
@@ -150,6 +149,7 @@ const CalendarStyled = styled(CalenDarFilter)`
     border-radius: 20px;
     cursor: pointer;
     font-weight: 600;
+    color: ${p => p.theme.palette?.text?.disabled};
 
     &.CalendarActive {
       background-color: #ffffff;

@@ -1,10 +1,8 @@
-import { useDeferredValue, useEffect, useLayoutEffect, useMemo, useState, useTransition } from 'react';
+import { useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { dayjs } from 'utils/dateTime';
-import { GridColDef, useGridApiRef } from '@mui/x-data-grid';
 
-import Stack from '@mui/material/Stack';
-import Typography from 'components/atoms/Typography';
+import { dayjs } from 'utils/dateTime';
+import { GridColDef, GridPaginationModel, useGridApiRef } from '@mui/x-data-grid';
 import Grid from '@mui/material/Grid2';
 import Filter from './Filter';
 import DataTable from 'components/organisms/DataTable';
@@ -27,19 +25,16 @@ import { useQueryElementTable } from 'hooks';
 export type GirdColDefColId = GridColDef & {
   columnId?: string;
 };
-const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
-  return (
-    <Stack alignItems="center" direction="row" my={1}>
-      <Typography flex="1" color="primary" variant="titleLarge" fontWeight="bold">
-        리스트 {totalRecord}
-      </Typography>
-    </Stack>
-  );
-};
 
 const ReservationList = ({ className }: { className?: string }) => {
   const [cachedTableWidth, setCachedTableWidth] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 30,
+    count: 0,
+  });
   const tableWidthAfterResizeFinal = useDeferredValue(cachedTableWidth);
+  const searchValues = useRef<SearchFilter | undefined>({});
 
   const apiRef = useGridApiRef();
   const [reservations, setReservations] = useState<Appointment[]>([]);
@@ -57,10 +52,12 @@ const ReservationList = ({ className }: { className?: string }) => {
       {
         field: 'patientId',
         headerName: '환자번호',
+        minWidth: 80,
       },
       {
         field: 'id', // reservationNumber
         headerName: '예약번호',
+        minWidth: 80,
       },
       {
         field: 'firstTimeVisit',
@@ -74,75 +71,55 @@ const ReservationList = ({ className }: { className?: string }) => {
       {
         field: 'patientName',
         headerName: '이름',
-
-        renderCell: ({ row }) => {
-          return patientsMap[row?.patientId]?.name;
-        },
+        minWidth: 80,
       },
       {
         field: 'birthDate',
         headerName: '생년월일',
-
+        minWidth: 120,
+        renderCell: ({ row }) => {
+          return patientsMap[row?.patientId]?.dateOfBirth;
+        },
         // width: 230,
       },
       {
-        field: 'contact',
+        field: 'phone',
         headerName: '연락처',
-
-        renderCell: ({ row }) => {
-          return patientsMap[row?.patientId]?.phone;
-        },
+        minWidth: 140,
       },
       {
         field: 'createdAt', // make appointment date
         headerName: '진료예약',
-
-        valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
+        minWidth: 150,
+        valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
       },
       {
-        field: 'department',
+        field: 'departmentName',
         headerName: '진료과',
-
-        // width: 130,
-        renderCell: ({ row }) => {
-          const doctorId = timeSlotMap?.[row?.timeslotId]?.doctorId;
-
-          if (doctorId) {
-            const departmentId = doctorsMap?.[doctorId]?.departmentId;
-
-            return departmentId ? departmentsMap[departmentId!]?.name : '';
-          }
-
-          return '';
-        },
+        minWidth: 100,
       },
       {
         field: 'doctorName',
         headerName: '담당의사',
-
-        renderCell: ({ row }) => {
-          const doctorId = timeSlotMap?.[row?.timeslotId]?.doctorId;
-          return doctorId ? doctorsMap[doctorId]?.name : '';
-        },
+        minWidth: 100,
       },
       {
         field: 'status',
         headerName: '예약상태',
-
+        minWidth: 80,
         valueFormatter: (value: STATUS_TYPE) => (value ? ReservationStatusLabel[value] : ''),
       },
       {
-        field: 'medicalStatus',
+        field: 'treatmentStatusLabel',
         headerName: '진료상태',
-
-        // valueFormatter: (value: STATUS_TYPE) => (value ? ReservationStatusLabel[value] : ''),
+        minWidth: 90,
       },
       {
-        field: 'reservationTime',
+        field: 'workingDate',
         headerName: '접수일자',
-
+        minWidth: 140,
         flex: 1,
-        valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
+        valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
       },
     ],
     [reservations.length, patientsMap, departmentsMap, doctorsMap, timeSlotMap]
@@ -193,6 +170,8 @@ const ReservationList = ({ className }: { className?: string }) => {
       payload.id = undefined;
     }
 
+    searchValues.current = payload;
+
     setTransition(async () => {
       const res = await fetchReservations({
         id: payload?.id,
@@ -205,9 +184,19 @@ const ReservationList = ({ className }: { className?: string }) => {
         endReceiptDate: payload?.endReceiptDate,
         startAppointmentDate: payload?.startAppointmentDate,
         endAppointmentDate: payload?.endAppointmentDate,
+        treatmentStatus: payload?.treatmentStatus,
+
+        page: paginationModel.page + 1,
+        pageSize: paginationModel.pageSize,
       });
 
-      setReservations(res);
+      if (res.data) {
+        setReservations(res.data);
+        setPaginationModel(prev => ({
+          ...prev,
+          count: res.meta.count,
+        }));
+      }
     });
   };
 
@@ -216,6 +205,27 @@ const ReservationList = ({ className }: { className?: string }) => {
 
     setCachedTableWidth(newWidth);
   };
+
+  const onPageChange = (value: GridPaginationModel) => {
+    searchValues.current = {
+      ...searchValues.current,
+      ...value,
+    };
+    setPaginationModel(prev => ({
+      ...prev,
+      ...value,
+    }));
+  };
+
+  useEffect(() => {
+    (async () => {
+      await onSearch({
+        ...searchValues.current,
+        page: paginationModel.page,
+        pageSize: paginationModel.pageSize,
+      });
+    })();
+  }, [paginationModel.page, paginationModel.pageSize]);
 
   useEffect(() => {
     const parentNode = tableWrapperRef.current?.parentNode as HTMLDivElement;
@@ -248,6 +258,9 @@ const ReservationList = ({ className }: { className?: string }) => {
       <Grid size={12} height="100%" overflow="auto" ref={tableWrapperRef} sx={{ width: tableWidth || '100%' }}>
         <DataTable
           className="Table-list"
+          paginationModel={paginationModel}
+          paginationMode="server"
+          rowCount={paginationModel.count}
           onColumnResize={onHandleColumnResize}
           autosizeOptions={{
             columns: [
@@ -269,17 +282,31 @@ const ReservationList = ({ className }: { className?: string }) => {
           columns={columns}
           rows={reservations}
           loading={loading}
+          totalRecord={paginationModel.count}
           onRowClick={val => {
             navigate(`${val.id}`);
           }}
+          disableRowSelectionOnClick
+          onPaginationModelChange={onPageChange}
           slots={{
-            toolbar: () => <GridToolbar totalRecord={reservations.length} />,
             noRowsOverlay: () => (
               <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 예약 내역이 없습니다.
               </div>
             ),
           }}
+          sortFields={[
+            {
+              field: 'reservationTime',
+              label: '진료예약순',
+              sort: 'desc',
+            },
+            {
+              field: 'createdAt',
+              label: '진료예약',
+              sort: 'desc',
+            },
+          ]}
         />
       </Grid>
     </Grid>

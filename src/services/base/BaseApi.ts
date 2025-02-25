@@ -13,6 +13,11 @@ export type AppResponse<T> = {
   status?: string;
 };
 
+export type Pagination = {
+  page?: number;
+  pageSize?: number;
+};
+
 const axiosInstance = axios.create({
   baseURL: env.API_URI,
   headers: {

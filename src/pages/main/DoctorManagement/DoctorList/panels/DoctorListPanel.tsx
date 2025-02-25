@@ -3,7 +3,6 @@ import { dayjs } from 'utils/dateTime';
 
 import { GridColDef, useGridApiRef } from '@mui/x-data-grid';
 
-import { Link } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Typography from 'components/atoms/Typography';
 import Button from '@mui/material/Button';
@@ -19,19 +18,6 @@ import Doctor from 'models/accounts/Doctor';
 import { useQueryElementTable } from 'hooks';
 import { useDeferredValue, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import Grid from '@mui/material/Grid2';
-
-const GridToolbar = ({ totalRecord }: { totalRecord: number }) => {
-  return (
-    <Stack alignItems="center" direction="row" my={1}>
-      <Typography flex="1" color="primary" variant="titleLarge" fontWeight="bold">
-        리스트 {totalRecord}
-      </Typography>
-      <Link to="create">
-        <Button variant="contained">의사 등록</Button>
-      </Link>
-    </Stack>
-  );
-};
 
 type Props = {
   doctorList: Doctor[];
@@ -53,11 +39,12 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
       {
         field: 'name',
         headerName: '의사명',
+        minWidth: 100,
       },
       {
         field: 'departmentId',
         headerName: '진료과',
-
+        minWidth: 100,
         valueGetter: value => {
           return departmentsMap[value]?.name;
         },
@@ -65,15 +52,17 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
       {
         field: 'contact',
         headerName: '연락처',
+        minWidth: 100,
       },
       {
         field: 'position',
         headerName: '포지션',
+        minWidth: 150,
       },
       {
         field: 'autoConfirmReservation', // auto confirm
         headerName: '예약확정',
-
+        minWidth: 100,
         renderCell: ({ value }) => {
           return value ? '자동확정' : '';
         },
@@ -81,18 +70,21 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
       {
         field: 'reservationAvailableDates',
         headerName: '예약 가능일',
+        minWidth: 180,
 
         valueFormatter: (value: number) => ReservationPossibleValue[value as keyof typeof ReservationPossibleValue],
       },
       {
         field: 'cancellationAvailableDates',
         headerName: '취소 가능일',
+        minWidth: 180,
 
         valueFormatter: (value: number) => CancelPossibleValue[value as keyof typeof CancelPossibleValue],
       },
       {
         field: 'exposure',
         headerName: '노출여부',
+        minWidth: 180,
 
         renderCell: ({ value, row }) => {
           return (
@@ -114,9 +106,9 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
       {
         field: 'createdAt',
         headerName: '등록일자',
-
+        minWidth: 150,
         flex: 1,
-        valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
+        valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
       },
     ],
     [doctorList.length]
@@ -171,9 +163,10 @@ const DoctorListPanel = ({ doctorList, loading }: Props) => {
         columns={columns}
         rows={doctorList}
         loading={loading}
+        totalRecord={doctorList.length}
         disableRowSelectionOnClick
-        slots={{
-          toolbar: () => <GridToolbar totalRecord={doctorList?.length} />,
+        onRowClick={val => {
+          navigate(`${val.id}`);
         }}
       />
     </Grid>

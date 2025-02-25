@@ -1,7 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
-import Select from 'components/atoms/Select';
 import Stack from '@mui/material/Stack';
 import { Image } from 'components/atoms/Image';
 import mainRoutes, { MAIN_PATH } from 'routes/mainRoutes';

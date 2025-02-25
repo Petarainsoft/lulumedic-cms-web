@@ -7,7 +7,7 @@ import MultipleSelect from 'components/atoms/Select/MultipleSelect';
 import { useOutletContext } from 'react-router-dom';
 import Department from 'models/appointment/Department';
 import { Any, ObjMap } from 'constants/types';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Chip from '@mui/material/Chip';
 import { SearchFilter } from 'services/DoctorService';
 
@@ -39,6 +39,18 @@ const FilterPanel = ({ onFilterChange }: Props) => {
     setSearchState({});
   };
 
+  const departmentsSelected = useMemo(() => {
+    if (searchState.departmentId) {
+      const temp = searchState.departmentId
+        .map(id => departmentsMap[id])
+        .sort((a, b) => a!.name!.localeCompare(b!.name!, 'ko'));
+
+      return temp;
+    }
+
+    return [];
+  }, [searchState.departmentId]);
+
   return (
     <Grid container alignItems="center" rowGap={3} borderTop={1} borderBottom={1} py={2} borderColor="divider">
       {/* Department */}
@@ -58,19 +70,21 @@ const FilterPanel = ({ onFilterChange }: Props) => {
         />
 
         <Grid display="flex" columnGap={1} rowGap={1} flexWrap="wrap">
-          {(searchState?.departmentId || []).map(item => (
-            <Chip
-              key={item}
-              label={departmentsMap[item]?.name || ''}
-              color="primary"
-              onDelete={() => {
-                const clone = [...(searchState?.departmentId || [])];
-                const index = clone.indexOf(item);
-                clone.splice(index, 1);
-                handleChangeFilter('departmentId', clone);
-              }}
-            />
-          ))}
+          {departmentsSelected.length
+            ? departmentsSelected.map(item => (
+                <Chip
+                  key={item!.id}
+                  label={item!.name || ''}
+                  color="primary"
+                  onDelete={() => {
+                    const clone = [...(searchState?.departmentId || [])];
+                    const index = clone.indexOf(item!.id);
+                    clone.splice(index, 1);
+                    handleChangeFilter('departmentId', clone);
+                  }}
+                />
+              ))
+            : null}
         </Grid>
       </Grid>
 
@@ -88,10 +102,10 @@ const FilterPanel = ({ onFilterChange }: Props) => {
       </Grid>
 
       <Grid size={3} display="flex" columnGap={1} justifyContent="end">
-        <Button variant="outlined" onClick={onReset}>
+        <Button variant="outlined" onClick={onReset} className="MuiButton-noBorderRadius">
           검색 초기화
         </Button>
-        <Button variant="contained" onClick={onSearch}>
+        <Button variant="contained" onClick={onSearch} className="MuiButton-noBorderRadius">
           검색
         </Button>
       </Grid>

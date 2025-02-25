@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { dayjs } from 'utils/dateTime';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import MonthlyCalendar, { ScheduleData } from 'components/organisms/Calendar/MonthlyCalendar';
@@ -16,6 +16,7 @@ import RegisterPanel from 'pages/main/DoctorManagement/DoctorRegister/panels/Reg
 import DoctorSchedule from 'models/appointment/DoctorSchedule';
 import { Button } from '@mui/material';
 import ScheduleCalendarProvider from '../contexts/ScheduleCalendarContext';
+import { MAIN_PATH } from 'routes';
 
 type Props = {
   doctorSchedules: DoctorSchedule[];
@@ -23,6 +24,8 @@ type Props = {
 };
 
 const DoctorDetailPanel = ({ doctorSchedules, className }: Props) => {
+  const navigate = useNavigate();
+
   const scheduleMapByDate = doctorSchedules.reduce(
     (acc, cur) => {
       const date = cur.date || '';
@@ -108,7 +111,9 @@ const DoctorDetailPanel = ({ doctorSchedules, className }: Props) => {
 
         {tabVal ? (
           <Grid textAlign="center">
-            <Button variant="outlined">리스트 이동</Button>
+            <Button variant="outlined" onClick={() => navigate(`/${MAIN_PATH.DOCTOR_MANAGEMENT}`)}>
+              리스트 이동
+            </Button>
           </Grid>
         ) : null}
       </Grid>

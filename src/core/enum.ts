@@ -138,22 +138,33 @@ export const reservationKeywordTypeOptions = Object.keys(ReservationKeywordTypeL
   value: key,
 }));
 
+// enum REASON_TYPE {
+//   PATIENT_CANCELLATION = 'PATIENT_CANCELLATION',
+//   CANCELLATION_OF_TREATMENT = 'CANCELLATION_OF_TREATMENT',
+//   EMERGENCY_SURGERY = 'EMERGENCY_SURGERY',
+//   OTHER = 'OTHER',
+// }
+
 export enum ReasonType {
-  CancelOfTreatment = 'CancelOfTreatment',
-  EmergencySurgery = 'EmergencySurgery',
-  Other = 'Other',
+  PatientCancellation = 'PATIENT_CANCELLATION',
+  CancelOfTreatment = 'CANCELLATION_OF_TREATMENT',
+  EmergencySurgery = 'EMERGENCY_SURGERY',
+  Other = 'OTHER',
 }
 
-const reasonTypeLabels = {
+export const reasonTypeLabels = {
+  [ReasonType.PatientCancellation]: '환자취소',
   [ReasonType.CancelOfTreatment]: '진료취소',
   [ReasonType.EmergencySurgery]: '응급수술',
   [ReasonType.Other]: '기타',
 };
 
-export const reasonTypeOptions = Object.keys(ReasonType).map(key => ({
-  label: reasonTypeLabels[key as keyof typeof ReasonType],
-  value: key,
-}));
+export const reasonTypeOptions = Object.keys(reasonTypeLabels)
+  .map(key => ({
+    label: reasonTypeLabels[key as keyof typeof reasonTypeLabels],
+    value: key,
+  }))
+  .filter(item => item.value !== ReasonType.PatientCancellation);
 
 // PARENTS = 'PARENTS',
 // SPOUSE = 'SPOUSE',
@@ -206,4 +217,14 @@ export const GenderLabel = {
   [Gender.MALE]: '남자',
   [Gender.FEMALE]: '논자',
   [Gender.OTHER]: '기타',
+};
+
+export enum TreatmentStatus {
+  COMPLETED = 'COMPLETED',
+  NO_SHOW = 'NO_SHOW',
+}
+
+export const TreatmentStatusLabel = {
+  [TreatmentStatus.COMPLETED]: '진료완료',
+  [TreatmentStatus.NO_SHOW]: '진료노쇼',
 };

@@ -1,7 +1,7 @@
 import Appointment, { AppointmentBody } from 'models/appointment/Appointment';
-import { get, patch } from './base/BaseApi';
+import { get, Pagination, patch } from './base/BaseApi';
 import { Any, ID } from 'constants/types';
-import { MedicalStatus, ReservationPeriod, ReservationKeywordType, STATUS_TYPE } from 'core/enum';
+import { MedicalStatus, ReservationPeriod, ReservationKeywordType, STATUS_TYPE, TreatmentStatus } from 'core/enum';
 export type SearchFilter = {
   status?: STATUS_TYPE[];
   medicalStatus?: MedicalStatus[];
@@ -23,13 +23,17 @@ export type SearchFilter = {
 
   patientId?: ID;
   id?: ID; // id of reservation
-};
+  treatmentStatus?: TreatmentStatus[];
+} & Pagination;
 
 export const fetchReservations = async (payload?: SearchFilter) => {
   const res = await get<Appointment[]>('/appointments/details', payload);
   const data = (res.data || []).map((item: Any) => new Appointment(item));
 
-  return data;
+  return {
+    data,
+    meta: res?.meta,
+  };
 };
 
 export const fetchReservationById = async (id: ID) => {

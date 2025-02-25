@@ -43,6 +43,7 @@ const LoginPanel = () => {
       onError('로그인 실패');
     }
   };
+
   return (
     <Container
       maxWidth="md"
@@ -56,12 +57,18 @@ const LoginPanel = () => {
       <Paper>
         <Stack justifyContent="center" alignItems="center" p={6} rowGap={2} width="100%">
           <Image src={logo} width={200} height={60} />
-          <TextField sx={{ width: 300 }} onChange={value => setUsername(value)} placeholder="아이디" />
+          <TextField
+            sx={{ width: 300 }}
+            onChange={value => setUsername(value)}
+            placeholder="아이디"
+            onKeyDown={e => e.key === 'Enter' && handleLogin()}
+          />
           <TextField
             sx={{ width: 300 }}
             onChange={value => setPassword(value)}
             type="password"
             placeholder="비밀번호"
+            onKeyDown={e => e.key === 'Enter' && handleLogin()}
           />
           <Button variant="contained" fullWidth sx={{ mt: 3 }} onClick={handleLogin} disabled={!username || !password}>
             로그인
