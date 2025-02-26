@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useOutletContext, useNavigate, useParams } from 'react-router-dom';
 import { dayjs } from 'utils/dateTime';
 
@@ -30,13 +30,6 @@ import useNotification from 'hooks/useNotification';
 // SERVICES
 import { fetchReservationById, updateReservationById } from 'services/ReservationService';
 
-const reservationStatus = Object.keys(ReservationStatusLabel)
-  .map(key => ({
-    label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
-    value: key,
-  }))
-  .filter(item => item.label !== ReservationStatusLabel.All);
-
 const DetailPanel = () => {
   const params = useParams();
   const [detail, setDetail] = useState<Appointment>();
@@ -50,6 +43,19 @@ const DetailPanel = () => {
   const [openConfirm, confirmProps] = useOpen();
   const [openReason, reasonProps] = useOpen();
   const { onSuccess, onError } = useNotification();
+
+  const reservationStatus = Object.keys(ReservationStatusLabel)
+    .filter(item => {
+      if (detail?.status === STATUS_TYPE.APPROVED) {
+        return item !== STATUS_TYPE.PENDING;
+      }
+
+      return item;
+    })
+    .map(key => ({
+      label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
+      value: key,
+    }));
 
   const { patientsMap, timeSlotMap } = useOutletContext<{
     patientsMap: ObjMap<Patient>;

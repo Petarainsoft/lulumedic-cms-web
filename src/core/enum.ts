@@ -90,7 +90,7 @@ export enum STATUS_TYPE {
 }
 
 export const ReservationStatusLabel = {
-  All: '전체',
+  // All: '전체',
   [STATUS_TYPE.PENDING]: '예약대기',
   [STATUS_TYPE.APPROVED]: '예약확정',
   // [STATUS_TYPE.COMPLETED]: '완전한',

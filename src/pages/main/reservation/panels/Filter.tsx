@@ -38,12 +38,11 @@ const filterDefault = {
   endDate: defaultEndDate.format('YYYY-MM-DD'),
 };
 
-const reservationStatus = Object.keys(ReservationStatusLabel)
-  .map(key => ({
-    label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
-    value: key,
-  }))
-  .filter(item => item.value !== 'All');
+const reservationStatus = Object.keys(ReservationStatusLabel).map(key => ({
+  label: ReservationStatusLabel[key as keyof typeof ReservationStatusLabel],
+  value: key,
+}));
+// .filter(item => item.value !== 'All');
 
 const medicalStatusOptions = Object.keys(TreatmentStatusLabel).map(key => ({
   label: TreatmentStatusLabel[key as keyof typeof TreatmentStatusLabel],

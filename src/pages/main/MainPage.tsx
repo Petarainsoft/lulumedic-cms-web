@@ -34,19 +34,9 @@ const MainPage = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetchPatients();
-      // const doctors = await fetchDoctors();
       const departments = await fetchTDepartments();
+      const res = await fetchPatients();
       const timeSlots = await fetchTimeSlots();
-
-      if (timeSlots) {
-        setTimeSlotMap(() => {
-          return timeSlots.reduce((acc, item) => {
-            acc[item.id] = item;
-            return acc;
-          }, {} as ObjMap<TimeSlot>);
-        });
-      }
 
       if (departments) {
         setDepartments(departments);
@@ -55,6 +45,15 @@ const MainPage = () => {
             acc[item.id] = item;
             return acc;
           }, {} as ObjMap<Department>);
+        });
+      }
+
+      if (timeSlots) {
+        setTimeSlotMap(() => {
+          return timeSlots.reduce((acc, item) => {
+            acc[item.id] = item;
+            return acc;
+          }, {} as ObjMap<TimeSlot>);
         });
       }
 
