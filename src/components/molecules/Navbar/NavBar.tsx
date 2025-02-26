@@ -55,7 +55,6 @@ const Navbar = () => {
           const childrenItems = (currentRoute.children || []).filter(item => item.handle?.showInMenu);
 
           if (childrenItems.length) {
-            console.log({ childrenItems });
             setChildrenRouter(childrenItems[0].handle?.path as MAIN_PATH);
 
             result = childrenItems.map(item => ({
@@ -71,10 +70,6 @@ const Navbar = () => {
     );
   }, [parentRouter]);
 
-  console.log({ childrenPaths });
-  useEffect(() => {
-    console.log({ childrenRouter });
-  }, [childrenRouter]);
 
   const onSelectPageChange = (value: ID) => {
     navigate(value as string);

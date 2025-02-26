@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { dayjs } from 'utils/dateTime';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
+import env from 'constants/env';
 
 import MonthlyCalendar, { ScheduleData } from 'components/organisms/Calendar/MonthlyCalendar';
 import WeeklyCalendar from 'components/organisms/Calendar/WeeklyCalendar';
@@ -18,6 +19,8 @@ import { Button } from '@mui/material';
 import ScheduleCalendarProvider from '../contexts/ScheduleCalendarContext';
 import { MAIN_PATH } from 'routes';
 import Doctor from 'models/accounts/Doctor';
+import { createDoctorSchedule } from 'services/DoctorService';
+import { WORKING_TYPE } from 'core/enum';
 
 type Props = {
   doctorDetail?: Doctor;
@@ -27,6 +30,8 @@ type Props = {
 
 const DoctorDetailPanel = ({ doctorSchedules, doctorDetail, className }: Props) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useTransition();
+  const params = useParams();
 
   const scheduleMapByDate = doctorSchedules.reduce(
     (acc, cur) => {
@@ -64,9 +69,58 @@ const DoctorDetailPanel = ({ doctorSchedules, doctorDetail, className }: Props) 
     setTabVal(newValue);
   };
 
+  // DEV MODE
+  const handleGenerateSchedule = () => {
+
+    setLoading(async () => {
+
+      const currentMonth = searchParams.get('date')
+
+      const getRandomInt = (min: number, max: number) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      };
+
+      const days = dayjs(currentMonth).daysInMonth();
+
+      for (let i = 0; i < days; i++) {
+        const randomStartTime = getRandomInt(i + 6, 20);
+        const randomEndTime = getRandomInt(randomStartTime + 1, 20);
+        const randomDay = dayjs(currentMonth).set('D', getRandomInt(1, days)).format('YYYY-MM-DD');
+
+        const workingTypeArr = Object.values(WORKING_TYPE);
+        const workingType = workingTypeArr[getRandomInt(0, workingTypeArr.length - 1)];
+
+
+        if (randomEndTime > randomStartTime) {
+          const data = {
+            startTime: `${randomStartTime}:00`,
+            endTime: `${randomEndTime}:00`,
+            date: randomDay,
+            doctorId: params.id!,
+            workingType: workingType,
+          };
+
+          if (data.startTime !== data.endTime) {
+            await createDoctorSchedule(data);
+          }
+        }
+
+      }
+    })
+
+  };
+
   return (
     <TabContext value={tabVal}>
       <Grid overflow="auto" display="flex" flexDirection="column" className={className} rowGap={2}>
+        {/* DEV MODE */}
+        {
+          env.ENV == 'development' &&
+          <Button loading={loading} variant="contained" sx={{ width: 300 }} onClick={handleGenerateSchedule}>
+            Generate schedule dev mode
+          </Button>
+        }
+
         <TabList onChange={handleChangeTab}>
           <Tab id="view" label="의사정보" />
           <Tab id="schedule" label="스케줄" />
@@ -120,7 +174,7 @@ const DoctorDetailPanel = ({ doctorSchedules, doctorDetail, className }: Props) 
           </Grid>
         ) : null}
       </Grid>
-    </TabContext>
+    </TabContext >
   );
 };
 

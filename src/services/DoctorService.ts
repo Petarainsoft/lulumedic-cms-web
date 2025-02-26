@@ -1,5 +1,6 @@
 import { get, Pagination, patch, post } from './base/BaseApi';
 import { Any, ID } from 'constants/types';
+import { WORKING_TYPE } from 'core/enum';
 import Doctor, { DoctorBody } from 'models/accounts/Doctor';
 import DoctorSchedule from 'models/appointment/DoctorSchedule';
 
@@ -41,4 +42,20 @@ export const createDoctor = async (payload: DoctorBody) => {
   const res = await post<Doctor>('/doctors', payload);
 
   return res?.data || {};
+};
+
+// DEV MODE
+export const createDoctorSchedule = (payload: {
+  startTime: string;
+  endTime: string;
+  date: string;
+  doctorId: ID;
+  workingType: WORKING_TYPE;
+}) => {
+  return post<DoctorSchedule>(`/doctors/${payload.doctorId}/working-schedules`, {
+    startTime: payload.startTime,
+    endTime: payload.endTime,
+    date: payload.date,
+    workingType: payload.workingType,
+  });
 };

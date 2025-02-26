@@ -14,13 +14,10 @@ import Tooltip from '@mui/material/Tooltip';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 type Props = SelectProps;
 const NavMenu = ({ value, options, className, onChange }: Props) => {
-  console.log({ options });
 
   const [val, setVal] = useState<Value>();
 
   useEffect(() => {
-    console.log({ value });
-
     if (value) {
       setVal((options || []).find(item => item.value === value)?.label);
     }
@@ -42,7 +39,7 @@ const NavMenu = ({ value, options, className, onChange }: Props) => {
           <Box mt={1} minWidth={130}>
             <List disablePadding sx={{ border: 1, borderColor: 'divider', borderRadius: 2 }}>
               {(options || []).map((item: SelectOption, index) => (
-                <Box>
+                <Box key={index}>
                   <ListItem
                     key={item.value}
                     onClick={() => {

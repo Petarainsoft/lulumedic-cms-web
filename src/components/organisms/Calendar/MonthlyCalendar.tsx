@@ -24,8 +24,8 @@ const WorkingList = ({ data }: { data?: ScheduleData[] }) => {
   return (
     <>
       {dataToShow?.map((item, index) => (
-        <Stack direction="row" columnGap={1} px={1}>
-          <Typography color="textDisabled" key={index} variant="bodySmall" align="left">
+        <Stack key={index} direction="row" columnGap={1} px={1}>
+          <Typography color="textDisabled" variant="bodySmall" align="left">
             {item.startTime.format('HH:mm')} ~ {item.endTime.format('HH:mm')}
           </Typography>
           <Typography variant="bodySmall">
@@ -78,20 +78,21 @@ const DaysInMonth = ({
     <Stack justifyContent="space-evenly" flexDirection="row" height={150}>
       {(days || []).map((day, index) => (
         <Stack
+          key={index}
           width="100%"
           sx={{
             opacity: day.isSame(currentDate, 'month') ? 1 : 0.5,
           }}
         >
-          <Typography
+          <Stack
             key={index}
-            align="left"
+            // align="left"
             flex="1"
             p={1}
             borderRight={1}
             borderBottom={1}
             borderColor="divider"
-            color={day.format('ddd') == '일' ? 'error' : ''}
+
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -103,6 +104,7 @@ const DaysInMonth = ({
               p={0.5}
               borderRadius="100%"
               textAlign="center"
+              color={day.format('ddd') == '일' ? 'error' : ''}
               sx={{
                 bgcolor: today.isSame(day, 'date') ? '#12BD7E' : '',
                 color: today.isSame(day, 'date') ? 'white' : '',
@@ -112,7 +114,7 @@ const DaysInMonth = ({
               {day.format('D')}
             </Typography>
             {workingData?.[day.format('YYYY-MM-DD')] && <WorkingList data={workingData?.[day.format('YYYY-MM-DD')]} />}
-          </Typography>
+          </Stack>
         </Stack>
       ))}
     </Stack>
@@ -141,8 +143,8 @@ const MonthlyCalendar = ({ currentDate, scheduleMapByDate }: Props) => {
       <WeekDayList weekdays={weekdays} />
 
       <Grid overflow="auto">
-        {(daysMapFiltered || []).map(days => (
-          <DaysInMonth days={days} currentDate={currentDate} workingData={scheduleMapByDate} />
+        {(daysMapFiltered || []).map((days, index) => (
+          <DaysInMonth key={index} days={days} currentDate={currentDate} workingData={scheduleMapByDate} />
         ))}
       </Grid>
     </Grid>

@@ -9,6 +9,7 @@ import { useScheduleCalendarContext } from '../doctorDetail/contexts/ScheduleCal
 import Typography from 'components/atoms/Typography';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import { formatYearMonth } from 'utils/dateTime/formatDate';
 
 type Props = {
   onChangeWeek: (action: 'prev' | 'next') => void;
@@ -20,10 +21,10 @@ const WeeklyNav = ({ onChangeWeek, onToWeek }: Props) => {
   const renderTime = () => {
     const check = weeklyRange?.startTime?.isSame(weeklyRange?.endTime, 'month');
     if (check) {
-      return weeklyRange?.endTime?.format('YYYY MMMM');
+      return formatYearMonth(weeklyRange?.endTime?.toString());
     }
 
-    return `${weeklyRange?.startTime?.format('YYYY MMMM')} - ${weeklyRange?.endTime?.format('YYYY MMMM')}`;
+    return `${formatYearMonth(weeklyRange?.startTime?.toString())} - ${formatYearMonth(weeklyRange?.endTime?.toString())}`;
   };
 
   return (

@@ -29,23 +29,24 @@ const WeekDayList = ({ weekdays, daysInWeekDay }: { weekdays: string[]; daysInWe
     <Stack direction="row" justifyContent="space-evenly" ml={3}>
       {weekdays.map((item, index) => (
         <>
-          <Typography
+          <Stack
             key={index}
-            align="center"
+            // align="center"
             flex="1"
             py={1}
             borderRight={1}
             borderColor="divider"
             bgcolor={'background.default'}
-            color={item == '일' ? 'error' : ''}
+
             display="flex"
             justifyContent="center"
             alignItems="center"
             flexDirection="column"
             rowGap={1}
           >
-            <Typography fontWeight="bold">{item}</Typography>
+            <Typography color={item == '일' ? 'error' : ''} fontWeight="bold">{item}</Typography>
             <Typography
+              color={item == '일' ? 'error' : ''}
               sx={{
                 borderRadius: '100%',
                 width: 35,
@@ -58,7 +59,7 @@ const WeekDayList = ({ weekdays, daysInWeekDay }: { weekdays: string[]; daysInWe
             >
               {dayInWeekDayMap[item]?.format('D')}
             </Typography>
-          </Typography>
+          </Stack>
         </>
       ))}
     </Stack>

@@ -4,7 +4,7 @@ const scrollbarStyle = `
 
   // The entire scrollbar
   ::-webkit-scrollbar {
-    width: 0.4rem;
+    width: 0.1rem;
     height: 0.4rem;
     scrollbar-gutter: stable;
     background-color: #F8F8F8;
