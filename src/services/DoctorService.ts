@@ -10,7 +10,7 @@ export type SearchFilter = {
 
 export const fetchDoctors = async (payload?: SearchFilter) => {
   const res = await get<Doctor[]>('/doctors', payload);
-  const data = (res.data || []).map((item: Any) => new Doctor(item));
+  const data = (res?.data || []).map((item: Any) => new Doctor(item));
 
   return {
     data,

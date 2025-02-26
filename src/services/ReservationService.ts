@@ -28,7 +28,7 @@ export type SearchFilter = {
 
 export const fetchReservations = async (payload?: SearchFilter) => {
   const res = await get<Appointment[]>('/appointments/details', payload);
-  const data = (res.data || []).map((item: Any) => new Appointment(item));
+  const data = (res?.data || []).map((item: Any) => new Appointment(item));
 
   return {
     data,
@@ -38,7 +38,7 @@ export const fetchReservations = async (payload?: SearchFilter) => {
 
 export const fetchReservationById = async (id: ID) => {
   const res = await get<Appointment>(`/appointments/${id}/details`);
-  const data = new Appointment(res.data);
+  const data = new Appointment(res?.data);
 
   return data;
 };

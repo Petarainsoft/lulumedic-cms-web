@@ -188,8 +188,8 @@ const ReservationList = ({ className }: { className?: string }) => {
         pageSize: paginationModel.pageSize,
       });
 
-      if (res.data) {
-        setReservations(res.data);
+      if (res?.data) {
+        setReservations(res?.data);
         setPaginationModel(prev => ({
           ...prev,
           count: res.meta.count,

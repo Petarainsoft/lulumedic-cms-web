@@ -35,11 +35,10 @@ const handleRefreshToken = async (error: Any) => {
     const res = await getNewToken({ refreshToken });
 
     if (res?.data) {
-      localStorage.setItem('accessToken', res.data.accessToken);
-      localStorage.setItem('refreshToken', res.data.refreshToken);
+      localStorage.setItem('accessToken', res?.data.accessToken);
+      localStorage.setItem('refreshToken', res?.data.refreshToken);
 
-      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${res.data.accessToken}`;
-      console.log({ res });
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${res?.data.accessToken}`;
 
       return await axiosInstance(originalRequest);
     } else {
@@ -61,7 +60,7 @@ axiosInstance.interceptors.response.use(
       if (status == 'ERROR_USER_NOT_FOUND' || status == 'ERROR_WRONG_PASSWORD') {
         return error;
       } else {
-        await handleRefreshToken(error);
+        return await handleRefreshToken(error);
       }
     }
   }

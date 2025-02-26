@@ -13,7 +13,7 @@ class Doctor extends DataModel<Doctor> {
   treatmentCriteriaNumberOfPeople?: number;
   treatmentCriteriaTimes?: number;
   autoConfirmReservation?: boolean;
-
+  phone?: number;
   constructor(payload: Obj) {
     super();
 
@@ -36,6 +36,7 @@ class Doctor extends DataModel<Doctor> {
       treatmentCriteriaNumberOfPeople: this.treatmentCriteriaNumberOfPeople,
       treatmentCriteriaTimes: this.treatmentCriteriaTimes,
       autoConfirmReservation: this.autoConfirmReservation,
+      phone: this.phone,
     };
   }
 
@@ -48,10 +49,11 @@ class Doctor extends DataModel<Doctor> {
       departmentId: this.departmentId,
       reservationAvailableDates: +this.reservationAvailableDates!,
       cancellationAvailableDates: +this.cancellationAvailableDates!,
-      exposure: this.exposure,
+      exposure: this.exposure ?? false,
       treatmentCriteriaNumberOfPeople: +this.treatmentCriteriaNumberOfPeople!,
       treatmentCriteriaTimes: +this.treatmentCriteriaTimes!,
-      autoConfirmReservation: this.autoConfirmReservation,
+      autoConfirmReservation: this.autoConfirmReservation ?? false,
+      phone: this.phone,
     };
   }
 }

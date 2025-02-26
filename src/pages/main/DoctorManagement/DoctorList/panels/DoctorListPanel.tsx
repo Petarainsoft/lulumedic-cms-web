@@ -51,7 +51,7 @@ const DoctorListPanel = () => {
         },
       },
       {
-        field: 'contact',
+        field: 'phone',
         headerName: '연락처',
         minWidth: 100,
       },
