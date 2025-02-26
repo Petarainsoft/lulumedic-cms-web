@@ -116,7 +116,7 @@ const DoctorDetailPanel = ({ doctorSchedules, doctorDetail, className }: Props) 
         {/* DEV MODE */}
         {
           env.ENV == 'development' &&
-          <Button loading={loading} variant="contained" sx={{ width: 300 }} onClick={handleGenerateSchedule}>
+          <Button loading={loading} variant="contained" sx={{ width: 300, display: 'none' }} onClick={handleGenerateSchedule}>
             Generate schedule dev mode
           </Button>
         }
