@@ -1,7 +1,7 @@
 import { Any, OrPromise } from 'constants/types';
 import { createContext, useContext } from 'react';
 import { useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
-import { AnyObjectSchema, ObjectSchema } from 'yup';
+import { ObjectSchema } from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 type FormState = {

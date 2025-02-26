@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 

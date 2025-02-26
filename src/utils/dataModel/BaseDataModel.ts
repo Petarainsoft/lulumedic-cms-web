@@ -36,7 +36,7 @@ abstract class BaseDataModel<Model extends Obj> {
   public assign<Attr extends keyof Model>(newValues: Record<Attr, Model[Attr]>) {
     for (const attr in newValues) {
       if (attr in this && !['id', 'createdAt', 'updatedAt'].includes(attr)) {
-        // @ts-ignore
+        // @ts-expect-error
         this[attr] = newValues[attr];
       }
     }
